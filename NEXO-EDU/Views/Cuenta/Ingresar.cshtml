@@ -1,0 +1,30 @@
+@model NEXO_EDU.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Iniciar sesión";
+}
+<section class="auth-page page-width">
+    <div class="auth-intro">
+        <span class="eyebrow">BIENVENIDO A NEXO EDU</span>
+        <h1>Aprender es mejor <span>cuando avanzamos juntos.</span></h1>
+        <p>Ingresa con tu cuenta de alumno, docente o familia para abrir tu espacio educativo personalizado.</p>
+        <div class="auth-art">
+            <partial name="_NexoPet" />
+            <div><strong>¡Hola! Soy Nexi.</strong><p>Estoy aquí para acompañarte en tu aprendizaje.</p></div>
+        </div>
+        <div class="auth-roles"><span>✦ Alumno</span><span>▥ Docente</span><span>♡ Familia</span></div>
+    </div>
+    <div class="auth-card">
+        <span class="eyebrow">TU ESPACIO PERSONAL</span>
+        <h2>Inicia sesión</h2>
+        <p>Usa las credenciales de prueba configuradas por el equipo.</p>
+        <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div asp-validation-summary="ModelOnly" class="auth-errors" role="alert"></div>
+            <div class="auth-field"><label asp-for="Email"></label><input asp-for="Email" autocomplete="username" placeholder="alumno@nexoedu.test" /><span asp-validation-for="Email" class="validation-message"></span></div>
+            <div class="auth-field"><label asp-for="Password"></label><input asp-for="Password" autocomplete="current-password" placeholder="Tu contraseña" /><span asp-validation-for="Password" class="validation-message"></span></div>
+            <button class="btn btn-primary auth-submit" type="submit">Ingresar a NEXO EDU →</button>
+        </form>
+        <div class="auth-note">Acceso protegido con ASP.NET Core Identity. No existe registro público en esta versión de demostración.</div>
+    </div>
+</section>

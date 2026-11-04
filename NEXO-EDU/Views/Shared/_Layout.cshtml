@@ -6,23 +6,50 @@
     <meta name="theme-color" content="#0a57cb" />
     <title>@ViewData["Title"] · NEXO EDU</title>
     <link rel="stylesheet" href="~/css/nexo-ui.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/nexo-auth.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="topbar">
-        <a class="brand" asp-controller="NexoDemo" asp-action="Index" aria-label="Ir al inicio de NEXO EDU">
-            <span class="brand-symbol">N</span><span>NEXO <em>EDU</em></span>
-        </a>
-        <nav class="main-nav" aria-label="Navegación principal">
-            <a asp-controller="NexoDemo" asp-action="Index">Inicio</a>
-            <a asp-controller="NexoDemo" asp-action="Estudiante">Estudiante</a>
-            <a asp-controller="NexoDemo" asp-action="Docente">Docente</a>
-            <a asp-controller="NexoDemo" asp-action="Familia">Familia</a>
+<header class="topbar">
+    <a class="brand" asp-controller="NexoDemo" asp-action="Index" aria-label="Ir al inicio de NEXO EDU">
+        <span class="brand-symbol">N</span><span>NEXO <em>EDU</em></span>
+    </a>
+    <nav class="main-nav" aria-label="Navegación principal">
+        <a asp-controller="NexoDemo" asp-action="Index">Inicio</a>
+        @if (User.IsInRole("Alumno"))
+        {
+            <a asp-controller="NexoDemo" asp-action="Estudiante">Mi aprendizaje</a>
+            <a asp-controller="NexoDemo" asp-action="Diagnostico">Diagnóstico</a>
             <a asp-controller="NexoDemo" asp-action="Mascota">NEXO PET</a>
-        </nav>
-        <a class="nav-cta" asp-controller="NexoDemo" asp-action="Diagnostico">Iniciar diagnóstico →</a>
-    </header>
-    <main id="contenido">@RenderBody()</main>
-    <footer class="site-footer"><span>© 2026 NEXO EDU · Conectamos talento. Transformamos el aprendizaje.</span><span>Prototipo Hack4Edu · Datos de demostración</span></footer>
-    @await RenderSectionAsync("Scripts", required: false)
+        }
+        @if (User.IsInRole("Docente"))
+        {
+            <a asp-controller="NexoDemo" asp-action="Docente">Panel docente</a>
+        }
+        @if (User.IsInRole("Familia"))
+        {
+            <a asp-controller="NexoDemo" asp-action="Familia">Seguimiento familiar</a>
+        }
+    </nav>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="account-toolbar">
+            <span class="account-label">@User.Identity.Name</span>
+            <form asp-controller="Cuenta" asp-action="Salir" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="nav-cta logout-btn">Cerrar sesión</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <a class="nav-cta" asp-controller="Cuenta" asp-action="Ingresar">Iniciar sesión →</a>
+    }
+</header>
+<main id="contenido">@RenderBody()</main>
+<footer class="site-footer">
+    <span>© 2026 NEXO EDU · Conectamos talento. Transformamos el aprendizaje.</span>
+    <span>Prototipo Hack4Edu · Datos de demostración</span>
+</footer>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

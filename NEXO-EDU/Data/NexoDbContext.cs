@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NEXO_EDU.Models;
 
 namespace NEXO_EDU.Data;
 
-public sealed class NexoDbContext(DbContextOptions<NexoDbContext> options) : DbContext(options)
+// Al usar un único contexto se guardan los usuarios de Identity y los módulos educativos en PostgreSQL.
+public sealed class NexoDbContext(DbContextOptions<NexoDbContext> options) : IdentityDbContext<IdentityUser>(options)
 {
     public DbSet<Estudiante> Estudiantes => Set<Estudiante>();
     public DbSet<Concepto> Conceptos => Set<Concepto>();
@@ -15,6 +18,7 @@ public sealed class NexoDbContext(DbContextOptions<NexoDbContext> options) : DbC
 
     protected override void OnModelCreating(ModelBuilder model)
     {
+        base.OnModelCreating(model); // Obligatorio para configurar Identity (usuarios, roles y contraseñas).
         model.Entity<Estudiante>().HasIndex(x => x.Alias).IsUnique();
         model.Entity<Concepto>().HasIndex(x => x.Clave).IsUnique();
         model.Entity<Pregunta>().HasOne(x => x.Concepto).WithMany().HasForeignKey(x => x.ConceptoId);

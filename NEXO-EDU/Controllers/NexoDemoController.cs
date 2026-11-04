@@ -1,20 +1,37 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NEXO_EDU.Services;
 
 namespace NEXO_EDU.Controllers;
 
-// Vistas públicas de DEMOSTRACIÓN con datos simulados; no existen usuarios autenticados aún.
+// Los contenidos son ficticios; los módulos requieren una sesión válida y su rol correspondiente.
 public sealed class NexoDemoController : Controller
 {
-    [HttpGet] public IActionResult Index() => View();
-    [HttpGet] public IActionResult Estudiante() => View();
-    [HttpGet] public IActionResult Docente() => View();
-    [HttpGet] public IActionResult Familia() => View();
-    [HttpGet] public IActionResult Mascota() => View();
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult Index() => View();
 
+    [Authorize(Roles = "Alumno")]
+    [HttpGet]
+    public IActionResult Estudiante() => View();
+
+    [Authorize(Roles = "Docente")]
+    [HttpGet]
+    public IActionResult Docente() => View();
+
+    [Authorize(Roles = "Familia")]
+    [HttpGet]
+    public IActionResult Familia() => View();
+
+    [Authorize(Roles = "Alumno")]
+    [HttpGet]
+    public IActionResult Mascota() => View();
+
+    [Authorize(Roles = "Alumno")]
     [HttpGet]
     public IActionResult Diagnostico() => View(DemoCurriculum.Preguntas);
 
+    [Authorize(Roles = "Alumno")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Evaluar()
@@ -30,7 +47,6 @@ public sealed class NexoDemoController : Controller
             }
             respuestas[p.Id] = opcion;
         }
-        var evaluacion = DemoCurriculum.Evaluar(respuestas);
-        return View("Resultado", evaluacion);
+        return View("Resultado", DemoCurriculum.Evaluar(respuestas));
     }
 }
