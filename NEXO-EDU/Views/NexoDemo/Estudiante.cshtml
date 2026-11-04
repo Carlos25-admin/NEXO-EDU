@@ -1,20 +1,44 @@
 @{
-    ViewData["Title"] = "Panel del estudiante";
+    ViewData["Title"] = "Mi aprendizaje";
+    ViewData["Immersive"] = true;
+    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    ViewData["CurrentLevel"] = nivel;
+    ViewData["LevelAction"] = "Estudiante";
+    ViewData["LevelRole"] = "Alumno";
 }
-<section class="dashboard page-width">
-  <div class="dashboard-heading"><div><span class="eyebrow">MI ESPACIO · DEMOSTRACIÓN</span><h1>¡Hola, Sofía! <span>✦</span></h1><p>Hoy tienes nuevas oportunidades para aprender.</p></div><a class="btn btn-outline" asp-action="Diagnostico">Evaluación diagnóstica →</a></div>
-  <div class="student-grid">
-    <div class="student-main">
-      <div class="welcome-strip"><div><strong>¡Vas muy bien!</strong><p>Cada intento cuenta. Continúa construyendo tus habilidades.</p></div><span class="badge badge-green">✓ Sigue aprendiendo</span></div>
-      <div class="kpi-grid three"><article class="stat-card"><span>✦</span><div><small>Experiencia</small><strong>120 XP</strong></div></article><article class="stat-card"><span>▤</span><div><small>Misiones</small><strong>2 / 3</strong></div></article><article class="stat-card"><span>✺</span><div><small>Logros</small><strong>4</strong></div></article></div>
-      <article class="panel"><div class="panel-title"><div><h2>Tu ruta de hoy</h2><p>Actividades recomendadas para ti.</p></div><span class="pill">67% completado</span></div>
-        <div class="course-grid"><div class="course-card done"><div class="course-icon">∑</div><h3>Matemáticas</h3><p>Fracciones</p><span>✓ Completada</span></div><div class="course-card done"><div class="course-icon">▤</div><h3>Lectura</h3><p>Comprensión</p><span>✓ Completada</span></div><div class="course-card active"><div class="course-icon">⚗</div><h3>Ciencias</h3><p>Ecosistemas</p><span>◉ Pendiente</span></div></div>
-      </article>
-      <article class="panel next-activity"><div><span class="eyebrow">SIGUIENTE ACTIVIDAD</span><h2>Domina las fracciones con NEXO LEARN</h2><p>Descubre qué conceptos ya dominas y cuáles necesitas reforzar.</p><span class="pill">⏱ 8–10 min · Matemáticas</span></div><a class="btn btn-primary" asp-action="Diagnostico">Comenzar →</a></article>
+<div class="level-experience @(nivel == "primaria" ? "theme-primary" : nivel == "secundaria" ? "theme-secondary" : "theme-prepa")">
+@if (nivel == "primaria")
+{
+    <header class="primary-student-header">
+        <a class="level-logo" asp-action="Index"><span class="level-logo-icon">N</span><strong>nexo <small>edu</small></strong></a>
+        <nav class="student-topnav"><span class="active">⌂ Mi aventura</span><a asp-action="Mascota">✧ Mis logros</a></nav>
+        <div class="student-xp">☆ 120 XP</div><div class="round-avatar">L</div>
+        <form asp-controller="Cuenta" asp-action="Salir" method="post">@Html.AntiForgeryToken()<button class="icon-signout" type="submit" aria-label="Cerrar sesión">↗</button></form>
+    </header>
+    <main class="primary-student-content">
+        <div class="level-preview"><small>Vista de demostración · nivel educativo</small><partial name="_LevelSwitcher"/></div>
+        <div class="primary-greeting"><div><h1>¡Hola, Leo!</h1><p>¿Listo para descubrir algo nuevo?</p></div><span>♨ ¡3 días seguidos!</span></div>
+        <section class="primary-hero">
+            <div><span class="tiny-caps">♧ MATEMÁTICAS · 5 MIN</span><h2>El bosque de<br/>los números</h2><div class="tiny-meter"><span></span></div><small>2 de 5 retos · progreso ilustrativo</small><br/><a class="primary-button" asp-action="Aventura" asp-route-nivel="primaria">¡Seguir jugando! ▷</a></div>
+            <div class="number-art" aria-label="Bloques ilustrados con los números 1, 2 y 3"><span class="block-one">1</span><span class="block-two">2</span><span class="block-three">3</span><i class="sun-disc"></i></div>
+        </section>
+        <h2 class="explore-title">También puedes explorar</h2>
+        <div class="primary-explore"><article class="explore-card purple"><span>▣</span><div><strong>Cuentos con magia</strong><small>Escucha y descubre · Próximamente</small></div></article><article class="explore-card mint"><span>♧</span><div><strong>Detectives de la naturaleza</strong><small>Mira, busca y aprende · Próximamente</small></div></article></div>
+        <div class="pet-footer"><span class="mini-pet">✦</span><div><strong>¡Paso a paso lo estás logrando!</strong><small>NEXO PET te acompaña en cada aventura.</small></div><span class="achievement-mini">♙ Tu última insignia <strong>Gran explorador</strong></span></div>
+    </main>
+}
+else
+{
+    <div class="level-app-shell">
+        <partial name="_LevelSidebar"/>
+        <main class="level-main">
+            <div class="level-page-top"><span>@(nivel == "secundaria" ? "Tu espacio para explorar y superarte" : "Tu espacio para construir tu futuro")</span><span>Hack4Edu · Prototipo</span></div>
+            <div class="level-preview"><small>Comparar diseño de niveles</small><partial name="_LevelSwitcher"/></div>
+            <div class="level-heading"><h1>@(nivel == "secundaria" ? "¡Hola, Sofía! Sigue descubriendo." : "Hola, Alex. Tu progreso importa.")</h1><p>@(nivel == "secundaria" ? "Cada misión te ayuda a fortalecer lo que sabes." : "Organiza tus objetivos, mide tus avances y desarrolla nuevas competencias.")</p></div>
+            <section class="level-banner"><div><span class="tiny-caps">@(nivel == "secundaria" ? "TU MISIÓN ACTUAL · MATEMÁTICAS" : "RUTA DE APRENDIZAJE · ÁLGEBRA")</span><h2>@(nivel == "secundaria" ? "Explora el mundo de las fracciones" : "Comprende y aplica funciones lineales")</h2><p>@(nivel == "secundaria" ? "Desafíos de 10 minutos y apoyo cuando lo necesites." : "Practica con ejercicios aplicados, revisa tus fortalezas y da seguimiento a tus metas.")</p><a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@nivel">@(nivel == "secundaria" ? "Empezar misión →" : "Comenzar evaluación →")</a></div><div class="banner-symbol">@(nivel == "secundaria" ? "✦" : "ƒ(x)")</div></section>
+            <div class="level-metrics"><article><span>PROGRESO GENERAL</span><strong>@(nivel == "secundaria" ? "72%" : "81%")</strong><small>Ejemplo ilustrativo</small></article><article><span>RETOS SUPERADOS</span><strong>@(nivel == "secundaria" ? "8/12" : "14/18")</strong><small>Misiones académicas</small></article><article><span>META ACTUAL</span><strong>@(nivel == "secundaria" ? "Fracciones" : "Funciones")</strong><small>Una habilidad a la vez</small></article></div>
+            <div class="level-two-cols"><article class="level-white-card"><h2>@(nivel == "secundaria" ? "Tu ruta recomendada" : "Plan académico personal")</h2><p>Refuerza los conceptos a tu propio ritmo y revisa tus resultados después de cada actividad.</p><div class="route-item"><span class="route-icon">∑</span><div><strong>Matemáticas</strong><small>@(nivel == "secundaria" ? "Fracciones equivalentes" : "Funciones y ecuaciones")</small></div><span class="route-tag">En curso</span></div><div class="route-item"><span class="route-icon">▣</span><div><strong>Comprensión lectora</strong><small>@(nivel == "secundaria" ? "Identificar ideas principales" : "Análisis de textos argumentativos")</small></div><span class="route-tag neutral">Próximamente</span></div></article><article class="level-white-card companion-card"><h2>@(nivel == "secundaria" ? "Tu compañero NEXO PET" : "Tu asistente de progreso")</h2><div class="companion-glyph">@(nivel == "secundaria" ? "✦" : "◇")</div><strong>@(nivel == "secundaria" ? "Explorador · Etapa 2" : "Metas académicas")</strong><p>@(nivel == "secundaria" ? "Evoluciona con tus aprendizajes y esfuerzo." : "Reconoce tus avances y mantén la constancia.")</p><a asp-action="Mascota">Ver progreso →</a></article></div>
+        </main>
     </div>
-    <aside class="student-aside">
-      <article class="panel pet-panel"><div class="panel-title"><h2>✦ NEXO PET</h2><span class="pill">Nivel 2</span></div><div class="pet-stage"><partial name="_NexoPet" /></div><h3>¡Hola! Soy Nexi</h3><p>Aprendemos y crecemos juntos, incluso cuando algo resulta difícil.</p><div class="progress-label"><span>Evolución</span><strong>65%</strong></div><div class="progress-bar"><span style="width:65%"></span></div><a class="text-link" asp-action="Mascota">Conocer mis evoluciones →</a></article>
-      <article class="panel badges-panel"><h2>Mis insignias</h2><div class="badge-row"><span>✦</span><span>▣</span><span>✺</span><span>✓</span></div><p>Logros de práctica, mejora y constancia.</p></article>
-    </aside>
-  </div>
-</section>
+}
+</div>

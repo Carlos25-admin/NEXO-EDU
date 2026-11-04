@@ -1,0 +1,9 @@
+@{
+    var action = ViewData["LevelAction"]?.ToString() ?? "Estudiante";
+    var actual = ViewData["CurrentLevel"]?.ToString() ?? "primaria";
+}
+<nav class="level-switcher" aria-label="Cambiar nivel educativo para demostración">
+    <a class="@(actual == "primaria" ? "selected" : "")" asp-controller="NexoDemo" asp-action="@action" asp-route-nivel="primaria">Primaria</a>
+    <a class="@(actual == "secundaria" ? "selected" : "")" asp-controller="NexoDemo" asp-action="@action" asp-route-nivel="secundaria">Secundaria</a>
+    <a class="@(actual == "preparatoria" ? "selected" : "")" asp-controller="NexoDemo" asp-action="@action" asp-route-nivel="preparatoria">Prepa</a>
+</nav>

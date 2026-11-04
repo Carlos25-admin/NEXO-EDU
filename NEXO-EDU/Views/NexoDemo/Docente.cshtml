@@ -1,14 +1,31 @@
 @{
-    ViewData["Title"] = "Panel docente";
+    ViewData["Title"] = "Mi aula";
+    ViewData["Immersive"] = true;
+    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    ViewData["CurrentLevel"] = nivel;
+    ViewData["LevelAction"] = "Docente";
+    ViewData["LevelRole"] = "Docente";
 }
-<section class="dashboard page-width">
-  <div class="dashboard-heading"><div><span class="eyebrow">NEXO CONNECT · DEMOSTRACIÓN</span><h1>Panel <span>docente</span></h1><p>Identifica dificultades y acompaña mejor a tus estudiantes.</p></div><span class="pill">Secundaria · Matemáticas</span></div>
-  <div class="kpi-grid four"><article class="stat-card"><span>♙</span><div><small>Estudiantes</small><strong>28</strong></div></article><article class="stat-card"><span>♢</span><div><small>Alertas tempranas</small><strong>6</strong></div></article><article class="stat-card"><span>↗</span><div><small>Buen progreso</small><strong>18</strong></div></article><article class="stat-card"><span>◎</span><div><small>Intervenciones</small><strong>3</strong></div></article></div>
-  <div class="teacher-grid">
-    <div>
-      <article class="panel"><div class="panel-title"><h2>Desempeño por concepto</h2><span class="pill">Datos ilustrativos</span></div><div class="chart-rows"><div><label>Equivalencias <strong>86%</strong></label><div class="progress-bar"><span style="width:86%"></span></div></div><div><label>Suma de fracciones <strong>72%</strong></label><div class="progress-bar"><span style="width:72%"></span></div></div><div><label>Resta de fracciones <strong>51%</strong></label><div class="progress-bar"><span style="width:51%"></span></div></div></div></article>
-      <article class="panel"><div class="panel-title"><h2>Estudiantes del grupo</h2><span class="pill">Semáforo orientativo</span></div><div class="table-wrap"><table class="nexo-table"><thead><tr><th>Estudiante</th><th>Avance</th><th>Alerta</th><th>Recomendación</th></tr></thead><tbody><tr><td>Diego Morales</td><td>42%</td><td><span class="badge badge-red">Revisar</span></td><td>Refuerzo guiado</td></tr><tr><td>Valentina Rojas</td><td>67%</td><td><span class="badge badge-yellow">Atención</span></td><td>Práctica adicional</td></tr><tr><td>Mateo Araya</td><td>91%</td><td><span class="badge badge-green">Adecuado</span></td><td>Nuevos desafíos</td></tr></tbody></table></div></article>
-    </div>
-    <aside><article class="panel intervention-card"><span class="eyebrow">NEXO ALERT</span><h2>Intervención sugerida</h2><p><strong>Diego Morales</strong> · Fracciones</p><div class="alert-banner">Se observaron errores frecuentes en resta de fracciones.</div><ol><li>Revisar qué concepto causa dificultad.</li><li>Proponer ejemplos guiados.</li><li>Aplicar una nueva evaluación y comprobar avance.</li></ol><p class="fine-print">La alerta es una sugerencia educativa, no un diagnóstico.</p></article></aside>
-  </div>
-</section>
+<div class="level-experience @(nivel == "primaria" ? "theme-primary" : nivel == "secundaria" ? "theme-secondary" : "theme-prepa")">
+<div class="level-app-shell">
+    <partial name="_LevelSidebar"/>
+    <main class="level-main">
+        <div class="level-page-top"><span>Buenos días, Clara</span><span>4 de noviembre de 2026 · Datos ilustrativos</span></div>
+        <div class="level-preview"><small>Ver diseño por nivel</small><partial name="_LevelSwitcher"/></div>
+        @if (nivel == "primaria")
+        {
+            <div class="level-heading"><h1>Cada pequeño avance cuenta</h1><p><strong>2.º B</strong> · 24 estudiantes</p></div>
+            <section class="teacher-feature"><div class="activity-glyph">△<br/>◯ □</div><div><span class="tiny-caps">EN MARCHA HOY</span><h2>El bosque de los números</h2><p>18 de 24 estudiantes han terminado.</p><div class="teacher-progress"><span></span></div></div><span class="subject-label">Matemáticas</span></section>
+            <div class="teacher-bottom"><section><h2>Un poco de apoyo</h2><p>Dos estudiantes necesitan una mano.</p><div class="student-list-item"><span class="initial-circle peach">L</span><div><strong>Leo Martín</strong><small>Está practicando sumas hasta 10</small></div><span>→</span></div><div class="student-list-item"><span class="initial-circle green">A</span><div><strong>Ana López</strong><small>Aún no ha empezado la actividad</small></div><span>→</span></div><p class="quiet-caption">Las alertas requieren revisión del docente.</p></section><section class="teacher-tomorrow"><h2>Para mañana</h2><div class="nature-icon">♧</div><h3>Detectives de la naturaleza</h3><p>Ciencias · 10 minutos</p><span class="violet-link">Preparar actividad · Próximamente</span></section></div>
+            <div class="teacher-lower"><div><strong>¿Qué aprenderemos después?</strong><p>Elige una aventura para tu aula.</p></div><span class="soft-pill">Crear actividad · Próximamente</span></div>
+        }
+        else
+        {
+            <div class="level-heading"><h1>@(nivel == "secundaria" ? "Acompaña cada aprendizaje" : "Decisiones docentes con evidencia")</h1><p>@(nivel == "secundaria" ? "2.º de secundaria · Matemáticas · Grupo A" : "Preparatoria · Matemáticas · Grupo 4.º A")</p></div>
+            <div class="level-metrics"><article><span>ESTUDIANTES</span><strong>@(nivel == "secundaria" ? "30" : "32")</strong><small>Datos ficticios</small></article><article><span>ALERTAS PARA REVISAR</span><strong>4</strong><small>Sin etiquetas definitivas</small></article><article><span>INTERVENCIONES</span><strong>2</strong><small>Pendientes de seguimiento</small></article></div>
+            <section class="level-white-card"><h2>@(nivel == "secundaria" ? "Seguimiento del grupo" : "Panorama de competencias")</h2><p>Identifica conceptos que requieren apoyo y propone actividades de refuerzo.</p><div class="teacher-topic"><span>@(nivel == "secundaria" ? "Fracciones" : "Funciones")</span><div class="horizontal-bar"><span style="width:74%"></span></div><strong>74%</strong></div><div class="teacher-topic"><span>@(nivel == "secundaria" ? "Ecuaciones básicas" : "Modelación algebraica")</span><div class="horizontal-bar"><span style="width:61%"></span></div><strong>61%</strong></div><div class="teacher-topic"><span>@(nivel == "secundaria" ? "Proporcionalidad" : "Análisis de datos")</span><div class="horizontal-bar"><span style="width:82%"></span></div><strong>82%</strong></div></section>
+            <div class="level-two-cols"><section class="level-white-card"><h2>Estudiantes que requieren apoyo</h2><div class="student-list-item"><span class="initial-circle peach">D</span><div><strong>Diego Morales</strong><small>Dificultades recurrentes en el concepto actual</small></div><span class="risk-pill">Revisar</span></div><div class="student-list-item"><span class="initial-circle green">V</span><div><strong>Valentina Rojas</strong><small>Necesita práctica complementaria</small></div><span class="risk-pill mild">Atención</span></div></section><section class="level-white-card"><h2>Próxima intervención</h2><p>Revisión individual, actividad guiada y reevaluación posterior.</p><div class="note-box">NEXO ALERT sugiere acciones; el docente decide cómo acompañar.</div></section></div>
+        }
+    </main>
+</div>
+</div>

@@ -1,0 +1,8 @@
+@model NEXO_EDU.Services.ResultadoAventuraDemo
+@{
+    ViewData["Title"] = "Resultado de mi aventura";
+}
+<section class="level-activity-wrap theme-@(Model.Nivel)">
+    <div class="activity-header"><a asp-action="Estudiante" asp-route-nivel="@Model.Nivel">← Mi espacio</a><span class="tiny-caps">NEXO LEARN · DEMOSTRACIÓN</span></div>
+    <div class="activity-result"><div class="activity-friendly-icon">✦</div><span class="tiny-caps">¡BIEN HECHO!</span><h1>¡Terminaste tu aventura!</h1><p>Respondiste correctamente @Model.Correctas de @Model.Total retos.</p><div class="result-stats"><div><strong>@Model.Porcentaje%</strong><small>Respuestas correctas</small></div><div><strong>+@Model.Xp XP</strong><small>Experiencia de ejemplo</small></div></div><p>Los errores son parte del aprendizaje. Puedes volver a practicar cuando quieras.</p><a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@Model.Nivel">Intentarlo otra vez ↻</a></div>
+</section>

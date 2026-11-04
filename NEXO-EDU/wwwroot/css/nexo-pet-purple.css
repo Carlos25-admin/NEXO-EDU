@@ -1,0 +1,9 @@
+/* Mascota primaria ilustrada en CSS, sin dependencias externas. */
+.mini-mascot{position:relative!important;font-size:0!important;background:#bca5f1!important;border-radius:42% 42% 47% 47%!important;isolation:isolate}
+.mini-mascot::before{content:"";position:absolute;width:29%;height:56%;background:#bca5f1;top:-24%;left:14%;border-radius:60% 60% 8% 8%;transform:rotate(-25deg);z-index:-1;box-shadow:92px 44px 0 -4px #bca5f1}
+.mini-mascot::after{content:"• ᴗ •";position:absolute;inset:15%;display:flex;align-items:center;justify-content:center;font-size:clamp(23px,3vw,37px);font-weight:800;letter-spacing:4px;color:#2d2942;text-shadow:-12px 24px 0 #e6b1cd,12px 24px 0 #e6b1cd}
+.pet-footer .mini-pet{position:relative;background:#bca5f1;border-radius:40% 40% 46% 46%;font-size:0;color:#2f294d}
+.pet-footer .mini-pet::before{content:"";position:absolute;width:11px;height:19px;border-radius:12px 12px 2px 2px;background:#bca5f1;left:5px;top:-6px;transform:rotate(-24deg);box-shadow:22px 10px #bca5f1}
+.pet-footer .mini-pet::after{content:"•ᴗ•";font-size:13px;letter-spacing:1px}
+.login-mascot .mini-mascot::before{box-shadow:113px 41px 0 -1px #bca5f1}
+@media(max-width:760px){.mini-mascot::before{box-shadow:75px 36px 0 -4px #bca5f1}}

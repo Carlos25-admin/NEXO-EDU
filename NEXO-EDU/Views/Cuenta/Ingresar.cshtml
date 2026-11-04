@@ -3,34 +3,37 @@
 @inject Microsoft.Extensions.Configuration.IConfiguration Config
 @{
     ViewData["Title"] = "Iniciar sesión";
+    ViewData["Immersive"] = true;
     var modoLocal = Ambiente.IsDevelopment() && Config.GetValue<bool>("DemoMode:Enabled");
 }
-<section class="auth-page page-width">
-    <div class="auth-intro">
-        <span class="eyebrow">BIENVENIDO A NEXO EDU</span>
-        <h1>Aprender es mejor <span>cuando avanzamos juntos.</span></h1>
-        <p>Ingresa con tu cuenta de alumno, docente o familia para abrir tu espacio educativo personalizado.</p>
-        <div class="auth-art">
-            <partial name="_NexoPet" />
-            <div><strong>¡Hola! Soy Nexi.</strong><p>Estoy aquí para acompañarte en tu aprendizaje.</p></div>
-        </div>
-        <div class="auth-roles"><span>✦ Alumno</span><span>▥ Docente</span><span>♡ Familia</span></div>
+<div class="nexo-login-reimagined">
+  <section class="login-left">
+    <a class="level-logo" asp-controller="NexoDemo" asp-action="Index"><span class="level-logo-icon">N</span><strong>nexo <small>edu</small></strong></a>
+    <div class="login-story"><h1>Pequeños pasos.<br/>Grandes aventuras.</h1><p>Un lugar para aprender, descubrir y crecer juntos.</p><div class="login-mascot" aria-label="Nexi, mascota de NEXO EDU"><span class="mini-mascot">✦</span><span>¡Hola! Soy NEXO PET</span></div></div>
+    <small class="login-safe">♧ Un espacio seguro para aprender · Prototipo local</small>
+  </section>
+  <section class="login-right">
+    <div class="login-right-inner"><span class="tiny-caps">NEXO EDU · ACCESO</span><h2>¡Qué bueno verte!</h2><p>Elige tu perfil para comenzar.</p>
+      <div class="login-role-picker" aria-label="Selecciona tu perfil de demostración">
+        <button type="button" class="chosen" data-demo-email="alumno@nexoedu.test"><span>♧</span>Estudiante</button>
+        <button type="button" data-demo-email="docente@nexoedu.test"><span>▣</span>Docente</button>
+        <button type="button" data-demo-email="familia@nexoedu.test"><span>♡</span>Familia</button>
+      </div>
+      <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="ReturnUrl"/>
+        <div asp-validation-summary="ModelOnly" class="auth-errors" role="alert"></div>
+        <label class="login-label" asp-for="Email">Correo de acceso</label>
+        <input class="login-input" asp-for="Email" autocomplete="username" placeholder="alumno@nexoedu.test"/>
+        <span asp-validation-for="Email" class="validation-message"></span>
+        <label class="login-label" asp-for="Password">Contraseña</label>
+        <input class="login-input" asp-for="Password" autocomplete="current-password" placeholder="Escribe tu contraseña"/>
+        <span asp-validation-for="Password" class="validation-message"></span>
+        <button class="login-submit" type="submit">Entrar a mi espacio →</button>
+      </form>
+      @if(modoLocal){<p class="login-tip">Modo demostración: las cuentas de prueba están documentadas en el README del repositorio. El perfil visual no sustituye la validación de credenciales.</p>}
+      <p class="login-footnote">El acceso mediante código de clase y el registro de nuevas cuentas se incorporarán posteriormente.</p>
     </div>
-    <div class="auth-card">
-        <span class="eyebrow">TU ESPACIO PERSONAL</span>
-        <h2>Inicia sesión</h2>
-        @if (modoLocal)
-        {
-            <div class="auth-note"><strong>Modo de prueba sin PostgreSQL.</strong> Puedes utilizar las cuentas de prueba del equipo. No se almacenan resultados ni usuarios en PostgreSQL.</div>
-        }
-        <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
-            @Html.AntiForgeryToken()
-            <input type="hidden" asp-for="ReturnUrl" />
-            <div asp-validation-summary="ModelOnly" class="auth-errors" role="alert"></div>
-            <div class="auth-field"><label asp-for="Email"></label><input asp-for="Email" autocomplete="username" placeholder="alumno@nexoedu.test" /><span asp-validation-for="Email" class="validation-message"></span></div>
-            <div class="auth-field"><label asp-for="Password"></label><input asp-for="Password" autocomplete="current-password" placeholder="Tu contraseña" /><span asp-validation-for="Password" class="validation-message"></span></div>
-            <button class="btn btn-primary auth-submit" type="submit">Ingresar a NEXO EDU →</button>
-        </form>
-        <div class="auth-note">Prototipo local sin datos reales. El inicio de sesión con Identity y PostgreSQL queda preparado para una etapa posterior.</div>
-    </div>
-</section>
+  </section>
+</div>
+<script src="~/js/nexo-login.js" asp-append-version="true"></script>
