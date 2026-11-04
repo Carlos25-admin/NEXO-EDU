@@ -1,24 +1,58 @@
+@using NEXO_EDU.Services
 @{
-    ViewData["Title"] = "NEXO PET";
+    ViewData["Title"] = "NEXO PET · Mi mascota";
     var nivel = (string?)ViewBag.Nivel ?? "primaria";
-    var progreso = ViewBag.Progreso as NEXO_EDU.Services.ProgresoDemo ?? new NEXO_EDU.Services.ProgresoDemo();
-    var limite = progreso.Etapa == 1 ? 70 : progreso.Etapa == 2 ? 180 : 360;
-    var porcentaje = Math.Min(100, (int)(100.0 * progreso.Xp / limite));
+    var progreso = ViewBag.Progreso as ProgresoDemo ?? new ProgresoDemo();
+    var mascota = MascotasNexo.ParaNivel(nivel);
+    var etapa = mascota.ElegirEtapa(progreso.Xp);
+    var proximaMeta = mascota.SiguienteMeta(progreso.Xp);
+    var porcentaje = Math.Min(100, (int)(100.0 * progreso.Xp / proximaMeta));
+    ViewData["PetLevel"] = nivel;
+    ViewData["PetStage"] = etapa.Numero;
 }
-<section class="dashboard page-width pet-growth-page">
-    <div class="dashboard-heading"><div><span class="eyebrow">NEXO PET · MI COMPAÑERO</span><h1>¡Crecemos <span>aprendiendo!</span></h1><p>Tu mascota evoluciona con esfuerzo, práctica y constancia. Nunca pierde experiencia por equivocarte.</p></div><a class="btn btn-outline" asp-action="Estudiante" asp-route-nivel="@nivel">Volver a mi nivel</a></div>
-    <div class="pet-showcase">
-        <div class="pet-showcase-art"><partial name="_NexoPet"/></div>
-        <div><span class="eyebrow">NEXI · ETAPA @progreso.Etapa</span><h2>@(progreso.Etapa == 1 ? "El inicio de una gran aventura" : progreso.Etapa == 2 ? "¡Nexi se está transformando!" : "Un compañero explorador")</h2>
-        <p>@(progreso.Mensaje ?? "Resuelve tu primera actividad para comenzar la evolución.")</p>
-        <div class="progress-label"><span>Mi experiencia</span><strong>@progreso.Xp / @limite XP</strong></div><div class="progress-bar"><span style="width:@(porcentaje)%"></span></div>
-        <p>@progreso.Actividades actividades terminadas en esta sesión.</p>
-        <a class="btn btn-primary" asp-action="Aventura" asp-route-nivel="@nivel">Ganar XP aprendiendo →</a></div>
+<section class="pet-studio pet-studio--@mascota.Clave">
+  <div class="pet-studio__top">
+    <a asp-action="Estudiante" class="pet-studio__back">← Volver a mi espacio</a>
+    <span class="pet-studio__brand">NEXO PET <span>✦</span> @NEXO_EDU.Models.NivelDemo.Nombre(nivel)</span>
+  </div>
+  <div class="pet-studio__layout">
+    <div class="pet-studio__stage">
+      <div class="pet-studio__orbit" aria-hidden="true"></div>
+      <partial name="_NexoPet"/>
+      <span class="pet-studio__pedestal" aria-hidden="true"></span>
+      <span class="pet-studio__level">ETAPA @etapa.Numero / 3 · @etapa.Nombre</span>
     </div>
-    <div class="evolution-grid">
-        <article class="feature-card @(progreso.Etapa >= 1 ? "pet-unlocked" : "")"><span class="evo-icon">✧</span><h3>Etapa 1 · Cría</h3><p>Una mascota curiosa que acaba de llegar.</p></article>
-        <article class="feature-card @(progreso.Etapa >= 2 ? "pet-unlocked" : "")"><span class="evo-icon">✦</span><h3>Etapa 2 · Aprendiz</h3><p>Alcanza 70 XP resolviendo tus primeras aventuras.</p></article>
-        <article class="feature-card @(progreso.Etapa >= 3 ? "pet-unlocked" : "")"><span class="evo-icon">✺</span><h3>Etapa 3 · Explorador</h3><p>Alcanza 180 XP para desbloquear esta etapa.</p></article>
+    <div class="pet-studio__info">
+      <span class="pet-studio__eyebrow">TU COMPAÑERO EVOLUTIVO</span>
+      <h1>Conoce a <span>@mascota.Nombre</span></h1>
+      <h2>@mascota.Apodo</h2>
+      <p>@mascota.Lema</p>
+      <div class="pet-studio__message">@(progreso.Mensaje ?? "¡Hola! Completa ejercicios y descubriremos juntos nuevas habilidades.")</div>
+      <div class="pet-studio__progress-head"><strong>@progreso.Xp XP</strong><span>@(etapa.Numero < 3 ? $"Próxima evolución: {proximaMeta} XP" : "¡Evolución máxima alcanzada!")</span></div>
+      <div class="pet-studio__progress" role="progressbar" aria-label="Experiencia de la mascota" aria-valuenow="@Math.Min(progreso.Xp, proximaMeta)" aria-valuemin="0" aria-valuemax="@proximaMeta"><span style="width:@(porcentaje)%"></span></div>
+      <small>@progreso.Actividades ejercicios completados durante esta sesión</small>
+      <div class="pet-studio__controls" aria-label="Jugar con la mascota">
+        <button type="button" data-pet-gesture="wave" data-pet-message="¡Hola! ¿Aprendemos juntos?">👋 Saludar</button>
+        <button type="button" data-pet-gesture="jump" data-pet-message="¡Vamos por otra aventura!">↥ Saltar</button>
+        <button type="button" data-pet-gesture="celebrate" data-pet-message="¡Qué gran esfuerzo!">✦ Celebrar</button>
+      </div>
+      <a class="pet-studio__cta" asp-controller="Modulos" asp-action="Biblioteca">Ganar experiencia con ejercicios →</a>
     </div>
-    <p class="fine-print">La experiencia se conserva mientras dure la sesión local. No es un historial académico permanente.</p>
+  </div>
+  <div class="pet-studio__evolutions">
+    <div class="pet-studio__section"><h2>El camino de @mascota.Nombre</h2><p>Tres transformaciones. La mascota crece cuando practicas; equivocarte nunca te hace perder XP.</p></div>
+    <div class="pet-studio__cards">
+      @foreach (var fase in mascota.Etapas)
+      {
+        var desbloqueada = progreso.Xp >= fase.XpMinimo;
+        <article class="pet-studio__card @(desbloqueada ? "is-unlocked" : "is-locked") @(etapa.Numero == fase.Numero ? "is-current" : "")">
+          <div class="pet-studio__preview">
+            <img src="~/img/pets/@(mascota.Clave)-@(fase.Numero).svg" loading="lazy" alt="@fase.Nombre" width="180" height="190"/>
+          </div>
+          <div><span>ETAPA @fase.Numero · @(desbloqueada ? "Desbloqueada" : $"{fase.XpMinimo} XP")</span><h3>@fase.Nombre</h3><p>@fase.Descripcion</p></div>
+        </article>
+      }
+    </div>
+  </div>
+  <p class="pet-studio__notice">NEXO PET es una experiencia de demostración. Por ahora el XP se guarda en la sesión del navegador y todavía no se sincroniza con PostgreSQL.</p>
 </section>

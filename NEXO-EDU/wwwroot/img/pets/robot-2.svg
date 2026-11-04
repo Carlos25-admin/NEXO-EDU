@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 440" role="img" aria-label="robot etapa 2"><defs>
+<linearGradient id="gBody" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fafbff"/><stop offset="1" stop-color="#8296cf"/></linearGradient>
+<linearGradient id="gGold" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff3a8"/><stop offset=".45" stop-color="#f5bf50"/><stop offset="1" stop-color="#dc802c"/></linearGradient>
+<linearGradient id="gDark" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#455075"/><stop offset="1" stop-color="#111832"/></linearGradient>
+<radialGradient id="gAura"><stop stop-color="#87f5f9" stop-opacity=".38"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+<filter id="shadow" x="-40%" y="-40%" width="180%" height="190%"><feDropShadow dx="0" dy="11" stdDeviation="10" flood-color="#26325d" flood-opacity=".24"/></filter>
+<filter id="glow"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<circle cx="210" cy="203" r="169" fill="url(#gAura)"/><ellipse cx="209" cy="390" rx="130" ry="20" fill="#222959" opacity=".15"/>
+
+<circle cx="210" cy="201" r="142" fill="none" stroke="#50dcef" stroke-opacity=".5" stroke-width="3" stroke-dasharray="8 14" class="pet-ring"/>
+<g filter="url(#shadow)">
+<path d="M158 278L140 341L179 367L210 330L242 367L283 342L264 278" fill="url(#gBody)" stroke="#404e89" stroke-width="8"/>
+<path d="M149 292L110 327L116 353L155 342" fill="url(#gBody)" stroke="#5667a1" stroke-width="8"/>
+<path d="M268 292L311 327L305 353L266 342" fill="url(#gBody)" stroke="#5667a1" stroke-width="8"/>
+<circle cx="113" cy="345" r="17" fill="#59cce8" stroke="#48578b" stroke-width="7"/><circle cx="307" cy="345" r="17" fill="#59cce8" stroke="#48578b" stroke-width="7"/>
+<path d="M167 355L156 386L189 397L206 361M246 355L261 387L228 397L212 361" fill="url(#gBody)" stroke="#5667a1" stroke-width="8"/>
+
+<path d="M133 133Q145 91 210 87Q277 89 286 134L298 217Q285 284 209 296Q129 290 115 219Z" fill="url(#gBody)" stroke="#526194" stroke-width="8"/>
+<path d="M140 153Q151 121 210 118Q270 117 283 153L280 222Q262 258 208 260Q158 258 140 222Z" fill="url(#gDark)" stroke="#3e5283" stroke-width="7"/>
+<path d="M152 191Q176 166 194 188M223 188Q244 165 265 191" stroke="#66f1fb" stroke-width="11" stroke-linecap="round" fill="none"/>
+<path d="M194 219Q209 237 227 217" fill="none" stroke="#5ce3f9" stroke-width="7" stroke-linecap="round"/>
+<circle cx="118" cy="181" r="23" fill="#e5e9ff" stroke="#6476ac" stroke-width="8"/><circle cx="118" cy="181" r="9" fill="#54e3f6"/>
+<circle cx="301" cy="181" r="23" fill="#e5e9ff" stroke="#6476ac" stroke-width="8"/><circle cx="301" cy="181" r="9" fill="#54e3f6"/>
+<path d="M163 126Q167 99 180 89L191 120M232 119L246 88L258 128" fill="#dce4fc" stroke="#6371a4" stroke-width="7"/>
+<path d="M173 276Q210 299 247 275" fill="none" stroke="#67dcf5" stroke-width="10"/>
+<path d="M190 284L229 284L226 308L194 308Z" fill="#445a9b" stroke="#52d9ed" stroke-width="5"/>
+<text x="210" y="303" text-anchor="middle" font-size="17" font-weight="900" fill="#8af8ff">N</text>
+
+
+</g>
+
+<style>.pet-ring{animation:spin 18s linear infinite;transform-origin:210px 201px}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.pet-ring{animation:none}}</style></svg>
