@@ -20,6 +20,10 @@ var demoLocal = builder.Environment.IsDevelopment()
     && builder.Configuration.GetValue<bool>("DemoMode:Enabled");
 
 var connection = builder.Configuration.GetConnectionString("NexoEdu");
+
+// No activar nunca el acceso ficticio fuera de Development.
+if (!builder.Environment.IsDevelopment() && builder.Configuration.GetValue<bool>("DemoMode:Enabled"))
+    throw new InvalidOperationException("DemoMode no está permitido fuera de Development.");
 if (demoLocal)
 {
     builder.Services.AddAuthentication("NexoDemoLocal")
@@ -38,7 +42,9 @@ if (demoLocal)
 else
 {
     if (string.IsNullOrWhiteSpace(connection))
-        throw new InvalidOperationException("Para usar Identity se requiere ConnectionStrings:NexoEdu. En desarrollo puedes habilitar DemoMode:Enabled.");
+        throw new InvalidOperationException(
+            "No se encontró PostgreSQL. Para trabajar sin base de datos, selecciona el perfil " +
+            "'NEXO EDU - Demo local' en Visual Studio (entorno Development).");
 
     builder.Services.AddDbContext<NexoDbContext>(options => options.UseNpgsql(connection));
     builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
