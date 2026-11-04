@@ -5,64 +5,72 @@ using NEXO_EDU.Services;
 
 namespace NEXO_EDU.Controllers;
 
-// Etapa de prototipo: perfiles protegidos por rol, niveles seleccionables solo para
-// comparar diseños sin datos reales. El nivel definitivo vendrá de la matrícula.
+// Los alumnos de demo tienen nivel fijo por claim. Docentes y familias pueden
+// explorar las tres presentaciones sin cambiar de rol ni acceder a datos reales.
 public sealed class NexoDemoController : Controller
 {
+    private string NivelAlumno => User.FindFirst("DemoLevel")?.Value is string valor
+        ? NivelDemo.Normalizar(valor) : NivelDemo.Primaria;
+
+    private string NivelDeVista(string? solicitado) =>
+        User.HasClaim("DemoLocal", "true") && User.IsInRole("Alumno")
+            ? NivelAlumno : NivelDemo.Normalizar(solicitado);
+
+    private void PrepararAlumno()
+    {
+        ViewBag.Nivel = NivelAlumno;
+        ViewBag.Nombre = User.FindFirst("DemoName")?.Value ?? "Estudiante";
+        ViewBag.Progreso = DemoProgressService.Leer(HttpContext.Session, User.Identity?.Name);
+    }
+
     [AllowAnonymous, HttpGet]
     public IActionResult Index() => View();
 
     [Authorize(Roles = "Alumno"), HttpGet]
     public IActionResult Estudiante(string? nivel)
     {
-        ViewBag.Nivel = NivelDemo.Normalizar(nivel);
+        PrepararAlumno();
         return View();
     }
 
     [Authorize(Roles = "Docente"), HttpGet]
     public IActionResult Docente(string? nivel)
     {
-        ViewBag.Nivel = NivelDemo.Normalizar(nivel);
+        ViewBag.Nivel = NivelDeVista(nivel);
         return View();
     }
 
     [Authorize(Roles = "Familia"), HttpGet]
     public IActionResult Familia(string? nivel)
     {
-        ViewBag.Nivel = NivelDemo.Normalizar(nivel);
+        ViewBag.Nivel = NivelDeVista(nivel);
         return View();
     }
 
     [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Mascota() => View();
-
-    [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Diagnostico() => View(DemoCurriculum.Preguntas);
-
-    [Authorize(Roles = "Alumno"), HttpPost, ValidateAntiForgeryToken]
-    public IActionResult Evaluar()
+    public IActionResult Mascota()
     {
-        var respuestas = new Dictionary<int, int>();
-        foreach (var p in DemoCurriculum.Preguntas)
-        {
-            if (!int.TryParse(Request.Form["q" + p.Id].ToString(), out var opcion)
-                || opcion < 0 || opcion >= p.Opciones.Length)
-            {
-                ModelState.AddModelError("", "Responde todas las preguntas para continuar.");
-                return View("Diagnostico", DemoCurriculum.Preguntas);
-            }
-            respuestas[p.Id] = opcion;
-        }
-        return View("Resultado", DemoCurriculum.Evaluar(respuestas));
+        PrepararAlumno();
+        return View();
     }
 
     [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Aventura(string? nivel) => View(ActividadesDemo.Crear(nivel));
+    public IActionResult Diagnostico() => RedirectToAction("Aventura", new { nivel = NivelAlumno });
+
+    [Authorize(Roles = "Alumno"), HttpPost, ValidateAntiForgeryToken]
+    public IActionResult Evaluar() => RedirectToAction("Aventura", new { nivel = NivelAlumno });
+
+    [Authorize(Roles = "Alumno"), HttpGet]
+    public IActionResult Aventura(string? nivel)
+    {
+        ViewBag.Progreso = DemoProgressService.Leer(HttpContext.Session, User.Identity?.Name);
+        return View(ActividadesDemo.Crear(NivelDeVista(nivel)));
+    }
 
     [Authorize(Roles = "Alumno"), HttpPost, ValidateAntiForgeryToken]
     public IActionResult CorregirAventura(string? nivel)
     {
-        var actividad = ActividadesDemo.Crear(nivel);
+        var actividad = ActividadesDemo.Crear(NivelDeVista(nivel));
         var respuestas = new Dictionary<int, int>();
         foreach (var reto in actividad.Retos)
         {
@@ -74,6 +82,9 @@ public sealed class NexoDemoController : Controller
             }
             respuestas[reto.Numero] = n;
         }
-        return View("ResultadoAventura", ActividadesDemo.Evaluar(actividad.Nivel, respuestas));
+
+        var resultado = ActividadesDemo.Evaluar(actividad.Nivel, respuestas);
+        ViewBag.Progreso = DemoProgressService.Registrar(HttpContext.Session, User.Identity?.Name, resultado);
+        return View("ResultadoAventura", resultado);
     }
 }

@@ -11,8 +11,7 @@ namespace NEXO_EDU.Controllers;
 
 public sealed class CuentaController(IServiceProvider services, IWebHostEnvironment environment, IConfiguration config) : Controller
 {
-    private bool DemoLocal => environment.IsDevelopment()
-        && config.GetValue<bool>("DemoMode:Enabled");
+    private bool DemoLocal => environment.IsDevelopment() && config.GetValue<bool>("DemoMode:Enabled");
 
     [AllowAnonymous, HttpGet]
     public IActionResult Ingresar(string? returnUrl = null)
@@ -29,13 +28,22 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
 
         if (DemoLocal)
         {
-            // Credenciales exclusivamente de prueba publicadas en appsettings.Development.json.
-            // No se utilizan en producción. Nunca reutilizar estas contraseñas.
-            var rol = new[] { "Alumno", "Docente", "Familia" }.FirstOrDefault(r =>
-                string.Equals(config[$"DemoUsers:{r}:Email"], email, StringComparison.OrdinalIgnoreCase)
-                && VerificarClave(model.Password, config[$"DemoUsers:{r}:Password"]));
+            // Cuentas temporales, exclusivamente en Development. No utilizar en servidores ni con datos reales.
+            var perfiles = new[]
+            {
+                new { Email = config["DemoStudents:Primaria:Email"], Password = config["DemoStudents:Primaria:Password"], Role = "Alumno", Level = "primaria", Name = config["DemoStudents:Primaria:Name"] },
+                new { Email = config["DemoStudents:Secundaria:Email"], Password = config["DemoStudents:Secundaria:Password"], Role = "Alumno", Level = "secundaria", Name = config["DemoStudents:Secundaria:Name"] },
+                new { Email = config["DemoStudents:Preparatoria:Email"], Password = config["DemoStudents:Preparatoria:Password"], Role = "Alumno", Level = "preparatoria", Name = config["DemoStudents:Preparatoria:Name"] },
+                new { Email = config["DemoUsers:Docente:Email"], Password = config["DemoUsers:Docente:Password"], Role = "Docente", Level = "primaria", Name = "Clara" },
+                new { Email = config["DemoUsers:Familia:Email"], Password = config["DemoUsers:Familia:Password"], Role = "Familia", Level = "primaria", Name = "Lucía" }
+            };
 
-            if (rol is null)
+            var perfil = perfiles.FirstOrDefault(p =>
+                !string.IsNullOrWhiteSpace(p.Email)
+                && string.Equals(p.Email, email, StringComparison.OrdinalIgnoreCase)
+                && VerificarClave(model.Password, p.Password));
+
+            if (perfil is null)
             {
                 ModelState.AddModelError("", "Credenciales de demostración incorrectas.");
                 return View(model);
@@ -45,13 +53,15 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
             {
                 new Claim(ClaimTypes.NameIdentifier, email.ToLowerInvariant()),
                 new Claim(ClaimTypes.Name, email),
-                new Claim(ClaimTypes.Role, rol),
+                new Claim(ClaimTypes.Role, perfil.Role),
+                new Claim("DemoLevel", perfil.Level),
+                new Claim("DemoName", perfil.Name ?? "Estudiante"),
                 new Claim("DemoLocal", "true")
             };
             var identity = new ClaimsIdentity(claims, "NexoDemoLocal");
             await HttpContext.SignInAsync("NexoDemoLocal", new ClaimsPrincipal(identity),
                 new AuthenticationProperties { IsPersistent = false, AllowRefresh = true });
-            return RedirigirPorNombreDeRol(rol);
+            return RedirigirPorNombreDeRol(perfil.Role, perfil.Level);
         }
 
         var users = services.GetRequiredService<UserManager<IdentityUser>>();
@@ -73,13 +83,11 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
             ModelState.AddModelError("", "Credenciales incorrectas.");
             return View(model);
         }
-        // Solo las rutas locales permitidas pueden ser destinos de redirección.
-        if (!string.IsNullOrWhiteSpace(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
-            return LocalRedirect(model.ReturnUrl);
 
-        if (await users.IsInRoleAsync(user, "Docente")) return RedirigirPorNombreDeRol("Docente");
-        if (await users.IsInRoleAsync(user, "Familia")) return RedirigirPorNombreDeRol("Familia");
-        if (await users.IsInRoleAsync(user, "Alumno")) return RedirigirPorNombreDeRol("Alumno");
+        // Evita que un ReturnUrl manipulado mande al alumno al panel de otro nivel.
+        if (await users.IsInRoleAsync(user, "Docente")) return RedirigirPorNombreDeRol("Docente", "primaria");
+        if (await users.IsInRoleAsync(user, "Familia")) return RedirigirPorNombreDeRol("Familia", "primaria");
+        if (await users.IsInRoleAsync(user, "Alumno")) return RedirigirPorNombreDeRol("Alumno", "primaria");
 
         await signIn.SignOutAsync();
         ModelState.AddModelError("", "Tu cuenta no tiene un perfil autorizado.");
@@ -89,6 +97,7 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
     [Authorize, HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Salir()
     {
+        HttpContext.Session.Clear();
         if (DemoLocal) await HttpContext.SignOutAsync("NexoDemoLocal");
         else await services.GetRequiredService<SignInManager<IdentityUser>>().SignOutAsync();
         return RedirectToAction("Index", "NexoDemo");
@@ -107,17 +116,17 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
 
     private IActionResult RedirigirPorRolActual()
     {
-        if (User.IsInRole("Docente")) return RedirigirPorNombreDeRol("Docente");
-        if (User.IsInRole("Familia")) return RedirigirPorNombreDeRol("Familia");
-        if (User.IsInRole("Alumno")) return RedirigirPorNombreDeRol("Alumno");
+        if (User.IsInRole("Docente")) return RedirigirPorNombreDeRol("Docente", "primaria");
+        if (User.IsInRole("Familia")) return RedirigirPorNombreDeRol("Familia", "primaria");
+        if (User.IsInRole("Alumno")) return RedirigirPorNombreDeRol("Alumno", User.FindFirst("DemoLevel")?.Value ?? "primaria");
         return RedirectToAction("Index", "NexoDemo");
     }
 
-    private IActionResult RedirigirPorNombreDeRol(string rol) => rol switch
+    private IActionResult RedirigirPorNombreDeRol(string rol, string nivel) => rol switch
     {
-        "Alumno" => RedirectToAction("Estudiante", "NexoDemo"),
-        "Docente" => RedirectToAction("Docente", "NexoDemo"),
-        "Familia" => RedirectToAction("Familia", "NexoDemo"),
+        "Alumno" => RedirectToAction("Estudiante", "NexoDemo", new { nivel }),
+        "Docente" => RedirectToAction("Docente", "NexoDemo", new { nivel }),
+        "Familia" => RedirectToAction("Familia", "NexoDemo", new { nivel }),
         _ => RedirectToAction("Index", "NexoDemo")
     };
 }

@@ -5,13 +5,25 @@ using NEXO_EDU.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.Name = "NexoEdu.Progress.Dev";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
 
-// Este interruptor solo es válido en Development. Aunque existan secretos antiguos
-// de PostgreSQL, la demo no intentará conectarse mientras esté habilitado.
 var demoLocal = builder.Environment.IsDevelopment()
     && builder.Configuration.GetValue<bool>("DemoMode:Enabled");
 
 var connection = builder.Configuration.GetConnectionString("NexoEdu");
+
+// No activar nunca el acceso ficticio fuera de Development.
+if (!builder.Environment.IsDevelopment() && builder.Configuration.GetValue<bool>("DemoMode:Enabled"))
+    throw new InvalidOperationException("DemoMode no está permitido fuera de Development.");
 if (demoLocal)
 {
     builder.Services.AddAuthentication("NexoDemoLocal")
@@ -30,7 +42,9 @@ if (demoLocal)
 else
 {
     if (string.IsNullOrWhiteSpace(connection))
-        throw new InvalidOperationException("Para usar Identity se requiere ConnectionStrings:NexoEdu. En desarrollo puedes habilitar DemoMode:Enabled.");
+        throw new InvalidOperationException(
+            "No se encontró PostgreSQL. Para trabajar sin base de datos, selecciona el perfil " +
+            "'NEXO EDU - Demo local' en Visual Studio (entorno Development).");
 
     builder.Services.AddDbContext<NexoDbContext>(options => options.UseNpgsql(connection));
     builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -64,16 +78,15 @@ if (!demoLocal && app.Environment.IsDevelopment()
 {
     await DemoIdentitySeeder.InitializeAsync(app.Services, app.Configuration);
 }
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(name: "default", pattern: "{controller=NexoDemo}/{action=Index}/{id?}");

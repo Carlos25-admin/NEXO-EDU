@@ -1,30 +1,44 @@
 @{
-    ViewData["Title"] = "Mi aprendizaje";
+    ViewData["Title"] = "Mi espacio de aprendizaje";
     ViewData["Immersive"] = true;
     var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    var nombre = (string?)ViewBag.Nombre ?? "Estudiante";
+    var progreso = ViewBag.Progreso as NEXO_EDU.Services.ProgresoDemo ?? new NEXO_EDU.Services.ProgresoDemo();
     ViewData["CurrentLevel"] = nivel;
     ViewData["LevelAction"] = "Estudiante";
     ViewData["LevelRole"] = "Alumno";
+    var esPrimaria = nivel == "primaria";
+    var esSecundaria = nivel == "secundaria";
+    var meta = esPrimaria ? 70 : esSecundaria ? 180 : 300;
+    var porcentajeMeta = Math.Min(100, (int)(100.0 * progreso.Xp / meta));
 }
-<div class="level-experience @(nivel == "primaria" ? "theme-primary" : nivel == "secundaria" ? "theme-secondary" : "theme-prepa")">
-@if (nivel == "primaria")
+<div class="level-experience @(esPrimaria ? "theme-primary" : esSecundaria ? "theme-secondary" : "theme-prepa")">
+@if(esPrimaria)
 {
     <header class="primary-student-header">
         <a class="level-logo" asp-action="Index"><span class="level-logo-icon">N</span><strong>nexo <small>edu</small></strong></a>
         <nav class="student-topnav"><span class="active">⌂ Mi aventura</span><a asp-action="Mascota">✧ Mis logros</a></nav>
-        <div class="student-xp">☆ 120 XP</div><div class="round-avatar">L</div>
+        <div class="student-xp">☆ @progreso.Xp XP</div><div class="round-avatar">@nombre.Substring(0,1)</div>
         <form asp-controller="Cuenta" asp-action="Salir" method="post">@Html.AntiForgeryToken()<button class="icon-signout" type="submit" aria-label="Cerrar sesión">↗</button></form>
     </header>
     <main class="primary-student-content">
-        <div class="level-preview"><small>Vista de demostración · nivel educativo</small><partial name="_LevelSwitcher"/></div>
-        <div class="primary-greeting"><div><h1>¡Hola, Leo!</h1><p>¿Listo para descubrir algo nuevo?</p></div><span>♨ ¡3 días seguidos!</span></div>
+        <div class="level-preview"><small>Espacio de primaria · Cuenta de demostración</small><partial name="_LevelSwitcher"/></div>
+        <div class="primary-greeting"><div><h1>¡Hola, @nombre!</h1><p>¿Listo para descubrir algo nuevo?</p></div><span>✦ Cada intento cuenta</span></div>
         <section class="primary-hero">
-            <div><span class="tiny-caps">♧ MATEMÁTICAS · 5 MIN</span><h2>El bosque de<br/>los números</h2><div class="tiny-meter"><span></span></div><small>2 de 5 retos · progreso ilustrativo</small><br/><a class="primary-button" asp-action="Aventura" asp-route-nivel="primaria">¡Seguir jugando! ▷</a></div>
-            <div class="number-art" aria-label="Bloques ilustrados con los números 1, 2 y 3"><span class="block-one">1</span><span class="block-two">2</span><span class="block-three">3</span><i class="sun-disc"></i></div>
+            <div><span class="tiny-caps">♧ MATEMÁTICAS · 5 MIN</span><h2>El bosque de<br/>los números</h2><div class="tiny-meter"><span style="width:@(porcentajeMeta)%"></span></div><small>@progreso.Actividades aventuras terminadas · progreso de esta sesión</small><br/><a class="primary-button" asp-action="Aventura" asp-route-nivel="primaria">¡Vamos a jugar! ▷</a></div>
+            <div class="number-art" aria-label="Bloques de números 1, 2 y 3"><span class="block-one">1</span><span class="block-two">2</span><span class="block-three">3</span><i class="sun-disc"></i></div>
         </section>
-        <h2 class="explore-title">También puedes explorar</h2>
-        <div class="primary-explore"><article class="explore-card purple"><span>▣</span><div><strong>Cuentos con magia</strong><small>Escucha y descubre · Próximamente</small></div></article><article class="explore-card mint"><span>♧</span><div><strong>Detectives de la naturaleza</strong><small>Mira, busca y aprende · Próximamente</small></div></article></div>
-        <div class="pet-footer"><span class="mini-pet">✦</span><div><strong>¡Paso a paso lo estás logrando!</strong><small>NEXO PET te acompaña en cada aventura.</small></div><span class="achievement-mini">♙ Tu última insignia <strong>Gran explorador</strong></span></div>
+        <h2 class="explore-title">Mis pequeñas aventuras</h2>
+        <div class="primary-explore">
+            <a class="explore-card purple" asp-action="Aventura" asp-route-nivel="primaria"><span>123</span><div><strong>Contamos juntos</strong><small>Sumas, restas y secuencias · Jugar →</small></div></a>
+            <a class="explore-card mint" asp-action="Mascota"><span>✦</span><div><strong>Cuidemos a Nexi</strong><small>Explora tus logros y evolución →</small></div></a>
+        </div>
+        <div class="student-improvements">
+            <article><span class="mini-icon">★</span><div><strong>Mi experiencia</strong><small>@progreso.Xp XP · etapa @progreso.Etapa de NEXO PET</small></div></article>
+            <article><span class="mini-icon">✓</span><div><strong>Mis aventuras</strong><small>@progreso.Actividades actividades terminadas</small></div></article>
+            <article><span class="mini-icon">♡</span><div><strong>Un paso cada día</strong><small>@(progreso.Mensaje ?? "Empieza jugando y celebra cada intento.")</small></div></article>
+        </div>
+        <div class="pet-footer"><span class="mini-pet">✦</span><div><strong>¡Paso a paso lo estás logrando!</strong><small>NEXO PET te acompaña en cada aventura.</small></div><a asp-action="Mascota" class="achievement-mini">Ver mi mascota →</a></div>
     </main>
 }
 else
@@ -32,12 +46,35 @@ else
     <div class="level-app-shell">
         <partial name="_LevelSidebar"/>
         <main class="level-main">
-            <div class="level-page-top"><span>@(nivel == "secundaria" ? "Tu espacio para explorar y superarte" : "Tu espacio para construir tu futuro")</span><span>Hack4Edu · Prototipo</span></div>
-            <div class="level-preview"><small>Comparar diseño de niveles</small><partial name="_LevelSwitcher"/></div>
-            <div class="level-heading"><h1>@(nivel == "secundaria" ? "¡Hola, Sofía! Sigue descubriendo." : "Hola, Alex. Tu progreso importa.")</h1><p>@(nivel == "secundaria" ? "Cada misión te ayuda a fortalecer lo que sabes." : "Organiza tus objetivos, mide tus avances y desarrolla nuevas competencias.")</p></div>
-            <section class="level-banner"><div><span class="tiny-caps">@(nivel == "secundaria" ? "TU MISIÓN ACTUAL · MATEMÁTICAS" : "RUTA DE APRENDIZAJE · ÁLGEBRA")</span><h2>@(nivel == "secundaria" ? "Explora el mundo de las fracciones" : "Comprende y aplica funciones lineales")</h2><p>@(nivel == "secundaria" ? "Desafíos de 10 minutos y apoyo cuando lo necesites." : "Practica con ejercicios aplicados, revisa tus fortalezas y da seguimiento a tus metas.")</p><a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@nivel">@(nivel == "secundaria" ? "Empezar misión →" : "Comenzar evaluación →")</a></div><div class="banner-symbol">@(nivel == "secundaria" ? "✦" : "ƒ(x)")</div></section>
-            <div class="level-metrics"><article><span>PROGRESO GENERAL</span><strong>@(nivel == "secundaria" ? "72%" : "81%")</strong><small>Ejemplo ilustrativo</small></article><article><span>RETOS SUPERADOS</span><strong>@(nivel == "secundaria" ? "8/12" : "14/18")</strong><small>Misiones académicas</small></article><article><span>META ACTUAL</span><strong>@(nivel == "secundaria" ? "Fracciones" : "Funciones")</strong><small>Una habilidad a la vez</small></article></div>
-            <div class="level-two-cols"><article class="level-white-card"><h2>@(nivel == "secundaria" ? "Tu ruta recomendada" : "Plan académico personal")</h2><p>Refuerza los conceptos a tu propio ritmo y revisa tus resultados después de cada actividad.</p><div class="route-item"><span class="route-icon">∑</span><div><strong>Matemáticas</strong><small>@(nivel == "secundaria" ? "Fracciones equivalentes" : "Funciones y ecuaciones")</small></div><span class="route-tag">En curso</span></div><div class="route-item"><span class="route-icon">▣</span><div><strong>Comprensión lectora</strong><small>@(nivel == "secundaria" ? "Identificar ideas principales" : "Análisis de textos argumentativos")</small></div><span class="route-tag neutral">Próximamente</span></div></article><article class="level-white-card companion-card"><h2>@(nivel == "secundaria" ? "Tu compañero NEXO PET" : "Tu asistente de progreso")</h2><div class="companion-glyph">@(nivel == "secundaria" ? "✦" : "◇")</div><strong>@(nivel == "secundaria" ? "Explorador · Etapa 2" : "Metas académicas")</strong><p>@(nivel == "secundaria" ? "Evoluciona con tus aprendizajes y esfuerzo." : "Reconoce tus avances y mantén la constancia.")</p><a asp-action="Mascota">Ver progreso →</a></article></div>
+            <div class="level-page-top"><span>@(esSecundaria ? "Tu espacio para explorar y superarte" : "Tu espacio para construir tu futuro")</span><span>Prototipo · Sesión de demostración</span></div>
+            <div class="level-preview"><small>Nivel educativo asociado a tu cuenta</small><partial name="_LevelSwitcher"/></div>
+            <div class="level-heading"><h1>@(esSecundaria ? $"¡Hola, {nombre}! Sigue descubriendo." : $"Hola, {nombre}. Diseña tu siguiente paso.")</h1><p>@(esSecundaria ? "Resuelve retos, descubre fortalezas y encuentra apoyo cuando lo necesites." : "Trabaja con metas, competencias y evaluaciones que te ayudan a tomar decisiones.")</p></div>
+            <section class="level-banner">
+                <div><span class="tiny-caps">@(esSecundaria ? "MISIÓN RECOMENDADA · MATEMÁTICAS" : "TRAYECTORIA ACADÉMICA · ÁLGEBRA")</span>
+                    <h2>@(esSecundaria ? "Desafío de fracciones" : "Funciones para resolver problemas")</h2>
+                    <p>@(esSecundaria ? "Identifica equivalencias, operaciones y porcentajes. Aprende con retos cortos." : "Analiza ecuaciones, pendientes y funciones lineales para fortalecer tu pensamiento matemático.")</p>
+                    <a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@nivel">@(esSecundaria ? "Comenzar desafío →" : "Evaluar mis habilidades →")</a>
+                </div><div class="banner-symbol">@(esSecundaria ? "✦" : "ƒ(x)")</div>
+            </section>
+            <div class="level-metrics">
+                <article><span>EXPERIENCIA CONSEGUIDA</span><strong>@progreso.Xp XP</strong><small>Acumulada durante esta sesión</small></article>
+                <article><span>ACTIVIDADES COMPLETADAS</span><strong>@progreso.Actividades</strong><small>Desafíos finalizados</small></article>
+                <article><span>ÚLTIMA EVALUACIÓN</span><strong>@(progreso.Actividades > 0 ? progreso.UltimoPorcentaje.ToString() + "%" : "—")</strong><small>@(progreso.UltimaRuta ?? "Sin actividad completada")</small></article>
+            </div>
+            <div class="level-two-cols">
+                <article class="level-white-card">
+                    <h2>@(esSecundaria ? "Tu ruta personalizada" : "Tu plan de competencias")</h2>
+                    <p>Avanza con una ruta que se ajusta a los resultados de los ejercicios. Aquí verás las próximas recomendaciones.</p>
+                    <div class="route-item"><span class="route-icon">∑</span><div><strong>Matemáticas</strong><small>@(esSecundaria ? "Fracciones y porcentajes" : "Funciones y ecuaciones")</small></div><a class="route-tag" asp-action="Aventura" asp-route-nivel="@nivel">Practicar</a></div>
+                    <div class="route-item"><span class="route-icon">▤</span><div><strong>@(esSecundaria ? "Comprensión lectora" : "Análisis y argumentación")</strong><small>Contenido curricular en preparación</small></div><span class="route-tag neutral">Próximamente</span></div>
+                    <div class="route-item"><span class="route-icon">⚗</span><div><strong>@(esSecundaria ? "Ciencias" : "Pensamiento científico")</strong><small>Contenido curricular en preparación</small></div><span class="route-tag neutral">Próximamente</span></div>
+                </article>
+                <article class="level-white-card companion-card"><h2>@(esSecundaria ? "NEXO PET: compañero de retos" : "Tu asistente de progreso")</h2><div class="companion-glyph">@(esSecundaria ? "✦" : "◇")</div><strong>Etapa @progreso.Etapa · @progreso.Xp XP</strong><p>@(progreso.Mensaje ?? (esSecundaria ? "Tu compañero también aprende con tus intentos." : "Evalúa tus fortalezas y organiza tus siguientes objetivos."))</p><div class="horizontal-bar"><span style="width:@(porcentajeMeta)%"></span></div><a asp-action="Mascota">Consultar evolución →</a></article>
+            </div>
+            <div class="level-two-cols">
+                <article class="level-white-card"><h2>@(esSecundaria ? "Misiones de esta semana" : "Metas de aprendizaje")</h2><p>Completa un desafío de matemáticas y utiliza tus resultados para definir tu siguiente práctica.</p><a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@nivel">Comenzar ahora →</a></article>
+                <article class="level-white-card"><h2>Seguimiento responsable</h2><p>Los resultados y alertas serán revisados por docentes cuando se integren grupos reales. Ninguna alerta sustituye una valoración educativa.</p><span class="route-tag neutral">Datos temporales</span></article>
+            </div>
         </main>
     </div>
 }

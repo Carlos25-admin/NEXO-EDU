@@ -1,8 +1,34 @@
 @model NEXO_EDU.Services.ResultadoAventuraDemo
 @{
     ViewData["Title"] = "Resultado de mi aventura";
+    var progreso = ViewBag.Progreso as NEXO_EDU.Services.ProgresoDemo ?? new NEXO_EDU.Services.ProgresoDemo();
 }
 <section class="level-activity-wrap theme-@(Model.Nivel)">
-    <div class="activity-header"><a asp-action="Estudiante" asp-route-nivel="@Model.Nivel">← Mi espacio</a><span class="tiny-caps">NEXO LEARN · DEMOSTRACIÓN</span></div>
-    <div class="activity-result"><div class="activity-friendly-icon">✦</div><span class="tiny-caps">¡BIEN HECHO!</span><h1>¡Terminaste tu aventura!</h1><p>Respondiste correctamente @Model.Correctas de @Model.Total retos.</p><div class="result-stats"><div><strong>@Model.Porcentaje%</strong><small>Respuestas correctas</small></div><div><strong>+@Model.Xp XP</strong><small>Experiencia de ejemplo</small></div></div><p>Los errores son parte del aprendizaje. Puedes volver a practicar cuando quieras.</p><a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@Model.Nivel">Intentarlo otra vez ↻</a></div>
+    <div class="activity-header"><a asp-action="Estudiante" asp-route-nivel="@Model.Nivel">← Mi espacio</a><span class="tiny-caps">NEXO LEARN · RESULTADO DE PRUEBA</span></div>
+    <div class="activity-result">
+        <div class="activity-friendly-icon">✦</div><span class="tiny-caps">¡BIEN HECHO!</span>
+        <h1>¡Terminaste tu aventura!</h1>
+        <p>Respondiste correctamente @Model.Correctas de @Model.Total retos.</p>
+        <div class="result-stats">
+            <div><strong>@Model.Porcentaje%</strong><small>Respuestas correctas</small></div>
+            <div><strong>+@Model.Xp XP</strong><small>De esta actividad</small></div>
+            <div><strong>@progreso.Xp XP</strong><small>Total de tu sesión</small></div>
+        </div>
+        <p>@progreso.Mensaje</p>
+        <a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@Model.Nivel">Practicar de nuevo ↻</a>
+        <a class="level-secondary-action" asp-action="Mascota">Ver evolución de NEXO PET →</a>
+    </div>
+    <article class="activity-review">
+        <h2>Aprende de tus respuestas</h2>
+        <p>Revisa cómo resolver cada pregunta. Equivocarte también forma parte del proceso.</p>
+        @foreach(var detalle in Model.Detalles)
+        {
+            <div class="review-row">
+                <span class="@(detalle.Correcta ? "review-ok" : "review-help")">@(detalle.Correcta ? "✓" : "✦")</span>
+                <div><strong>@detalle.Numero. @detalle.Enunciado</strong>
+                    <p>Respuesta: <b>@detalle.RespuestaCorrecta</b></p><small>@detalle.Explicacion</small></div>
+            </div>
+        }
+    </article>
+    <p class="fine-print">Resultados temporales del navegador, no evaluaciones escolares registradas.</p>
 </section>
