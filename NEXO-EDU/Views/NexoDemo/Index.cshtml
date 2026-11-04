@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "NEXO LEARN · Demostración";
+}
+<div class="nexo-shell">
+    <p class="nexo-eyebrow">NEXO EDU · Hack4Edu · Prototipo de aprendizaje</p>
+    <h1>Aprende a tu ritmo</h1>
+    <p>Diagnóstico inicial de fracciones. Esta demostración utiliza respuestas ficticias y reglas transparentes.</p>
+    <div class="nexo-grid">
+        <section class="nexo-card">
+            <h2>NEXO LEARN</h2>
+            <form method="post" asp-controller="NexoDemo" asp-action="Evaluar">
+                @Html.AntiForgeryToken()
+                <fieldset><legend>1. ¿Cuánto es 1/2 + 1/2?</legend>
+                    <label><input required type="radio" name="a1" value="A"/> 1/2</label>
+                    <label><input type="radio" name="a1" value="B"/> 1</label>
+                    <label><input type="radio" name="a1" value="C"/> 2</label>
+                </fieldset>
+                <fieldset><legend>2. ¿Qué fracción equivale a 2/4?</legend>
+                    <label><input required type="radio" name="a2" value="A"/> 1/2</label>
+                    <label><input type="radio" name="a2" value="B"/> 3/4</label>
+                    <label><input type="radio" name="a2" value="C"/> 1/4</label>
+                </fieldset>
+                <fieldset><legend>3. ¿Cuánto es 3/4 - 1/4?</legend>
+                    <label><input required type="radio" name="a3" value="A"/> 1/4</label>
+                    <label><input type="radio" name="a3" value="B"/> 3/4</label>
+                    <label><input type="radio" name="a3" value="C"/> 1/2</label>
+                </fieldset>
+                <button type="submit" class="nexo-primary">Evaluar mi progreso</button>
+            </form>
+        </section>
+        <aside class="nexo-card">
+            <div class="nexo-pet">✦</div>
+            <h2>NEXO PET</h2>
+            <p>Soy Nexi, tu compañero. Evoluciono con tu esfuerzo y tus nuevos conocimientos.</p>
+            <div class="nexo-progress"><span></span></div>
+            <small>Etapa 1 · Explorador inicial</small>
+            <h3>NEXO CONNECT</h3>
+            <p>Los docentes y las familias tendrán sus propios paneles con permisos diferenciados.</p>
+        </aside>
+    </div>
+</div>
+<link rel="stylesheet" href="~/css/nexo-demo.css" asp-append-version="true" />

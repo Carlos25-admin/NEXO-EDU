@@ -1,0 +1,27 @@
+@model NEXO_EDU.Controllers.DemoResultado
+@{
+    ViewData["Title"] = "Resultados · NEXO EDU";
+    var porcentaje = Model.Total == 0 ? 0 : 100 * Model.Correctas / Model.Total;
+    var etapa = Model.Experiencia >= 180 ? 3 : Model.Experiencia >= 70 ? 2 : 1;
+}
+<div class="nexo-shell">
+    <p class="nexo-eyebrow">NEXO EDU · Seguimiento de aprendizaje</p>
+    <h1>Tu diagnóstico</h1>
+    <div class="nexo-grid">
+        <section class="nexo-card">
+            <h2>@porcentaje% de respuestas correctas</h2>
+            <p>Ruta recomendada: <strong>@Model.Ruta</strong></p>
+            <p>Si tuviste dificultades, puedes practicar con ejemplos guiados. Un error es una oportunidad para aprender.</p>
+            <h3>NEXO ALERT (simulación)</h3>
+            <p>Nivel orientativo: <strong>@Model.NivelAlerta</strong>. Las alertas requieren revisión docente.</p>
+            <a class="nexo-primary" asp-controller="NexoDemo" asp-action="Index">Volver a practicar</a>
+        </section>
+        <aside class="nexo-card">
+            <div class="nexo-pet">✦</div>
+            <h2>¡Nexi consiguió @Model.Experiencia XP!</h2>
+            <p>Etapa @etapa · Las mascotas nunca pierden progreso por equivocaciones.</p>
+            <p>En la siguiente versión guardaremos tus intentos y evolución en PostgreSQL.</p>
+        </aside>
+    </div>
+</div>
+<link rel="stylesheet" href="~/css/nexo-demo.css" asp-append-version="true" />
