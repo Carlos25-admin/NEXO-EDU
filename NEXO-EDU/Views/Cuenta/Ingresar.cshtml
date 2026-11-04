@@ -1,6 +1,9 @@
 @model NEXO_EDU.Models.LoginViewModel
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Ambiente
+@inject Microsoft.Extensions.Configuration.IConfiguration Config
 @{
     ViewData["Title"] = "Iniciar sesión";
+    var modoLocal = Ambiente.IsDevelopment() && string.IsNullOrWhiteSpace(Config.GetConnectionString("NexoEdu"));
 }
 <section class="auth-page page-width">
     <div class="auth-intro">
@@ -16,7 +19,10 @@
     <div class="auth-card">
         <span class="eyebrow">TU ESPACIO PERSONAL</span>
         <h2>Inicia sesión</h2>
-        <p>Usa las credenciales de prueba configuradas por el equipo.</p>
+        @if (modoLocal)
+        {
+            <div class="auth-note"><strong>Modo de prueba sin PostgreSQL.</strong> Las cuentas se validan únicamente contra los secretos locales del equipo y no almacenan información.</div>
+        }
         <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ReturnUrl" />
@@ -25,6 +31,6 @@
             <div class="auth-field"><label asp-for="Password"></label><input asp-for="Password" autocomplete="current-password" placeholder="Tu contraseña" /><span asp-validation-for="Password" class="validation-message"></span></div>
             <button class="btn btn-primary auth-submit" type="submit">Ingresar a NEXO EDU →</button>
         </form>
-        <div class="auth-note">Acceso protegido con ASP.NET Core Identity. No existe registro público en esta versión de demostración.</div>
+        <div class="auth-note">Prototipo local sin datos reales. El inicio de sesión con Identity y PostgreSQL queda preparado para una etapa posterior.</div>
     </div>
 </section>
