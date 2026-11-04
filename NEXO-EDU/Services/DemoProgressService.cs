@@ -6,6 +6,7 @@ namespace NEXO_EDU.Services;
 // Solo almacena resultados ficticios dentro de la sesión del navegador. No es un expediente escolar.
 public sealed class ProgresoDemo
 {
+    public Dictionary<string, int> NivelesSuperados { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public int Xp { get; set; }
     public int Actividades { get; set; }
     public int UltimoPorcentaje { get; set; }
@@ -24,6 +25,27 @@ public static class DemoProgressService
         if (string.IsNullOrWhiteSpace(json)) return new ProgresoDemo();
         try { return JsonSerializer.Deserialize<ProgresoDemo>(json) ?? new ProgresoDemo(); }
         catch (JsonException) { return new ProgresoDemo(); }
+    }
+
+    // Avance lineal por módulo; solo se recompensa la primera aprobación.
+    public static int MaximoDesbloqueado(ProgresoDemo progreso, string clave)
+    {
+        progreso.NivelesSuperados ??= new(StringComparer.OrdinalIgnoreCase);
+        return Math.Min(5, progreso.NivelesSuperados.GetValueOrDefault(clave, 0) + 1);
+    }
+
+    public static bool AprobarNivel(ISession session, string? email, string clave, int nivel,
+        ResultadoAventuraDemo resultado, string materia)
+    {
+        var progreso = Leer(session, email);
+        progreso.NivelesSuperados ??= new(StringComparer.OrdinalIgnoreCase);
+        var completado = progreso.NivelesSuperados.GetValueOrDefault(clave, 0);
+        if (nivel < 1 || nivel > 5 || nivel > completado + 1 || nivel <= completado) return false;
+        progreso.NivelesSuperados[clave] = nivel;
+        // Registrar es el único punto que suma XP y guarda la sesión.
+        session.SetString(Key(email), JsonSerializer.Serialize(progreso));
+        Registrar(session, email, resultado, materia);
+        return true;
     }
 
     public static ProgresoDemo Registrar(ISession session, string? email, ResultadoAventuraDemo resultado, string? materia = null)

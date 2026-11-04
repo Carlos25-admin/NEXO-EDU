@@ -1,30 +1,42 @@
 @using NEXO_EDU.Services
 @using NEXO_EDU.Models
-@{
-    ViewData["Title"] = "Biblioteca de aprendizaje";
-}
-<link rel="stylesheet" href="~/css/nexo-modulos.css" asp-append-version="true" />
 @model IReadOnlyList<LeccionNexo>
 @{
+    ViewData["Title"] = "Biblioteca de aprendizaje";
     var nivel = (string?)ViewBag.Nivel ?? "primaria";
     var nombre = (string?)ViewBag.Nombre ?? "Estudiante";
     var progreso = ViewBag.Progreso as ProgresoDemo ?? new ProgresoDemo();
     var css = nivel == "secundaria" ? "secondary" : nivel == "preparatoria" ? "prepa" : "";
+    var superados = Model.Sum(m => Math.Max(0, DemoProgressService.MaximoDesbloqueado(progreso, m.Clave) - 1));
 }
 <div class="module-page @css">
-    <div class="module-top"><a class="module-back" asp-controller="NexoDemo" asp-action="Estudiante">← Volver a mi espacio</a><span class="module-tag">@NivelDemo.Nombre(nivel)</span></div>
-    <section class="module-hero"><span class="module-tag">RUTA DE APRENDIZAJE</span><h1 class="module-title">¡Hola, @nombre! Elige tu próximo reto.</h1>
-      <p class="module-subtitle">Explora distintas materias, resuelve ejercicios y recibe una explicación después de cada respuesta.</p>
-      <div class="module-summary"><div class="module-stat"><strong>@Model.Count</strong> rutas disponibles</div><div class="module-stat"><strong>@progreso.Actividades</strong> prácticas terminadas</div><div class="module-stat"><strong>@progreso.Xp</strong> XP de esta sesión</div></div>
-    </section>
-    <div class="module-grid">
-        @foreach(var l in Model)
-        {
-          <article class="module-card"><div class="module-icon">@l.Icono</div><span class="module-category">@l.Materia</span><h2>@l.Titulo</h2>
-            <p>@l.Descripcion</p><small>@l.Preguntas.Count preguntas · Corrección al finalizar</small>
-            <a class="module-action" asp-action="Resolver" asp-route-clave="@l.Clave">Comenzar actividad →</a>
-          </article>
-        }
+  <div class="module-top"><a class="module-back" asp-controller="NexoDemo" asp-action="Estudiante">← Volver a mi espacio</a><span class="module-tag">@NivelDemo.Nombre(nivel)</span></div>
+  <section class="module-hero">
+    <span class="module-tag">NEXO LEARN · 5 NIVELES POR MATERIA</span>
+    <h1 class="module-title">¡Hola, @nombre! Tu aventura continúa.</h1>
+    <p class="module-subtitle">Elige una materia y supera cinco niveles con retos nuevos, explicaciones y logros. Cada materia avanza a tu ritmo.</p>
+    <div class="module-summary">
+      <div class="module-stat"><strong>@Model.Count</strong> materias</div>
+      <div class="module-stat"><strong>@superados / @(Model.Count*5)</strong> niveles superados</div>
+      <div class="module-stat"><strong>@progreso.Xp</strong> XP de sesión</div>
     </div>
-    <p class="module-info">Banco de ejercicios de demostración. El progreso se conserva temporalmente en la sesión; todavía no constituye un expediente académico.</p>
+  </section>
+  <div class="module-grid">
+    @foreach(var modulo in Model)
+    {
+      var siguiente = DemoProgressService.MaximoDesbloqueado(progreso, modulo.Clave);
+      var aprobados = progreso.NivelesSuperados?.GetValueOrDefault(modulo.Clave,0) ?? 0;
+      <article class="module-card module-card--path">
+        <span class="module-icon" aria-hidden="true">@modulo.Icono</span><span class="module-category">@modulo.Materia</span>
+        <h2>@modulo.Titulo</h2><p>@modulo.Descripcion</p>
+        <div class="module-path-dots" aria-label="@aprobados de 5 niveles completados">
+          @for(var n=1;n<=5;n++){<span class="@(n <= aprobados ? "done" : n == siguiente ? "active" : "locked")" title="Nivel @n">@(n <= aprobados ? "✓" : n.ToString())</span>}
+        </div>
+        <div class="module-progress-line"><span style="width:@(aprobados*20)%"></span></div>
+        <small>@(aprobados==5 ? "Ruta terminada · ¡Felicidades!" : $"Nivel {siguiente} disponible de 5")</small>
+        <a class="module-action" asp-action="Ruta" asp-route-clave="@modulo.Clave">@(aprobados==5 ? "Repasar mis niveles →" : "Continuar mi ruta →")</a>
+      </article>
+    }
+  </div>
+  <p class="module-info">Aprendizaje de demostración: niveles, XP y logros permanecen en esta sesión, todavía no en PostgreSQL.</p>
 </div>

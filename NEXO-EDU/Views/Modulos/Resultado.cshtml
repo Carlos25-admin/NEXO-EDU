@@ -1,23 +1,36 @@
 @using NEXO_EDU.Services
-@using NEXO_EDU.Models
+@model ResultadoNivelViewModel
 @{
-    ViewData["Title"] = "Mis resultados";
-}
-<link rel="stylesheet" href="~/css/nexo-modulos.css" asp-append-version="true" />
-@model RevisionLeccionNexo
-@{
-    var css = Model.Leccion.Nivel == "secundaria" ? "secondary" : Model.Leccion.Nivel == "preparatoria" ? "prepa" : "";
+    ViewData["Title"] = "Resultado del nivel " + Model.Nivel;
+    var revision = Model.Revision;
+    var modulo = revision.Leccion;
+    var css = modulo.Nivel == "secundaria" ? "secondary" : modulo.Nivel == "preparatoria" ? "prepa" : "";
 }
 <div class="module-page @css">
-    <div class="module-top"><a class="module-back" asp-action="Biblioteca">← Regresar a mis materias</a><span class="module-tag">@Model.Leccion.Materia</span></div>
-    <section class="module-hero"><span class="module-tag">RESULTADOS Y RETROALIMENTACIÓN</span><h1 class="module-title">@Model.Aciertos de @Model.Total respuestas correctas</h1><p class="module-subtitle">@Model.Recomendacion</p>
-      <div class="module-summary"><div class="module-stat"><strong>@Model.Porcentaje%</strong> aciertos</div><div class="module-stat"><strong>+@Model.Experiencia</strong> XP</div></div>
+    <div class="module-top"><a class="module-back" asp-action="Ruta" asp-route-clave="@modulo.Clave">← Volver a la ruta</a><span class="module-tag">@modulo.Materia · Nivel @Model.Nivel</span></div>
+    <section class="module-hero">
+      <span class="module-tag">@(Model.Aprobado ? "✦ NIVEL SUPERADO" : "REFUERZO RECOMENDADO")</span>
+      <h1 class="module-title">@(Model.Aprobado ? "¡Lo lograste!" : "¡Buen intento, sigue practicando!")</h1>
+      <p class="module-subtitle">Respondiste correctamente @revision.Aciertos de @revision.Total preguntas. @(Model.Aprobado ? (Model.Nivel==5 ? "¡Completaste la ruta de esta materia!" : "Ya puedes avanzar al siguiente nivel.") : "Revisa las explicaciones y vuelve a intentarlo.")</p>
+      <div class="module-summary">
+        <div class="module-stat"><strong>@revision.Porcentaje%</strong> aciertos</div>
+        <div class="module-stat"><strong>+@Model.PuntosOtorgados</strong> XP nuevos</div>
+        <div class="module-stat"><strong>@Model.MejorNivel / 5</strong> desbloqueado</div>
+      </div>
+      @if(Model.Aprobado && !Model.RecompensaNueva){<p class="module-info">Este nivel ya estaba superado: no se vuelve a sumar XP por repetirlo.</p>}
     </section>
     <h2>Aprende de cada respuesta</h2>
-    @foreach(var r in Model.Respuestas)
+    @foreach(var r in revision.Respuestas)
     {
        <article class="module-result @(r.Acertada ? "correct" : "review")"><strong>@(r.Acertada ? "✓ Correcto" : "↻ Para repasar") · @r.Numero. @r.Enunciado</strong><p>Respuesta correcta: <strong>@r.Correcta</strong></p><p>@r.Explicacion</p></article>
     }
-    <div class="module-actions"><a class="module-action" asp-action="Resolver" asp-route-clave="@Model.Leccion.Clave">Volver a practicar</a><a class="module-outline" asp-action="Biblioteca">Explorar otra materia</a></div>
-    <p class="module-info">Los puntos de esta actividad se acumulan en esta sesión; la persistencia en PostgreSQL se implementará en una etapa posterior.</p>
+    <div class="module-actions">
+      @if(Model.Aprobado && Model.Nivel < 5){
+        <a class="module-action" asp-action="Resolver" asp-route-clave="@modulo.Clave" asp-route-nivel="@(Model.Nivel+1)">Continuar al nivel @(Model.Nivel+1) →</a>
+      }
+      <a class="module-outline" asp-action="Resolver" asp-route-clave="@modulo.Clave" asp-route-nivel="@Model.Nivel">Practicar de nuevo</a>
+      <a class="module-outline" asp-action="Ruta" asp-route-clave="@modulo.Clave">Ver todos los niveles</a>
+      <a class="module-outline" asp-controller="NexoDemo" asp-action="Mascota">Ver mi NEXO PET</a>
+    </div>
+    <p class="module-info">Los resultados y desbloqueos pertenecen al prototipo de sesión; todavía no son registros permanentes de PostgreSQL.</p>
 </div>

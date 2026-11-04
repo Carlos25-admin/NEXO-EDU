@@ -32,3 +32,28 @@
 .module-highlight{background:var(--m-tint);border-radius:18px;padding:23px;margin:20px 0}
 .module-highlight h2{font-size:1.2rem;margin:0 0 9px}.module-highlight p{margin:0;color:#4d5e73}
 @media(max-width:600px){.module-page{padding:24px 15px 50px}.module-hero{padding:22px}.module-card{padding:19px}.module-question{padding:17px}.module-action{width:100%}}
+
+/* Misiones progresivas: estados visuales por materia y nivel */
+.module-card--path{position:relative;overflow:hidden}
+.module-card--path::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:linear-gradient(90deg,var(--m-accent),#89d9d3)}
+.module-path-dots{display:flex;align-items:center;gap:7px;margin:8px 0 2px}
+.module-path-dots span{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:.81rem}
+.module-path-dots .done{background:#dff8ed;color:#177b5e}
+.module-path-dots .active{background:var(--m-accent);color:#fff;box-shadow:0 6px 12px #27356825}
+.module-path-dots .locked{background:#edf0f4;color:#9aa6b7}
+.module-progress-line{height:8px;width:100%;background:#e8edf4;border-radius:99px;overflow:hidden}
+.module-progress-line span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--m-accent),#60cdbd)}
+.module-level-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:17px;margin:22px 0 32px}
+.module-level{border:1px solid #e0e5ef;background:#fff;border-radius:24px;padding:25px;display:flex;flex-direction:column;gap:10px;position:relative;min-height:284px;box-shadow:0 10px 26px #25305c09}
+.module-level.available{border:2px solid var(--m-accent);box-shadow:0 15px 32px #25305c16}
+.module-level.completed{background:linear-gradient(150deg,#f3fff8,#fff);border-color:#badfcf}
+.module-level.locked{background:#f4f6f9;color:#8290a4}
+.module-level__top{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;font-weight:900;letter-spacing:.1em}
+.module-level__top span:last-child{font-size:1.35rem}
+.module-level__number{font-size:3.3rem;font-weight:900;line-height:1;color:var(--m-accent)}
+.module-level.locked .module-level__number{color:#aeb7c5}
+.module-level h2{font-size:1.13rem;line-height:1.25;color:#24344f;margin:3px 0}
+.module-level p{font-size:.9rem;line-height:1.55;color:#63718a;margin:0;flex:1}
+.module-level .module-action{margin-top:8px;max-width:100%;width:auto}
+.module-level__status{display:block;font-size:.78rem;font-weight:800;color:#8b96a5;margin-top:8px}
+@media(max-width:600px){.module-level-grid{grid-template-columns:1fr}.module-level{min-height:245px}}

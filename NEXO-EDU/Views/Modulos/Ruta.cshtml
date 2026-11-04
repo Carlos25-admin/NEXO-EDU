@@ -1,0 +1,32 @@
+@using NEXO_EDU.Services
+@model RutaNivelViewModel
+@{
+    ViewData["Title"] = Model.Modulo.Materia + " · Mi ruta";
+    var css = Model.Modulo.Nivel == "secundaria" ? "secondary" : Model.Modulo.Nivel == "preparatoria" ? "prepa" : "";
+    var nombres = new [] { "Primeros pasos", "Explora y comprende", "Aplica lo aprendido", "Desafío experto", "Misión final" };
+}
+<div class="module-page @css">
+  <div class="module-top"><a class="module-back" asp-action="Biblioteca">← Todas las materias</a><span class="module-tag">@Model.Modulo.Materia</span></div>
+  <section class="module-hero">
+    <span class="module-tag">RUTA DE CINCO NIVELES · @Model.Modulo.Icono</span>
+    <h1 class="module-title">@Model.Modulo.Titulo</h1>
+    <p class="module-subtitle">@Model.Modulo.Descripcion Cada misión tiene preguntas distintas y retroalimentación al terminar.</p>
+    <div class="module-summary"><div class="module-stat"><strong>@Model.TotalNiveles</strong> niveles</div><div class="module-stat"><strong>@Model.PreguntasDisponibles</strong> preguntas</div><div class="module-stat"><strong>@Math.Min(5,Model.NivelMaximo)</strong> nivel disponible</div></div>
+  </section>
+  <div class="module-level-grid">
+    @for (var n=1;n<=Model.TotalNiveles;n++)
+    {
+      var disponible = n <= Model.NivelMaximo;
+      var terminado = n < Model.NivelMaximo || (n==5 && Model.NivelMaximo==5 && (ViewBag.Progreso as ProgresoDemo)?.NivelesSuperados?.GetValueOrDefault(Model.Modulo.Clave,0)==5);
+      <article class="module-level @(terminado ? "completed" : disponible ? "available" : "locked")">
+        <div class="module-level__top"><span>NIVEL @n</span><span aria-hidden="true">@(terminado ? "✓" : disponible ? "✦" : "🔒")</span></div>
+        <div class="module-level__number">@n</div>
+        <h2>@nombres[n-1]</h2>
+        <p>@(n==1 ? "Construye las bases y reconoce ideas principales." : n==2 ? "Relaciona conceptos con nuevos ejemplos." : n==3 ? "Resuelve situaciones y conecta aprendizajes." : n==4 ? "Analiza problemas de mayor complejidad." : "Integra lo aprendido en un desafío final.")</p>
+        @if(disponible){<a class="module-action" asp-action="Resolver" asp-route-clave="@Model.Modulo.Clave" asp-route-nivel="@n">@(terminado ? "Practicar de nuevo" : "Comenzar reto →")</a>}
+        else{<span class="module-level__status">Supera el nivel @(n-1) para desbloquear</span>}
+      </article>
+    }
+  </div>
+  <div class="module-highlight"><h2>¿Cómo avanzo?</h2><p>Responde las preguntas y consigue al menos el 65% de aciertos. Puedes repetir cada misión. Ganas XP solo la primera vez que superas un nivel; no pierdes experiencia por equivocarte.</p></div>
+</div>
