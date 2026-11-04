@@ -3,31 +3,34 @@ using NEXO_EDU.Services;
 
 namespace NEXO_EDU.Controllers;
 
-// Solo datos sintéticos para mostrar el flujo; no es un módulo de producción.
-public sealed class NexoDemoController(IWebHostEnvironment environment) : Controller
+// Vistas públicas de DEMOSTRACIÓN con datos simulados; no existen usuarios autenticados aún.
+public sealed class NexoDemoController : Controller
 {
-    private bool Disponible => environment.IsDevelopment();
+    [HttpGet] public IActionResult Index() => View();
+    [HttpGet] public IActionResult Estudiante() => View();
+    [HttpGet] public IActionResult Docente() => View();
+    [HttpGet] public IActionResult Familia() => View();
+    [HttpGet] public IActionResult Mascota() => View();
 
     [HttpGet]
-    public IActionResult Index()
-    {
-        if (!Disponible) return NotFound();
-        return View();
-    }
+    public IActionResult Diagnostico() => View(DemoCurriculum.Preguntas);
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Evaluar([FromForm] string? a1, [FromForm] string? a2, [FromForm] string? a3)
+    public IActionResult Evaluar()
     {
-        if (!Disponible) return NotFound();
-        var respuestas = new[] { a1, a2, a3 };
-        var esperadas = new[] { "B", "A", "C" };
-        int correctas = respuestas.Where((r, i) => r == esperadas[i]).Count();
-        var ruta = NexoLearning.Ruta(correctas, esperadas.Length);
-        var nivel = NexoLearning.NivelAlerta(correctas, esperadas.Length);
-        var xp = NexoLearning.Experiencia(correctas, esperadas.Length);
-        return View("Resultado", new DemoResultado(correctas, esperadas.Length, ruta, nivel, xp));
+        var respuestas = new Dictionary<int, int>();
+        foreach (var p in DemoCurriculum.Preguntas)
+        {
+            if (!int.TryParse(Request.Form["q" + p.Id].ToString(), out var opcion) ||
+                opcion < 0 || opcion >= p.Opciones.Length)
+            {
+                ModelState.AddModelError("", "Responde todas las preguntas para continuar.");
+                return View("Diagnostico", DemoCurriculum.Preguntas);
+            }
+            respuestas[p.Id] = opcion;
+        }
+        var evaluacion = DemoCurriculum.Evaluar(respuestas);
+        return View("Resultado", evaluacion);
     }
 }
-
-public sealed record DemoResultado(int Correctas, int Total, string Ruta, string NivelAlerta, int Experiencia);

@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Panel del estudiante";
+}
+<section class="dashboard page-width">
+  <div class="dashboard-heading"><div><span class="eyebrow">MI ESPACIO · DEMOSTRACIÓN</span><h1>¡Hola, Sofía! <span>✦</span></h1><p>Hoy tienes nuevas oportunidades para aprender.</p></div><a class="btn btn-outline" asp-action="Diagnostico">Evaluación diagnóstica →</a></div>
+  <div class="student-grid">
+    <div class="student-main">
+      <div class="welcome-strip"><div><strong>¡Vas muy bien!</strong><p>Cada intento cuenta. Continúa construyendo tus habilidades.</p></div><span class="badge badge-green">✓ Sigue aprendiendo</span></div>
+      <div class="kpi-grid three"><article class="stat-card"><span>✦</span><div><small>Experiencia</small><strong>120 XP</strong></div></article><article class="stat-card"><span>▤</span><div><small>Misiones</small><strong>2 / 3</strong></div></article><article class="stat-card"><span>✺</span><div><small>Logros</small><strong>4</strong></div></article></div>
+      <article class="panel"><div class="panel-title"><div><h2>Tu ruta de hoy</h2><p>Actividades recomendadas para ti.</p></div><span class="pill">67% completado</span></div>
+        <div class="course-grid"><div class="course-card done"><div class="course-icon">∑</div><h3>Matemáticas</h3><p>Fracciones</p><span>✓ Completada</span></div><div class="course-card done"><div class="course-icon">▤</div><h3>Lectura</h3><p>Comprensión</p><span>✓ Completada</span></div><div class="course-card active"><div class="course-icon">⚗</div><h3>Ciencias</h3><p>Ecosistemas</p><span>◉ Pendiente</span></div></div>
+      </article>
+      <article class="panel next-activity"><div><span class="eyebrow">SIGUIENTE ACTIVIDAD</span><h2>Domina las fracciones con NEXO LEARN</h2><p>Descubre qué conceptos ya dominas y cuáles necesitas reforzar.</p><span class="pill">⏱ 8–10 min · Matemáticas</span></div><a class="btn btn-primary" asp-action="Diagnostico">Comenzar →</a></article>
+    </div>
+    <aside class="student-aside">
+      <article class="panel pet-panel"><div class="panel-title"><h2>✦ NEXO PET</h2><span class="pill">Nivel 2</span></div><div class="pet-stage"><partial name="_NexoPet" /></div><h3>¡Hola! Soy Nexi</h3><p>Aprendemos y crecemos juntos, incluso cuando algo resulta difícil.</p><div class="progress-label"><span>Evolución</span><strong>65%</strong></div><div class="progress-bar"><span style="width:65%"></span></div><a class="text-link" asp-action="Mascota">Conocer mis evoluciones →</a></article>
+      <article class="panel badges-panel"><h2>Mis insignias</h2><div class="badge-row"><span>✦</span><span>▣</span><span>✺</span><span>✓</span></div><p>Logros de práctica, mejora y constancia.</p></article>
+    </aside>
+  </div>
+</section>

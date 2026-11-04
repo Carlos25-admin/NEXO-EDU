@@ -1,0 +1,27 @@
+@model IReadOnlyList<NEXO_EDU.Services.DemoQuestion>
+@{
+    ViewData["Title"] = "Diagnóstico";
+}
+<section class="dashboard page-width quiz-page">
+  <div class="dashboard-heading"><div><span class="eyebrow">NEXO LEARN · MATEMÁTICAS</span><h1>Descubre tu <span>punto de partida</span></h1><p>9 preguntas · 3 conceptos · Sin penalizaciones por equivocarte.</p></div><span class="pill">Diagnóstico inicial</span></div>
+  <div class="quiz-grid">
+    <form class="panel quiz-form" asp-controller="NexoDemo" asp-action="Evaluar" method="post">
+      @Html.AntiForgeryToken()
+      @if (!ViewData.ModelState.IsValid)
+      {
+          <div class="alert-banner" role="alert">Contesta todas las preguntas para evaluar tu progreso.</div>
+      }
+      @foreach (var p in Model)
+      {
+          <fieldset class="question-block"><legend><span class="question-index">@p.Id</span>@p.Enunciado</legend><small>@p.Concepto</small><div class="answer-choices">
+          @for (var i = 0; i < p.Opciones.Length; i++)
+          {
+              <label><input type="radio" name="q@(p.Id)" value="@i" required /><span>@p.Opciones[i]</span></label>
+          }
+          </div></fieldset>
+      }
+      <button type="submit" class="btn btn-primary">Ver mis resultados →</button>
+    </form>
+    <aside><article class="panel pet-panel"><div class="pet-stage"><partial name="_NexoPet" /></div><h2>¡Tú puedes!</h2><p>Responde con calma. Tus resultados servirán para recomendarte una ruta de aprendizaje.</p><div class="small-note">Las respuestas se procesan en el servidor y no se guardan todavía.</div></article></aside>
+  </div>
+</section>

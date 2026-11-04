@@ -1,40 +1,37 @@
-# NEXO EDU · Base técnica del MVP
+# NEXO EDU · MVP en Visual Studio 2022
 
-Rama de integración inicial para Visual Studio 2022, .NET 8 y PostgreSQL.
+## Ejecutar
+1. Abrir `NEXO-EDU.sln` en Visual Studio y restaurar NuGet.
+2. Ejecutar en HTTPS (F5 o Ctrl+F5).
+3. La raíz `https://localhost:PUERTO/` abre **NEXO EDU**, ya no el template Welcome.
+4. Navegar entre Inicio, Estudiante, Docente, Familia, NEXO PET y Diagnóstico.
+5. En Diagnóstico responder las 9 preguntas y consultar el resultado por conceptos.
 
-## Qué contiene
-- Proyecto MVC existente conservado (sin sustituir la solución `NEXO-EDU.sln`).
-- Pantalla demostrativa en `/NexoDemo` con diagnóstico de fracciones, ruta adaptativa y experiencia de NEXO PET.
-- Modelos EF Core y `NexoDbContext` preparados para persistencia con PostgreSQL.
-- Lógica de alerta orientativa, NO diagnóstico real.
-- Solo disponible en entorno `Development`; sin información de estudiantes reales.
+## Arquitectura
+- **ASP.NET Core MVC (.NET 8)** con C#: interfaz MVC responsiva para primer MVP.
+- **PostgreSQL + Entity Framework Core**: contexto y entidades preparados.
+- **Frontend React/TypeScript**: propuesto para una futura fase; **no está integrado aún**. Primero validamos el flujo completo del MVC existente.
+- La mascota se dibuja inicialmente con CSS. Arte 3D, IA generativa y sesiones reales quedan para iteraciones posteriores.
 
-## Requisitos
-Visual Studio 2022 con carga ASP.NET/web, .NET SDK 8 y PostgreSQL.
-
-## Configuración de PostgreSQL
-1. Crea una base local llamada `nexo_edu` y una cuenta con permisos limitados.
-2. En el directorio del proyecto web usa Secret Manager (Visual Studio: botón derecho sobre el proyecto > Administrar secretos de usuario) y guarda:
+## PostgreSQL local
+Crear una base `nexo_edu` en PostgreSQL y configurar `ConnectionStrings:NexoEdu` mediante **Manage User Secrets** (no registrar contraseñas en Git):
 ```json
-{
-  "ConnectionStrings": {
-    "NexoEdu": "Host=localhost;Port=5432;Database=nexo_edu;Username=USUARIO_LOCAL;Password=CLAVE_LOCAL"
-  }
-}
+{"ConnectionStrings":{"NexoEdu":"Host=localhost;Port=5432;Database=nexo_edu;Username=USUARIO;Password=CLAVE"}}
 ```
-3. No publiques contraseñas en GitHub.
-4. El contexto ya está registrado si existe la cadena de conexión; **aún no se han incluido migraciones ni se crean tablas automáticamente**. No se debe afirmar que PostgreSQL ya guarda los resultados.
+**Importante:** todavía no se incluyen migraciones EF Core ni persistencia de intentos. La aplicación ejecuta la demostración sin PostgreSQL; la conexión es una base técnica preparada, no una base ya operativa.
 
-## Ejecución
-1. Abre `NEXO-EDU.sln`, restaura NuGet y compila.
-2. Inicia el proyecto en modo `Development`.
-3. Abre `/NexoDemo`. El formulario usa datos de ejemplo y NO escribe todavía en la base.
+## Seguridad
+- Todas las identidades, calificaciones y alertas que se muestran son **ficticias**.
+- El formulario usa token antifalsificación y corrige en el servidor.
+- No existe login, roles ni permisos reales. **No desplegar para alumnos reales** hasta implementar autenticación, autorización, consentimiento, protección de datos y auditoría.
+- No introducir claves o datos personales en el repositorio.
 
-## Pendientes para completar el MVP
-- Migración inicial de EF Core y datos semilla educativos.
-- Autenticación real con ASP.NET Core Identity y permisos Estudiante/Docente/Familia.
-- Guardar intentos, calcular alertas persistentes e intervenciones docentes.
-- Integración del frontend React/TypeScript (fase siguiente) y tutor IA guiado.
-- Pruebas automatizadas, revisión de accesibilidad y seguridad.
+## Trabajo en equipo
+Hacer cambios en ramas feature y abrir pull requests. La rama `master` queda sin modificar hasta revisar y compilar.
 
-La rama es una propuesta técnica para revisión del equipo. **No usar con datos personales reales ni desplegar en producción.**
+## Pendiente en próximos hitos
+1. Migraciones iniciales y datos de semilla en PostgreSQL; persistencia por usuario.
+2. ASP.NET Core Identity y separación de roles por profesor/estudiante/familia.
+3. Alertas reales basadas en evolución, y registro de intervenciones.
+4. Tutor que guía sin entregar respuestas directamente, recursos educativos revisados.
+5. Pruebas automatizadas, PWA accesible y despliegue seguro.
