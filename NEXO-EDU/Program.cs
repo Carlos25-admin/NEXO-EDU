@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NEXO_EDU.Data;
@@ -7,13 +6,13 @@ using NEXO_EDU.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
-var connection = builder.Configuration.GetConnectionString("NexoEdu");
-var usarDemoLocal = builder.Environment.IsDevelopment()
-    && string.IsNullOrWhiteSpace(connection);
+// Este interruptor solo es válido en Development. Aunque existan secretos antiguos
+// de PostgreSQL, la demo no intentará conectarse mientras esté habilitado.
+var demoLocal = builder.Environment.IsDevelopment()
+    && builder.Configuration.GetValue<bool>("DemoMode:Enabled");
 
-// Desarrollo sin PostgreSQL: cookie temporal para probar perfiles.
-// No se admite esta alternativa fuera de Development.
-if (usarDemoLocal)
+var connection = builder.Configuration.GetConnectionString("NexoEdu");
+if (demoLocal)
 {
     builder.Services.AddAuthentication("NexoDemoLocal")
         .AddCookie("NexoDemoLocal", options =>
@@ -31,7 +30,7 @@ if (usarDemoLocal)
 else
 {
     if (string.IsNullOrWhiteSpace(connection))
-        throw new InvalidOperationException("Se requiere PostgreSQL fuera de Development.");
+        throw new InvalidOperationException("Para usar Identity se requiere ConnectionStrings:NexoEdu. En desarrollo puedes habilitar DemoMode:Enabled.");
 
     builder.Services.AddDbContext<NexoDbContext>(options => options.UseNpgsql(connection));
     builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -60,7 +59,7 @@ else
 }
 
 var app = builder.Build();
-if (!usarDemoLocal && app.Environment.IsDevelopment()
+if (!demoLocal && app.Environment.IsDevelopment()
     && app.Configuration.GetValue<bool>("DemoUsers:Initialize"))
 {
     await DemoIdentitySeeder.InitializeAsync(app.Services, app.Configuration);

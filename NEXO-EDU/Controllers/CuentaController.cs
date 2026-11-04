@@ -12,7 +12,7 @@ namespace NEXO_EDU.Controllers;
 public sealed class CuentaController(IServiceProvider services, IWebHostEnvironment environment, IConfiguration config) : Controller
 {
     private bool DemoLocal => environment.IsDevelopment()
-        && string.IsNullOrWhiteSpace(config.GetConnectionString("NexoEdu"));
+        && config.GetValue<bool>("DemoMode:Enabled");
 
     [AllowAnonymous, HttpGet]
     public IActionResult Ingresar(string? returnUrl = null)
@@ -29,15 +29,15 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
 
         if (DemoLocal)
         {
-            // No hay contraseñas predeterminadas publicadas en el repositorio.
-            // Solo credenciales guardadas localmente en User Secrets.
+            // Credenciales exclusivamente de prueba publicadas en appsettings.Development.json.
+            // No se utilizan en producción. Nunca reutilizar estas contraseñas.
             var rol = new[] { "Alumno", "Docente", "Familia" }.FirstOrDefault(r =>
                 string.Equals(config[$"DemoUsers:{r}:Email"], email, StringComparison.OrdinalIgnoreCase)
                 && VerificarClave(model.Password, config[$"DemoUsers:{r}:Password"]));
 
             if (rol is null)
             {
-                ModelState.AddModelError("", "Credenciales incorrectas o usuarios de demostración sin configurar en secretos locales.");
+                ModelState.AddModelError("", "Credenciales de demostración incorrectas.");
                 return View(model);
             }
 

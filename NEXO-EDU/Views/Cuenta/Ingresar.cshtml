@@ -3,7 +3,7 @@
 @inject Microsoft.Extensions.Configuration.IConfiguration Config
 @{
     ViewData["Title"] = "Iniciar sesión";
-    var modoLocal = Ambiente.IsDevelopment() && string.IsNullOrWhiteSpace(Config.GetConnectionString("NexoEdu"));
+    var modoLocal = Ambiente.IsDevelopment() && Config.GetValue<bool>("DemoMode:Enabled");
 }
 <section class="auth-page page-width">
     <div class="auth-intro">
@@ -21,7 +21,7 @@
         <h2>Inicia sesión</h2>
         @if (modoLocal)
         {
-            <div class="auth-note"><strong>Modo de prueba sin PostgreSQL.</strong> Las cuentas se validan únicamente contra los secretos locales del equipo y no almacenan información.</div>
+            <div class="auth-note"><strong>Modo de prueba sin PostgreSQL.</strong> Puedes utilizar las cuentas de prueba del equipo. No se almacenan resultados ni usuarios en PostgreSQL.</div>
         }
         <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
             @Html.AntiForgeryToken()
