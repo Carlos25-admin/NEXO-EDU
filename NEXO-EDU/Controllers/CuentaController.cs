@@ -84,10 +84,15 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
             return View(model);
         }
 
-        // Evita que un ReturnUrl manipulado mande al alumno al panel de otro nivel.
+        // Se ignora ReturnUrl en login: siempre se redirige según roles y nivel persistidos.
         if (await users.IsInRoleAsync(user, "Docente")) return RedirigirPorNombreDeRol("Docente", "primaria");
         if (await users.IsInRoleAsync(user, "Familia")) return RedirigirPorNombreDeRol("Familia", "primaria");
-        if (await users.IsInRoleAsync(user, "Alumno")) return RedirigirPorNombreDeRol("Alumno", "primaria");
+        if (await users.IsInRoleAsync(user, "Alumno"))
+        {
+            var claims = await users.GetClaimsAsync(user);
+            var nivel = claims.FirstOrDefault(c => c.Type == "DemoLevel")?.Value ?? "primaria";
+            return RedirigirPorNombreDeRol("Alumno", nivel);
+        }
 
         await signIn.SignOutAsync();
         ModelState.AddModelError("", "Tu cuenta no tiene un perfil autorizado.");

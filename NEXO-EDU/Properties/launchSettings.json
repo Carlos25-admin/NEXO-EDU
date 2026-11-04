@@ -9,6 +9,18 @@
     }
   },
   "profiles": {
+    "NEXO EDU - PostgreSQL": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "Cuenta/Ingresar",
+      "applicationUrl": "https://localhost:7189;http://localhost:5124",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DemoMode__Enabled": "false"
+      }
+    },
     "NEXO EDU - Demo local": {
       "commandName": "Project",
       "dotnetRunMessages": true,

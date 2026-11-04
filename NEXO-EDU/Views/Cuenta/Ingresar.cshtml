@@ -17,18 +17,18 @@
             <span class="tiny-caps">NEXO EDU · PERFILES DE ACCESO</span><h2>¡Qué bueno verte!</h2>
             <p>Selecciona un perfil. Los estudiantes tienen un nivel asignado a su cuenta de prueba.</p>
             <div class="login-role-picker demo-five" aria-label="Selecciona una cuenta temporal">
-                <button type="button" class="chosen" data-demo-email="alumno@nexoedu.test"><span>✿</span>Primaria<small>Alumno</small></button>
-                <button type="button" data-demo-email="secundaria@nexoedu.test"><span>✦</span>Secundaria<small>Alumno</small></button>
-                <button type="button" data-demo-email="prepa@nexoedu.test"><span>◇</span>Prepa<small>Alumno</small></button>
-                <button type="button" data-demo-email="docente@nexoedu.test"><span>▣</span>Docente<small>Educador</small></button>
-                <button type="button" data-demo-email="familia@nexoedu.test"><span>♡</span>Familia<small>Responsable</small></button>
+                <button type="button" class="chosen" data-demo-email="@(modoLocal ? "alumno@nexoedu.test" : Config["PostgresBootstrap:Accounts:Primaria:Email"] ?? "primaria.db@nexoedu.test")"><span>✿</span>Primaria<small>Alumno</small></button>
+                <button type="button" data-demo-email="@(modoLocal ? "secundaria@nexoedu.test" : Config["PostgresBootstrap:Accounts:Secundaria:Email"] ?? "secundaria.db@nexoedu.test")"><span>✦</span>Secundaria<small>Alumno</small></button>
+                <button type="button" data-demo-email="@(modoLocal ? "prepa@nexoedu.test" : Config["PostgresBootstrap:Accounts:Preparatoria:Email"] ?? "prepa.db@nexoedu.test")"><span>◇</span>Prepa<small>Alumno</small></button>
+                <button type="button" data-demo-email="@(modoLocal ? "docente@nexoedu.test" : Config["PostgresBootstrap:Accounts:Docente:Email"] ?? "docente.db@nexoedu.test")"><span>▣</span>Docente<small>Educador</small></button>
+                <button type="button" data-demo-email="@(modoLocal ? "familia@nexoedu.test" : Config["PostgresBootstrap:Accounts:Familia:Email"] ?? "familia.db@nexoedu.test")"><span>♡</span>Familia<small>Responsable</small></button>
             </div>
             <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ReturnUrl"/>
                 <div asp-validation-summary="ModelOnly" class="auth-errors" role="alert"></div>
                 <label class="login-label" asp-for="Email">Correo de acceso</label>
-                <input class="login-input" asp-for="Email" autocomplete="username" placeholder="alumno@nexoedu.test"/>
+                <input class="login-input" asp-for="Email" autocomplete="username" placeholder="correo@nexoedu.test"/>
                 <span asp-validation-for="Email" class="validation-message"></span>
                 <label class="login-label" asp-for="Password">Contraseña</label>
                 <input class="login-input" asp-for="Password" autocomplete="current-password" placeholder="Introduce tu contraseña"/>

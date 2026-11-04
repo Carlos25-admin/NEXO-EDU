@@ -13,7 +13,7 @@ public sealed class NexoDemoController : Controller
         ? NivelDemo.Normalizar(valor) : NivelDemo.Primaria;
 
     private string NivelDeVista(string? solicitado) =>
-        User.HasClaim("DemoLocal", "true") && User.IsInRole("Alumno")
+        User.IsInRole("Alumno")
             ? NivelAlumno : NivelDemo.Normalizar(solicitado);
 
     private void PrepararAlumno()

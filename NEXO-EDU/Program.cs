@@ -46,7 +46,9 @@ else
             "No se encontró PostgreSQL. Para trabajar sin base de datos, selecciona el perfil " +
             "'NEXO EDU - Demo local' en Visual Studio (entorno Development).");
 
-    builder.Services.AddDbContext<NexoDbContext>(options => options.UseNpgsql(connection));
+    // Identity utiliza solamente las siete tablas AspNet* existentes.
+    // No crear ni migrar automáticamente las tablas SQL del esquema nexo.
+    builder.Services.AddDbContext<NexoIdentityDbContext>(options => options.UseNpgsql(connection));
     builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;
@@ -58,7 +60,7 @@ else
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.AllowedForNewUsers = true;
-    }).AddEntityFrameworkStores<NexoDbContext>().AddDefaultTokenProviders();
+    }).AddEntityFrameworkStores<NexoIdentityDbContext>().AddDefaultTokenProviders();
 
     builder.Services.ConfigureApplicationCookie(options =>
     {
@@ -74,7 +76,7 @@ else
 
 var app = builder.Build();
 if (!demoLocal && app.Environment.IsDevelopment()
-    && app.Configuration.GetValue<bool>("DemoUsers:Initialize"))
+    && app.Configuration.GetValue<bool>("PostgresBootstrap:Enabled"))
 {
     await DemoIdentitySeeder.InitializeAsync(app.Services, app.Configuration);
 }
