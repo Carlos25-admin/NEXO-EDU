@@ -7,33 +7,37 @@
     var modoLocal = Ambiente.IsDevelopment() && Config.GetValue<bool>("DemoMode:Enabled");
 }
 <div class="nexo-login-reimagined">
-  <section class="login-left">
-    <a class="level-logo" asp-controller="NexoDemo" asp-action="Index"><span class="level-logo-icon">N</span><strong>nexo <small>edu</small></strong></a>
-    <div class="login-story"><h1>Pequeños pasos.<br/>Grandes aventuras.</h1><p>Un lugar para aprender, descubrir y crecer juntos.</p><div class="login-mascot" aria-label="Nexi, mascota de NEXO EDU"><span class="mini-mascot">✦</span><span>¡Hola! Soy NEXO PET</span></div></div>
-    <small class="login-safe">♧ Un espacio seguro para aprender · Prototipo local</small>
-  </section>
-  <section class="login-right">
-    <div class="login-right-inner"><span class="tiny-caps">NEXO EDU · ACCESO</span><h2>¡Qué bueno verte!</h2><p>Elige tu perfil para comenzar.</p>
-      <div class="login-role-picker" aria-label="Selecciona tu perfil de demostración">
-        <button type="button" class="chosen" data-demo-email="alumno@nexoedu.test"><span>♧</span>Estudiante</button>
-        <button type="button" data-demo-email="docente@nexoedu.test"><span>▣</span>Docente</button>
-        <button type="button" data-demo-email="familia@nexoedu.test"><span>♡</span>Familia</button>
-      </div>
-      <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="ReturnUrl"/>
-        <div asp-validation-summary="ModelOnly" class="auth-errors" role="alert"></div>
-        <label class="login-label" asp-for="Email">Correo de acceso</label>
-        <input class="login-input" asp-for="Email" autocomplete="username" placeholder="alumno@nexoedu.test"/>
-        <span asp-validation-for="Email" class="validation-message"></span>
-        <label class="login-label" asp-for="Password">Contraseña</label>
-        <input class="login-input" asp-for="Password" autocomplete="current-password" placeholder="Escribe tu contraseña"/>
-        <span asp-validation-for="Password" class="validation-message"></span>
-        <button class="login-submit" type="submit">Entrar a mi espacio →</button>
-      </form>
-      @if(modoLocal){<p class="login-tip">Modo demostración: las cuentas de prueba están documentadas en el README del repositorio. El perfil visual no sustituye la validación de credenciales.</p>}
-      <p class="login-footnote">El acceso mediante código de clase y el registro de nuevas cuentas se incorporarán posteriormente.</p>
-    </div>
-  </section>
+    <section class="login-left">
+        <a class="level-logo" asp-controller="NexoDemo" asp-action="Index"><span class="level-logo-icon">N</span><strong>nexo <small>edu</small></strong></a>
+        <div class="login-story"><h1>Pequeños pasos.<br/>Grandes aventuras.</h1><p>Un lugar para aprender, descubrir y crecer juntos.</p><div class="login-mascot" aria-label="NEXO PET, tu compañero"><span class="mini-mascot">✦</span><span>¡Hola! Soy NEXO PET</span></div></div>
+        <small class="login-safe">♧ Un espacio para aprender · Prototipo local</small>
+    </section>
+    <section class="login-right">
+        <div class="login-right-inner">
+            <span class="tiny-caps">NEXO EDU · PERFILES DE ACCESO</span><h2>¡Qué bueno verte!</h2>
+            <p>Selecciona un perfil. Los estudiantes tienen un nivel asignado a su cuenta de prueba.</p>
+            <div class="login-role-picker demo-five" aria-label="Selecciona una cuenta temporal">
+                <button type="button" class="chosen" data-demo-email="alumno@nexoedu.test"><span>✿</span>Primaria<small>Alumno</small></button>
+                <button type="button" data-demo-email="secundaria@nexoedu.test"><span>✦</span>Secundaria<small>Alumno</small></button>
+                <button type="button" data-demo-email="prepa@nexoedu.test"><span>◇</span>Prepa<small>Alumno</small></button>
+                <button type="button" data-demo-email="docente@nexoedu.test"><span>▣</span>Docente<small>Educador</small></button>
+                <button type="button" data-demo-email="familia@nexoedu.test"><span>♡</span>Familia<small>Responsable</small></button>
+            </div>
+            <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ReturnUrl"/>
+                <div asp-validation-summary="ModelOnly" class="auth-errors" role="alert"></div>
+                <label class="login-label" asp-for="Email">Correo de acceso</label>
+                <input class="login-input" asp-for="Email" autocomplete="username" placeholder="alumno@nexoedu.test"/>
+                <span asp-validation-for="Email" class="validation-message"></span>
+                <label class="login-label" asp-for="Password">Contraseña</label>
+                <input class="login-input" asp-for="Password" autocomplete="current-password" placeholder="Introduce tu contraseña"/>
+                <span asp-validation-for="Password" class="validation-message"></span>
+                <button class="login-submit" type="submit">Entrar a mi espacio →</button>
+            </form>
+            @if(modoLocal){<p class="login-tip">Las credenciales de prueba están en README-ACCESOS-NIVELES.md. Seleccionar un perfil no evita la comprobación de contraseña.</p>}
+            <p class="login-footnote">El registro de cuentas reales, códigos de clase y recuperación de contraseñas se integrarán con PostgreSQL.</p>
+        </div>
+    </section>
 </div>
 <script src="~/js/nexo-login.js" asp-append-version="true"></script>

@@ -5,9 +5,17 @@ using NEXO_EDU.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.Name = "NexoEdu.Progress.Dev";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
 
-// Este interruptor solo es válido en Development. Aunque existan secretos antiguos
-// de PostgreSQL, la demo no intentará conectarse mientras esté habilitado.
 var demoLocal = builder.Environment.IsDevelopment()
     && builder.Configuration.GetValue<bool>("DemoMode:Enabled");
 
@@ -64,16 +72,15 @@ if (!demoLocal && app.Environment.IsDevelopment()
 {
     await DemoIdentitySeeder.InitializeAsync(app.Services, app.Configuration);
 }
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute(name: "default", pattern: "{controller=NexoDemo}/{action=Index}/{id?}");

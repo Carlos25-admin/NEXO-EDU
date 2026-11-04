@@ -1,9 +1,24 @@
 @{
     ViewData["Title"] = "NEXO PET";
+    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    var progreso = ViewBag.Progreso as NEXO_EDU.Services.ProgresoDemo ?? new NEXO_EDU.Services.ProgresoDemo();
+    var limite = progreso.Etapa == 1 ? 70 : progreso.Etapa == 2 ? 180 : 360;
+    var porcentaje = Math.Min(100, (int)(100.0 * progreso.Xp / limite));
 }
-<section class="dashboard page-width">
-  <div class="dashboard-heading"><div><span class="eyebrow">APRENDIZAJE QUE MOTIVA</span><h1>Conoce a <span>NEXO PET</span></h1><p>Tu compañero evoluciona con tus avances y también celebra tus intentos.</p></div><a class="btn btn-primary" asp-action="Diagnostico">Conseguir experiencia →</a></div>
-  <div class="pet-showcase"><div class="pet-showcase-art"><partial name="_NexoPet" /></div><div><span class="eyebrow">MASCOTA INICIAL · NEXI</span><h2>La aventura comienza aprendiendo</h2><p>Resuelve actividades, refuerza conceptos y gana experiencia por intentarlo y mejorar. Nunca perderás a tu mascota por equivocarte.</p><div class="progress-label"><span>Experiencia de ejemplo</span><strong>120 / 180 XP</strong></div><div class="progress-bar"><span style="width:67%"></span></div></div></div>
-  <div class="evolution-grid"><article class="feature-card"><span class="evo-icon">✧</span><h3>Etapa 1 · Cría</h3><p>Conoces a Nexi y comienzas tu primera ruta.</p></article><article class="feature-card"><span class="evo-icon">✦</span><h3>Etapa 2 · Aprendiz</h3><p>Practicas, mejoras y descubres nuevas habilidades.</p></article><article class="feature-card"><span class="evo-icon">✺</span><h3>Etapa 3 · Explorador</h3><p>Dominas conceptos y continúas evolucionando.</p></article></div>
-  <p class="fine-print">Diseño de referencia. Las ilustraciones 3D y la persistencia del progreso se añadirán en fases posteriores.</p>
+<section class="dashboard page-width pet-growth-page">
+    <div class="dashboard-heading"><div><span class="eyebrow">NEXO PET · MI COMPAÑERO</span><h1>¡Crecemos <span>aprendiendo!</span></h1><p>Tu mascota evoluciona con esfuerzo, práctica y constancia. Nunca pierde experiencia por equivocarte.</p></div><a class="btn btn-outline" asp-action="Estudiante" asp-route-nivel="@nivel">Volver a mi nivel</a></div>
+    <div class="pet-showcase">
+        <div class="pet-showcase-art"><partial name="_NexoPet"/></div>
+        <div><span class="eyebrow">NEXI · ETAPA @progreso.Etapa</span><h2>@(progreso.Etapa == 1 ? "El inicio de una gran aventura" : progreso.Etapa == 2 ? "¡Nexi se está transformando!" : "Un compañero explorador")</h2>
+        <p>@(progreso.Mensaje ?? "Resuelve tu primera actividad para comenzar la evolución.")</p>
+        <div class="progress-label"><span>Mi experiencia</span><strong>@progreso.Xp / @limite XP</strong></div><div class="progress-bar"><span style="width:@(porcentaje)%"></span></div>
+        <p>@progreso.Actividades actividades terminadas en esta sesión.</p>
+        <a class="btn btn-primary" asp-action="Aventura" asp-route-nivel="@nivel">Ganar XP aprendiendo →</a></div>
+    </div>
+    <div class="evolution-grid">
+        <article class="feature-card @(progreso.Etapa >= 1 ? "pet-unlocked" : "")"><span class="evo-icon">✧</span><h3>Etapa 1 · Cría</h3><p>Una mascota curiosa que acaba de llegar.</p></article>
+        <article class="feature-card @(progreso.Etapa >= 2 ? "pet-unlocked" : "")"><span class="evo-icon">✦</span><h3>Etapa 2 · Aprendiz</h3><p>Alcanza 70 XP resolviendo tus primeras aventuras.</p></article>
+        <article class="feature-card @(progreso.Etapa >= 3 ? "pet-unlocked" : "")"><span class="evo-icon">✺</span><h3>Etapa 3 · Explorador</h3><p>Alcanza 180 XP para desbloquear esta etapa.</p></article>
+    </div>
+    <p class="fine-print">La experiencia se conserva mientras dure la sesión local. No es un historial académico permanente.</p>
 </section>
