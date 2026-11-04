@@ -1,0 +1,30 @@
+@using NEXO_EDU.Services
+@using NEXO_EDU.Models
+@{
+    ViewData["Title"] = "Biblioteca de aprendizaje";
+}
+<link rel="stylesheet" href="~/css/nexo-modulos.css" asp-append-version="true" />
+@model IReadOnlyList<LeccionNexo>
+@{
+    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    var nombre = (string?)ViewBag.Nombre ?? "Estudiante";
+    var progreso = ViewBag.Progreso as ProgresoDemo ?? new ProgresoDemo();
+    var css = nivel == "secundaria" ? "secondary" : nivel == "preparatoria" ? "prepa" : "";
+}
+<div class="module-page @css">
+    <div class="module-top"><a class="module-back" asp-controller="NexoDemo" asp-action="Estudiante">← Volver a mi espacio</a><span class="module-tag">@NivelDemo.Nombre(nivel)</span></div>
+    <section class="module-hero"><span class="module-tag">RUTA DE APRENDIZAJE</span><h1 class="module-title">¡Hola, @nombre! Elige tu próximo reto.</h1>
+      <p class="module-subtitle">Explora distintas materias, resuelve ejercicios y recibe una explicación después de cada respuesta.</p>
+      <div class="module-summary"><div class="module-stat"><strong>@Model.Count</strong> rutas disponibles</div><div class="module-stat"><strong>@progreso.Actividades</strong> prácticas terminadas</div><div class="module-stat"><strong>@progreso.Xp</strong> XP de esta sesión</div></div>
+    </section>
+    <div class="module-grid">
+        @foreach(var l in Model)
+        {
+          <article class="module-card"><div class="module-icon">@l.Icono</div><span class="module-category">@l.Materia</span><h2>@l.Titulo</h2>
+            <p>@l.Descripcion</p><small>@l.Preguntas.Count preguntas · Corrección al finalizar</small>
+            <a class="module-action" asp-action="Resolver" asp-route-clave="@l.Clave">Comenzar actividad →</a>
+          </article>
+        }
+    </div>
+    <p class="module-info">Banco de ejercicios de demostración. El progreso se conserva temporalmente en la sesión; todavía no constituye un expediente académico.</p>
+</div>

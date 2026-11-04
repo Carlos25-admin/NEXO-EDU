@@ -12,6 +12,7 @@
     <main class="level-main">
         <div class="level-page-top"><span>Hola, Lucía</span><span>Semana del 2 al 8 de noviembre · Datos de ejemplo</span></div>
         <div class="level-preview"><small>Ver diseño por nivel</small><partial name="_LevelSwitcher"/></div>
+        <div class="module-shortcut"><div><strong>Guía para acompañar en casa</strong><p>Actividades sencillas y consejos específicos para cada nivel educativo.</p></div><a asp-controller="Modulos" asp-action="GuiaFamiliar" asp-route-nivel="@nivel">Ver la guía →</a></div>
         @if (nivel == "primaria")
         {
             <div class="level-heading family-heading"><h1>Así va la aventura de Leo</h1><p>Pequeños descubrimientos, a su ritmo.</p></div>

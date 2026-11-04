@@ -1,0 +1,19 @@
+@using NEXO_EDU.Services
+@using NEXO_EDU.Models
+@{
+    ViewData["Title"] = "Guía familiar";
+}
+<link rel="stylesheet" href="~/css/nexo-modulos.css" asp-append-version="true" />
+@model IReadOnlyList<LeccionNexo>
+@{
+    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    var css = nivel == "secundaria" ? "secondary" : nivel == "preparatoria" ? "prepa" : "";
+}
+<div class="module-page @css"><div class="module-top"><a class="module-back" asp-controller="NexoDemo" asp-action="Familia" asp-route-nivel="@nivel">← Mi resumen familiar</a><span class="module-tag">Guía familiar · @NivelDemo.Nombre(nivel)</span></div>
+<section class="module-hero"><span class="module-tag">APRENDER EN COMPAÑÍA</span><h1 class="module-title">Pequeñas acciones, grandes avances</h1><p class="module-subtitle">Ideas concretas para conversar sobre lo aprendido sin presionar ni sustituir el trabajo del estudiante.</p></section>
+<section class="module-highlight"><h2>@(nivel == "primaria" ? "10 minutos de curiosidad" : nivel == "secundaria" ? "Conversaciones sin presión" : "Autonomía y metas compartidas")</h2>
+<p>@(nivel == "primaria" ? "Cuenta objetos del hogar, invita a explicar una historia y observen juntos una planta." : nivel == "secundaria" ? "Pregunta qué tema le interesó, acuerden pausas y revisen juntos cómo identificar una fuente confiable." : "Pregunta por sus metas, escucha sus decisiones y ofrécele apoyo para organizar tiempo, descanso y presupuesto.")</p></section>
+<h2>Temas que pueden conversar</h2><div class="module-grid">@foreach(var l in Model){<article class="module-card"><div class="module-icon">@l.Icono</div><span class="module-category">@l.Materia</span><h2>@l.Titulo</h2><p>@l.Descripcion</p><small>Sugerencia: pregunta «¿cómo lo resolviste?» antes de dar la respuesta.</small></article>}</div>
+<div class="module-notice">Por privacidad, esta guía no muestra calificaciones ni datos individuales. Los vínculos entre familiares y alumnos se configurarán cuando se implemente el seguimiento académico real.</div>
+<div class="module-actions"><a class="module-outline" asp-action="GuiaFamiliar" asp-route-nivel="primaria">Primaria</a><a class="module-outline" asp-action="GuiaFamiliar" asp-route-nivel="secundaria">Secundaria</a><a class="module-outline" asp-action="GuiaFamiliar" asp-route-nivel="preparatoria">Preparatoria</a></div>
+</div>

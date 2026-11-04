@@ -1,0 +1,29 @@
+@using NEXO_EDU.Services
+@using NEXO_EDU.Models
+@{
+    ViewData["Title"] = "Resolver actividad";
+}
+<link rel="stylesheet" href="~/css/nexo-modulos.css" asp-append-version="true" />
+@model LeccionNexo
+@{
+    var css = Model.Nivel == "secundaria" ? "secondary" : Model.Nivel == "preparatoria" ? "prepa" : "";
+}
+<div class="module-page @css">
+    <div class="module-top"><a class="module-back" asp-action="Biblioteca">← Todas mis materias</a><span class="module-tag">@NivelDemo.Nombre(Model.Nivel) · @Model.Materia</span></div>
+    <section class="module-hero"><span class="module-tag">@Model.Icono ACTIVIDAD INTERACTIVA</span><h1 class="module-title">@Model.Titulo</h1><p class="module-subtitle">@Model.Descripcion</p><div class="module-summary"><div class="module-stat"><strong>@Model.Preguntas.Count</strong> ejercicios</div><div class="module-stat"><strong>+XP</strong> al terminar</div></div></section>
+    @if(!ViewData.ModelState.IsValid){<div class="module-notice" role="alert">Responde todas las preguntas antes de finalizar.</div>}
+    <form method="post" asp-action="Calificar" asp-route-clave="@Model.Clave">
+      @Html.AntiForgeryToken()
+      @foreach(var p in Model.Preguntas)
+      {
+        <fieldset class="module-question"><legend>@p.Numero. @p.Enunciado</legend>
+          @for(var i=0;i<p.Opciones.Length;i++)
+          {
+            <label class="module-answer"><input type="radio" required name="pregunta@(p.Numero)" value="@i" /><span>@p.Opciones[i]</span></label>
+          }
+        </fieldset>
+      }
+      <button type="submit" class="module-action">Revisar mis respuestas →</button>
+    </form>
+    <p class="module-info">Puedes intentarlo de nuevo las veces que necesites. Las respuestas correctas se muestran después de enviar.</p>
+</div>

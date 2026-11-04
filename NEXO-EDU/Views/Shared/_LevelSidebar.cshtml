@@ -12,12 +12,20 @@
         <a class="side-link active" asp-controller="NexoDemo" asp-action="@action" asp-route-nivel="@nivel"><span>⌂</span>@(role == "Docente" ? "Mi aula" : role == "Familia" ? "Resumen" : "Mi aventura")</a>
         @if (role == "Alumno")
         {
-            <a class="side-link" asp-controller="NexoDemo" asp-action="Aventura" asp-route-nivel="@nivel"><span>◇</span>Actividades</a>
+            <a class="side-link" asp-controller="Modulos" asp-action="Biblioteca"><span>◇</span>Mis materias</a>
+            <a class="side-link" asp-controller="NexoDemo" asp-action="Aventura" asp-route-nivel="@nivel"><span>▣</span>Reto de matemáticas</a>
             <a class="side-link" asp-controller="NexoDemo" asp-action="Mascota"><span>✦</span>Mi mascota</a>
         }
         else
         {
-            <div class="side-link side-muted"><span>▤</span>@(role == "Docente" ? "Actividades" : "Su aprendizaje") <small>Próximamente</small></div>
+            @if (role == "Docente")
+            {
+                <a class="side-link" asp-controller="Modulos" asp-action="RecursosDocente" asp-route-nivel="@nivel"><span>▤</span>Recursos docentes</a>
+            }
+            else
+            {
+                <a class="side-link" asp-controller="Modulos" asp-action="GuiaFamiliar" asp-route-nivel="@nivel"><span>▤</span>Guía familiar</a>
+            }
             <div class="side-link side-muted"><span>◯</span>Mensajes <small>Próximamente</small></div>
         }
     </nav>

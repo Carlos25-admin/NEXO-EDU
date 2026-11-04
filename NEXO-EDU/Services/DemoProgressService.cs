@@ -26,7 +26,7 @@ public static class DemoProgressService
         catch (JsonException) { return new ProgresoDemo(); }
     }
 
-    public static ProgresoDemo Registrar(ISession session, string? email, ResultadoAventuraDemo resultado)
+    public static ProgresoDemo Registrar(ISession session, string? email, ResultadoAventuraDemo resultado, string? materia = null)
     {
         var actual = Leer(session, email);
         actual.Xp += resultado.Xp;
@@ -34,7 +34,7 @@ public static class DemoProgressService
         actual.UltimoPorcentaje = resultado.Porcentaje;
         actual.UltimaRuta = resultado.Porcentaje < 50 ? "Refuerzo guiado" :
             resultado.Porcentaje < 80 ? "Práctica complementaria" : "Nuevo desafío";
-        actual.UltimaMateria = "Matemáticas";
+        actual.UltimaMateria = materia ?? "Matemáticas";
         actual.Mensaje = resultado.Porcentaje < 50
             ? "¡Buen intento! Repasemos este tema de otra manera."
             : resultado.Porcentaje < 80

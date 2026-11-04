@@ -26,3 +26,9 @@
 .login-role-picker.demo-five button:focus-visible{outline:3px solid #7c69da}
 @media(max-width:800px){.level-experience .student-improvements{grid-template-columns:1fr}}
 @media(max-width:550px){.login-role-picker.demo-five{grid-template-columns:repeat(3,minmax(0,1fr))}.login-role-picker.demo-five button{min-height:77px}.level-secondary-action{margin-left:0;display:block}.level-activity-wrap .result-stats{gap:15px}}
+
+/* Acceso rápido a módulos, adaptado a los paneles existentes */
+.module-shortcut{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin:22px 0;padding:19px 24px;border-radius:20px;border:1px solid #dfdef2;background:linear-gradient(110deg,#f6f2ff,#eef9ff);color:#283451}
+.module-shortcut strong{font-size:1.08rem;color:#293752}.module-shortcut p{margin:5px 0 0;font-size:.91rem;color:#60718b}
+.module-shortcut a{background:#6957ca;color:white!important;border-radius:13px;padding:12px 18px;text-decoration:none;font-weight:750;white-space:nowrap}
+@media(max-width:600px){.module-shortcut a{width:100%;text-align:center}}
