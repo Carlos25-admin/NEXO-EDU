@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="~/css/nexo-modulos.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/nexo-pets-studio.css" asp-append-version="true"/>
     <script src="~/js/nexo-pet.js" asp-append-version="true" defer></script>
+    <link rel="stylesheet" href="~/css/nexo-pet-companion.css" asp-append-version="true"/>
+    <script src="~/js/nexo-pet-companion.js" asp-append-version="true" defer></script>
 </head>
 <body>
 @if (ViewData["Immersive"] is not true)
@@ -43,6 +45,10 @@
     </header>
 }
 <main id="contenido">@RenderBody()</main>
+@if (User.IsInRole("Alumno") && ViewData["PetCompanionDisabled"] is not true)
+{
+    <partial name="_PetCompanion"/>
+}
 @if (ViewData["Immersive"] is not true)
 {
     <footer class="site-footer"><span>© 2026 NEXO EDU · Conectamos talento. Transformamos el aprendizaje.</span><span>Prototipo · Datos ficticios</span></footer>

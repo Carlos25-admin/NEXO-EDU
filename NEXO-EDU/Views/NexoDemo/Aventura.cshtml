@@ -1,6 +1,7 @@
 @model NEXO_EDU.Services.AventuraDemo
 @{
     ViewData["Title"] = "Actividad · " + Model.Titulo;
+    ViewData["PetCompanionContext"] = "activity";
 }
 <section class="level-activity-wrap theme-@(Model.Nivel)">
     <div class="activity-header">

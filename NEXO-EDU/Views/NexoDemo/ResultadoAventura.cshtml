@@ -1,6 +1,7 @@
 @model NEXO_EDU.Services.ResultadoAventuraDemo
 @{
     ViewData["Title"] = "Resultado de mi aventura";
+    ViewData["PetCompanionContext"] = Model.Porcentaje >= 65 ? "success" : "retry";
     var progreso = ViewBag.Progreso as NEXO_EDU.Services.ProgresoDemo ?? new NEXO_EDU.Services.ProgresoDemo();
 }
 <section class="level-activity-wrap theme-@(Model.Nivel)">

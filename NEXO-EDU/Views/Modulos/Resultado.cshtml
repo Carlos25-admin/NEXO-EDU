@@ -2,6 +2,7 @@
 @model ResultadoNivelViewModel
 @{
     ViewData["Title"] = "Resultado del nivel " + Model.Nivel;
+    ViewData["PetCompanionContext"] = Model.Aprobado ? "success" : "retry";
     var revision = Model.Revision;
     var modulo = revision.Leccion;
     var css = modulo.Nivel == "secundaria" ? "secondary" : modulo.Nivel == "preparatoria" ? "prepa" : "";

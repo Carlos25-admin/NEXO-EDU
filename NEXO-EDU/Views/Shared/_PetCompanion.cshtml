@@ -1,0 +1,29 @@
+@using NEXO_EDU.Services
+@inject NexoPetNameStore PetNames
+@inject NexoProgressStore Progress
+@{
+    var nivelAsistente = User.FindFirst("DemoLevel")?.Value ?? "primaria";
+    var modeloAsistente = MascotasNexo.ParaNivel(nivelAsistente);
+    var nombreAsistenteGuardado = await PetNames.LeerAsync(Context, Context.RequestAborted);
+    var nombreAsistente = string.IsNullOrWhiteSpace(nombreAsistenteGuardado)
+        ? modeloAsistente.Nombre : nombreAsistenteGuardado;
+    var progresoAsistente = await Progress.LeerAsync(Context, Context.RequestAborted);
+    var etapaAsistente = modeloAsistente.ElegirEtapa(progresoAsistente.Xp).Numero;
+    var alumnoAsistente = User.FindFirst("DemoName")?.Value?.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? "estudiante";
+    var contextoAsistente = ViewData["PetCompanionContext"]?.ToString() ?? "general";
+}
+<aside class="pet-companion" data-pet-companion data-pet-type="@modeloAsistente.Clave"
+       data-pet-context="@contextoAsistente" data-pet-name="@nombreAsistente"
+       data-student-name="@alumnoAsistente" aria-label="Mensajes de tu mascota @nombreAsistente">
+    <div class="pet-companion__card">
+        <button type="button" class="pet-companion__close" data-pet-dismiss aria-label="Ocultar acompañante durante esta página" title="Ocultar acompañante">×</button>
+        <div class="pet-companion__visual" aria-hidden="true">
+            <img src="~/img/pets/@(modeloAsistente.Clave)-@(etapaAsistente).svg" width="125" height="131" alt="" loading="lazy"/>
+        </div>
+        <div class="pet-companion__content">
+            <span class="pet-companion__title">@nombreAsistente <span aria-hidden="true">✦</span></span>
+            <p data-pet-text>¡Estoy aquí para acompañarte!</p>
+            <a asp-controller="NexoDemo" asp-action="Mascota">Ver mi mascota</a>
+        </div>
+    </div>
+</aside>

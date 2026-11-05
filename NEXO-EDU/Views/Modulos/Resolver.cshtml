@@ -3,6 +3,7 @@
 @model ActividadNivelViewModel
 @{
     ViewData["Title"] = "Reto " + Model.Nivel + " · " + Model.Modulo.Materia;
+    ViewData["PetCompanionContext"] = "activity";
     var css = Model.Modulo.Nivel == "secundaria" ? "secondary" : Model.Modulo.Nivel == "preparatoria" ? "prepa" : "";
 }
 <div class="module-page @css">

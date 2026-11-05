@@ -1,6 +1,7 @@
 @using NEXO_EDU.Services
 @{
     ViewData["Title"] = "NEXO PET · Mi mascota";
+    ViewData["PetCompanionDisabled"] = true;
     var nivel = (string?)ViewBag.Nivel ?? "primaria";
     var progreso = ViewBag.Progreso as ProgresoDemo ?? new ProgresoDemo();
     var mascota = MascotasNexo.ParaNivel(nivel);

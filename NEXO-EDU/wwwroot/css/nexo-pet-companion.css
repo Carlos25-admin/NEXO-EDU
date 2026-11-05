@@ -1,0 +1,16 @@
+/* Asistente discreto NEXO PET para módulos y resultados */
+.pet-companion{position:fixed;z-index:85;right:20px;bottom:18px;width:min(335px,calc(100vw - 28px));pointer-events:none;opacity:0;visibility:hidden;transform:translateY(30px) scale(.96);transition:opacity .45s ease,transform .45s ease,visibility .45s}
+.pet-companion.is-visible{opacity:1;visibility:visible;transform:translateY(0) scale(1);pointer-events:auto}
+.pet-companion__card{position:relative;display:flex;gap:10px;align-items:center;min-height:125px;padding:10px 30px 10px 6px;background:linear-gradient(135deg,#fffefa,#f0eafa);border:1px solid #dad6ee;border-radius:25px;box-shadow:0 16px 50px #24254e3d;isolation:isolate}
+.pet-companion__visual{flex:0 0 111px;height:114px;display:flex;align-items:center;justify-content:center}
+.pet-companion__visual img{max-height:118px;max-width:112px;object-fit:contain;filter:drop-shadow(0 5px 9px #30265928);animation:pet-companion-hover 3s ease-in-out infinite}
+.pet-companion__content{flex:1;min-width:0;display:grid;gap:5px;color:#243553}
+.pet-companion__title{font-size:.92rem;font-weight:900;color:#5b46a7;overflow-wrap:anywhere}
+.pet-companion__title span{color:#e3a54a}
+.pet-companion__content p{font-size:.88rem;line-height:1.4;margin:0;color:#44526d}
+.pet-companion__content a{font-size:.75rem;color:#6350bb;font-weight:800;text-decoration:none}
+.pet-companion__close{position:absolute;top:7px;right:9px;border:0;border-radius:50%;background:#eae7f4;color:#5b5b7c;width:26px;height:26px;font-size:20px;line-height:1;cursor:pointer}
+.pet-companion__close:focus-visible{outline:3px solid #7561e0;outline-offset:2px}
+@keyframes pet-companion-hover{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@media(max-width:620px){.pet-companion{right:10px;bottom:10px;width:min(296px,calc(100vw - 20px))}.pet-companion__card{min-height:96px;padding:7px 28px 7px 3px;border-radius:20px}.pet-companion__visual{flex-basis:85px;height:91px}.pet-companion__visual img{max-height:95px;max-width:88px}.pet-companion__content p{font-size:.79rem}}
+@media(prefers-reduced-motion:reduce){.pet-companion,.pet-companion.reduce-motion{transition:none;transform:none}.pet-companion__visual img{animation:none}}
