@@ -8,7 +8,7 @@ namespace NEXO_EDU.Controllers;
 
 // Los alumnos de demo tienen nivel fijo por claim. Docentes y familias pueden
 // explorar las tres presentaciones sin cambiar de rol ni acceder a datos reales.
-public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaStore matriculas, NexoPetNameStore petNames, IConfiguration config, IWebHostEnvironment env) : Controller
+public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaStore matriculas, NexoPetNameStore petNames, NexoFamiliaStore familias, IConfiguration config, IWebHostEnvironment env) : Controller
 {
     private string NivelAlumno => User.FindFirst("DemoLevel")?.Value is string valor
         ? NivelDemo.Normalizar(valor) : NivelDemo.Primaria;
@@ -49,11 +49,55 @@ public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaSto
         return View();
     }
 
+    // Versión provisional estrictamente local: la búsqueda por nombre, grado y
+    // nivel NO verifica parentesco y nunca debe estar accesible en producción.
     [Authorize(Roles = "Familia"), HttpGet]
-    public IActionResult Familia(string? nivel)
+    public async Task<IActionResult> Familia(string? nivel, string? alumnoId)
     {
         ViewBag.Nivel = NivelDeVista(nivel);
-        return View();
+        ViewBag.Nombre = User.FindFirst("DemoName")?.Value ?? "Familia";
+        if (!env.IsDevelopment() || config.GetValue<bool>("DemoMode:Enabled"))
+        {
+            ViewBag.FamiliaProvisionalDisabled = true;
+            return View(new PanelFamiliar(Array.Empty<HijoResumen>(), null));
+        }
+        var id = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(id)) return Forbid();
+        var hijos = await familias.ListarHijosAsync(id, HttpContext.RequestAborted);
+        PanelHijo? elegido = null;
+        if (!string.IsNullOrWhiteSpace(alumnoId))
+        {
+            elegido = await familias.ConsultarAsync(id, alumnoId, HttpContext.RequestAborted);
+            if (elegido is null) return Forbid();
+        }
+        else if (hijos.Count > 0)
+            elegido = await familias.ConsultarAsync(id, hijos[0].AlumnoId, HttpContext.RequestAborted);
+        return View(new PanelFamiliar(hijos, elegido));
+    }
+
+    [Authorize(Roles = "Familia"), HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> BuscarHijo(BusquedaHijoModel model)
+    {
+        // La búsqueda por datos conocidos es únicamente una funcionalidad de
+        // prototipo para personas ficticias en desarrollo.
+        if (!env.IsDevelopment() || config.GetValue<bool>("DemoMode:Enabled")) return NotFound();
+        if (model.Nivel != "primaria" && model.Grado > 3)
+            ModelState.AddModelError(nameof(model.Grado), "Secundaria y preparatoria tienen grados 1 a 3.");
+        if (!ModelState.IsValid)
+        {
+            TempData["FamiliaError"] = "Revisa nombre completo, nivel educativo y grado.";
+            return RedirectToAction(nameof(Familia));
+        }
+        var id = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(id)) return Forbid();
+        var resultado = await familias.VincularPorDatosAsync(id, model, HttpContext.RequestAborted);
+        TempData[resultado == 1 ? "FamiliaOk" : "FamiliaError"] = resultado switch
+        {
+            1 => "Encontramos el registro. Ya puedes consultar el seguimiento de este alumno de prueba.",
+            -2 => "Encontramos más de un alumno con esos datos; pide al docente una vinculación individual.",
+            _ => "No encontramos una coincidencia exacta. Revisa el nombre, el grado y el nivel."
+        };
+        return RedirectToAction(nameof(Familia), new { nivel = model.Nivel });
     }
 
     [Authorize(Roles = "Alumno"), HttpGet]

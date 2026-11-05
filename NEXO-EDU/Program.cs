@@ -10,6 +10,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<NexoProgressStore>();
 builder.Services.AddScoped<NexoMatriculaStore>();
 builder.Services.AddScoped<NexoPetNameStore>();
+builder.Services.AddScoped<NexoFamiliaStore>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {

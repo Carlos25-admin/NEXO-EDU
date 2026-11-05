@@ -1,32 +1,141 @@
+@using NEXO_EDU.Models
+@using NEXO_EDU.Services
+@model PanelFamiliar
 @{
     ViewData["Title"] = "Seguimiento familiar";
     ViewData["Immersive"] = true;
-    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    var nivel = Model.Seleccionado?.Alumno.Nivel ?? (string?)ViewBag.Nivel ?? "primaria";
     ViewData["CurrentLevel"] = nivel;
     ViewData["LevelAction"] = "Familia";
     ViewData["LevelRole"] = "Familia";
+    var demoDeshabilitado = ViewBag.FamiliaProvisionalDisabled is true;
+    var alumno = Model.Seleccionado?.Alumno;
+    var nombre = (string?)ViewBag.Nombre ?? "Familia";
+    var nivelNombre = NEXO_EDU.Models.NivelDemo.Nombre(nivel);
+    var mascota = MascotasNexo.ParaNivel(nivel);
+    var etapa = alumno is null ? 1 : mascota.ElegirEtapa(alumno.Xp).Numero;
 }
+<link rel="stylesheet" href="~/css/nexo-family.css" asp-append-version="true"/>
 <div class="level-experience @(nivel == "primaria" ? "theme-primary" : nivel == "secundaria" ? "theme-secondary" : "theme-prepa")">
 <div class="level-app-shell">
-    <partial name="_LevelSidebar"/>
-    <main class="level-main">
-        <div class="level-page-top"><span>Hola, Lucía</span><span>Semana del 2 al 8 de noviembre · Datos de ejemplo</span></div>
-        <div class="level-preview"><small>Ver diseño por nivel</small><partial name="_LevelSwitcher"/></div>
-        <div class="module-shortcut"><div><strong>Guía para acompañar en casa</strong><p>Actividades sencillas y consejos específicos para cada nivel educativo.</p></div><a asp-controller="Modulos" asp-action="GuiaFamiliar" asp-route-nivel="@nivel">Ver la guía →</a></div>
-        @if (nivel == "primaria")
-        {
-            <div class="level-heading family-heading"><h1>Así va la aventura de Leo</h1><p>Pequeños descubrimientos, a su ritmo.</p></div>
-            <section class="family-feature"><div><span class="tiny-caps">ESTA SEMANA</span><h2>3 de 4 aventuras completadas</h2><div class="family-feature-progress"><span></span></div><p>✓ Ya reconoce los números hasta el 20.</p><span class="violet-link">Su aprendizaje · Vista de ejemplo</span></div><div class="family-mascot" aria-label="NEXO PET, compañero de Leo"><span class="mini-mascot">✦</span><div class="mascot-badge">♙ Gran explorador</div></div></section>
-            <section class="family-together"><div class="section-row"><h2>Un ratito juntos</h2><small>Sin pantallas · 5 minutos</small></div><div class="together-item"><div class="hand-illustration">♧</div><div><h3>¿Cuántos tesoros hay en casa?</h3><p>Buscad 10 objetos y contadlos juntos. Jugar con lo cotidiano ayuda a practicar las sumas.</p></div><span class="soft-pill">Actividad familiar</span></div></section>
-            <section class="family-message"><div class="section-row"><h2>Un mensaje de su profe</h2><small>Hoy, 10:30 · Ejemplo</small></div><div class="teacher-message"><span class="initial-circle green">CR</span><div><strong>Clara Ruiz</strong><p>«Leo está participando con muchas ganas. Esta semana seguiremos practicando las sumas. ¡Gracias por acompañarlo!»</p><span class="violet-link">Mensajería · Próximamente</span></div></div></section>
-        }
-        else
-        {
-            <div class="level-heading"><h1>@(nivel == "secundaria" ? "Acompaña el progreso de Sofía" : "Acompañamiento con autonomía")</h1><p>@(nivel == "secundaria" ? "2.º de secundaria · Seguimiento del aprendizaje" : "Preparatoria · Metas académicas compartidas con respeto a la privacidad")</p></div>
-            <section class="level-banner"><div><span class="tiny-caps">RESUMEN DEL PERIODO</span><h2>@(nivel == "secundaria" ? "Cada avance es una oportunidad" : "Avanzando hacia nuevas metas")</h2><p>@(nivel == "secundaria" ? "Celebra sus logros y ayuda a reforzar las dificultades." : "Acompaña sus decisiones educativas sin sustituir su autonomía.")</p><div class="progress-meter"><span style="width:76%"></span></div><small>76% del plan · dato ilustrativo</small></div><div class="banner-symbol">♡</div></section>
-            <div class="level-metrics"><article><span>ACTIVIDADES</span><strong>8/10</strong><small>Periodo actual</small></article><article><span>FORTALEZAS</span><strong>3</strong><small>Conceptos logrados</small></article><article><span>APOYOS SUGERIDOS</span><strong>1</strong><small>Consultar con el docente</small></article></div>
-            <div class="level-two-cols"><article class="level-white-card"><h2>¿Cómo puedo apoyar?</h2><p>@(nivel == "secundaria" ? "Conversen sobre el tema que está estudiando y acuerden horarios de práctica sin presiones." : "Escucha sus objetivos, reconoce sus decisiones y ofrece ayuda cuando la solicite.")</p><div class="note-box">El esfuerzo y la mejora son más importantes que una sola calificación.</div></article><article class="level-white-card"><h2>Comunicación con la escuela</h2><p>Un espacio para recibir avisos y coordinar apoyos educativos.</p><span class="route-tag neutral">Mensajería · Próximamente</span></article></div>
-        }
-    </main>
+  <partial name="_LevelSidebar"/>
+  <main class="level-main nexo-family">
+    <div class="level-page-top"><span>Hola, @nombre</span><span>NEXO FAMILY · Acompañamiento escolar</span></div>
+    <section class="family-hero-real">
+      <span class="family-eyebrow">FAMILIA · SEGUIMIENTO ACADÉMICO</span>
+      <h1>Acompañemos su aprendizaje</h1>
+      <p>Consulta las actividades, materias y avances registrados en NEXO EDU.</p>
+      @if (demoDeshabilitado) {
+        <div class="family-warning" role="status"><strong>Vinculación familiar aún no habilitada para producción.</strong> Para proteger la privacidad de los alumnos, la búsqueda por nombre y grado se permite únicamente en el entorno de desarrollo. La versión en línea requerirá una autorización verificada.</div>
+      } else {
+        <div class="family-warning" role="note"><strong>Modo de pruebas.</strong> Esta búsqueda por nombre, grado y nivel no verifica parentesco. Utilízala solamente con alumnos ficticios en desarrollo, nunca con expedientes reales.</div>
+      }
+    </section>
+    @if (!demoDeshabilitado)
+    {
+      <section class="family-finder">
+        <div><span class="family-eyebrow">LOCALIZAR ALUMNO</span><h2>Busca a tu hijo o hija</h2><p>Escribe los datos exactamente como el docente los registró.</p></div>
+        @if (TempData["FamiliaOk"] is string ok) { <p class="family-message family-message--success" role="status">@ok</p> }
+        @if (TempData["FamiliaError"] is string error) { <p class="family-message family-message--error" role="alert">@error</p> }
+        <form asp-controller="NexoDemo" asp-action="BuscarHijo" method="post" class="family-search-form">
+          @Html.AntiForgeryToken()
+          <label>Nombre completo del alumno
+            <input name="Nombre" type="text" required minlength="2" maxlength="120" autocomplete="off" placeholder="Como aparece en el registro escolar"/>
+          </label>
+          <label>Nivel educativo
+            <select name="Nivel" id="family-level" required>
+              <option value="primaria">Primaria</option>
+              <option value="secundaria">Secundaria</option>
+              <option value="preparatoria">Preparatoria</option>
+            </select>
+          </label>
+          <label>Grado escolar
+            <select name="Grado" id="family-grade" required>
+              @for(var i=1;i<=6;i++){<option value="@i">@(i).º grado</option>}
+            </select>
+          </label>
+          <button type="submit">Buscar en NEXO EDU →</button>
+        </form>
+      </section>
+      @if (Model.Hijos.Count>0)
+      {
+        <section class="family-children">
+          <div class="family-section-head"><div><span class="family-eyebrow">ALUMNOS VINCULADOS</span><h2>Mis estudiantes</h2></div><span>@Model.Hijos.Count registro(s)</span></div>
+          <div class="family-child-grid">
+            @foreach(var hijo in Model.Hijos)
+            {
+              var activo = alumno?.AlumnoId == hijo.AlumnoId;
+              <a class="family-child @(activo?"is-active":"")" asp-action="Familia" asp-route-alumnoId="@hijo.AlumnoId" asp-route-nivel="@hijo.Nivel">
+                <span class="family-child-avatar" aria-hidden="true">@(hijo.Nombre.Length>0?hijo.Nombre.Substring(0,1).ToUpperInvariant():"N")</span>
+                <span><strong>@hijo.Nombre</strong><small>@NEXO_EDU.Models.NivelDemo.Nombre(hijo.Nivel) · @(hijo.Grado).º @hijo.Grupo</small></span>
+                <span aria-hidden="true">›</span>
+              </a>
+            }
+          </div>
+        </section>
+      }
+      @if (alumno is not null)
+      {
+        <section class="family-pupil">
+          <div class="family-section-head"><div><span class="family-eyebrow">DATOS REALES DE POSTGRESQL</span><h2>Progreso de @alumno.Nombre</h2><p>@nivelNombre · @(alumno.Grado).º grado · Grupo @alumno.Grupo</p></div></div>
+          <div class="family-stats">
+            <article><span>EXPERIENCIA</span><strong>@alumno.Xp</strong><small>XP acumulados</small></article>
+            <article><span>ACTIVIDADES</span><strong>@alumno.Actividades</strong><small>Intentos registrados</small></article>
+            <article><span>NIVELES</span><strong>@alumno.NivelesSuperados</strong><small>Etapas superadas</small></article>
+            <article><span>ÚLTIMO RESULTADO</span><strong>@alumno.UltimoPorcentaje%</strong><small>Porcentaje más reciente</small></article>
+          </div>
+          <div class="family-overview">
+            <div class="family-panel-card">
+              <h3>Materias y niveles superados</h3>
+              @if (Model.Seleccionado!.Materias.Count==0) { <p>Aún no hay niveles superados. Su progreso aparecerá cuando complete actividades.</p> }
+              else {
+                @foreach(var materia in Model.Seleccionado.Materias) {
+                  <div class="family-progress-item">
+                    <div><strong>@materia.Clave</strong><small>Nivel @materia.NivelSuperado de 5 · Mejor resultado @materia.MejorPorcentaje%</small></div>
+                    <div class="family-meter" role="progressbar" aria-valuenow="@materia.NivelSuperado" aria-valuemin="0" aria-valuemax="5" aria-label="Niveles superados en @materia.Clave"><span style="width:@(materia.NivelSuperado*20)%"></span></div>
+                  </div>
+                }
+              }
+            </div>
+            <div class="family-panel-card family-pet-card">
+              <h3>Su compañero NEXO PET</h3>
+              <img src="~/img/pets/@(mascota.Clave)-@(etapa).svg" width="230" height="242" alt="@mascota.Nombre, etapa @etapa"/>
+              <strong>@(string.IsNullOrWhiteSpace(alumno.Mascota)?mascota.Nombre:alumno.Mascota)</strong>
+              <p>Etapa @etapa de 3 · Evoluciona con el aprendizaje.</p>
+            </div>
+          </div>
+          <div class="family-panel-card">
+            <h3>Actividades recientes</h3>
+            @if(Model.Seleccionado!.Intentos.Count==0){<p>Todavía no hay intentos registrados.</p>}
+            else{
+              <div class="family-history">
+                @foreach(var intento in Model.Seleccionado.Intentos){
+                  <div class="family-history-row"><span><strong>@intento.Materia · Nivel @intento.Nivel</strong><small>@intento.Fecha.ToString("dd/MM/yyyy")</small></span><strong class="@(intento.Aprobado?"good":"review")">@intento.Porcentaje% · @(intento.Aprobado?"Superado":"Practicando")</strong></div>
+                }
+              </div>
+            }
+          </div>
+          <div class="family-tip"><strong>¿Cómo apoyarlo?</strong><p>@(alumno.UltimoPorcentaje<65 && alumno.Actividades>0 ? "Conversa sobre lo que le resultó difícil y anímalo a revisar las explicaciones. Lo importante es avanzar a su ritmo." : "Reconoce su esfuerzo y pregúntale qué fue lo que más le gustó aprender.")</p></div>
+        </section>
+      }
+      else
+      {
+        <div class="family-empty"><h2>Tu espacio familiar está listo</h2><p>Busca los datos de un alumno de prueba registrado por su docente para consultar sus resultados.</p></div>
+      }
+    }
+    <div class="module-shortcut"><div><strong>Guía para acompañar en casa</strong><p>Ideas sencillas de apoyo para cada nivel.</p></div><a asp-controller="Modulos" asp-action="GuiaFamiliar" asp-route-nivel="@nivel">Abrir guía →</a></div>
+  </main>
 </div>
 </div>
+<script>
+(() => {
+ const level=document.querySelector('#family-level'),grade=document.querySelector('#family-grade');
+ if (!level || !grade) return;
+ const sync=()=>{
+   const last=level.value==='primaria'?6:3;
+   for (const option of grade.options) option.hidden=Number(option.value)>last;
+   if (Number(grade.value)>last) grade.value='1';
+ };
+ level.addEventListener('change',sync);sync();
+})();
+</script>
