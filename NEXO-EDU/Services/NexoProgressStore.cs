@@ -139,9 +139,19 @@ public sealed class NexoProgressStore(IConfiguration config, IWebHostEnvironment
         CancellationToken ct=default)
     {
         if (Demo) return DemoProgressService.Registrar(ctx.Session,ctx.User.Identity?.Name,resultado);
-        // La aventura clásica usa una clave propia, sin mezclarse con niveles de materias.
-        var modulo = new LeccionNexo(resultado.Nivel,"aventura-"+resultado.Nivel,
-            "Matemáticas","Aventura clásica","Reto inicial","✦",Array.Empty<PreguntaNexo>());
+        // La aventura clásica tiene su propio banco de seis preguntas por nivel.
+        // No usar un arreglo vacío: RevisionLeccionNexo.Total se calcula desde
+        // Leccion.Preguntas.Count y PostgreSQL exige total > 0.
+        var actividad = ActividadesDemo.Crear(resultado.Nivel);
+        if (actividad.Retos.Count == 0 || actividad.Retos.Count != resultado.Total)
+            throw new InvalidOperationException("La aventura no tiene un total de preguntas válido.");
+
+        var preguntas = actividad.Retos
+            .Select(r => new PreguntaNexo(r.Numero, r.Enunciado, r.Opciones,
+                r.Correcta, r.Explicacion))
+            .ToArray();
+        var modulo = new LeccionNexo(actividad.Nivel, "aventura-" + actividad.Nivel,
+            actividad.Materia, actividad.Titulo, actividad.Descripcion, "✦", preguntas);
         var revision = new RevisionLeccionNexo(modulo,resultado.Correctas,
             resultado.Detalles.Select(d => new RespuestaNexo(d.Numero,d.Enunciado,
             d.RespuestaCorrecta,d.Explicacion,d.Correcta)).ToArray(),resultado.Xp);
