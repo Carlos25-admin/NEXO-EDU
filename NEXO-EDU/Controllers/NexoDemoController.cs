@@ -50,7 +50,7 @@ public sealed class NexoDemoController(NexoProgressStore store) : Controller
     [Authorize(Roles = "Alumno"), HttpGet]
     public async Task<IActionResult> Mascota()
     {
-        PrepararAlumno();
+        await PrepararAlumnoAsync();
         return View();
     }
 
@@ -63,7 +63,7 @@ public sealed class NexoDemoController(NexoProgressStore store) : Controller
     [Authorize(Roles = "Alumno"), HttpGet]
     public async Task<IActionResult> Aventura(string? nivel)
     {
-        ViewBag.Progreso = DemoProgressService.Leer(HttpContext.Session, User.Identity?.Name);
+        ViewBag.Progreso = await store.LeerAsync(HttpContext, HttpContext.RequestAborted);
         return View(ActividadesDemo.Crear(NivelDeVista(nivel)));
     }
 

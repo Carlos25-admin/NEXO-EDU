@@ -48,7 +48,7 @@ public sealed class ModulosController(NexoProgressStore store) : Controller
     {
         var modulo = CatalogoLecciones.Buscar(NivelAlumno, clave);
         if (modulo is null || nivel is < 1 or > 5) return NotFound();
-        if (nivel > DemoProgressService.MaximoDesbloqueado(Progreso, clave))
+        if (nivel > DemoProgressService.MaximoDesbloqueado(await ProgresoAsync(), clave))
             return RedirectToAction(nameof(Ruta), new { clave });
 
         var preguntas = BancoNiveles.Obtener(modulo,nivel);
