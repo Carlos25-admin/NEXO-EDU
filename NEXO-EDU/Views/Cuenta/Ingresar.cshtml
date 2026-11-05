@@ -9,14 +9,47 @@
 <div class="nexo-login-reimagined">
     <section class="login-left">
         <a class="level-logo" asp-controller="NexoDemo" asp-action="Index"><span class="level-logo-icon">N</span><strong>nexo <small>edu</small></strong></a>
-        <div class="login-story"><h1>Pequeños pasos.<br/>Grandes aventuras.</h1><p>Un lugar para aprender, descubrir y crecer juntos.</p><div class="login-mascot" aria-label="NEXO PET, tu compañero"><span class="mini-mascot">✦</span><span>¡Hola! Soy NEXO PET</span></div></div>
+        <div class="login-story">
+            <div class="login-story__copy">
+                <span class="login-story__eyebrow"><span class="login-story__eyebrow-mark">✦</span> TU AVENTURA COMIENZA AQUÍ</span>
+                <h1>Pequeños pasos.<br/><span>Grandes aventuras.</span></h1>
+                <p>Un lugar para aprender, descubrir y crecer juntos.</p>
+            </div>
+            <div class="login-scene" aria-label="NEXO PET te da la bienvenida" role="img">
+                <div class="login-scene__halo" aria-hidden="true"></div>
+                <span class="login-scene__star login-scene__star--one" aria-hidden="true">✦</span>
+                <span class="login-scene__star login-scene__star--two" aria-hidden="true">✦</span>
+                <span class="login-scene__star login-scene__star--three" aria-hidden="true">✧</span>
+                <span class="login-scene__book" aria-hidden="true">📖</span>
+                <div class="login-scene__speech" aria-hidden="true" data-login-greeting>¡Hola! Soy<br/><strong>NEXO PET</strong></div>
+                <div class="login-buddy" aria-hidden="true">
+                    <div class="login-buddy__ear login-buddy__ear--left"></div>
+                    <div class="login-buddy__ear login-buddy__ear--right"></div>
+                    <div class="login-buddy__body">
+                        <span class="login-buddy__eye login-buddy__eye--left"></span>
+                        <span class="login-buddy__eye login-buddy__eye--right"></span>
+                        <span class="login-buddy__cheek login-buddy__cheek--left"></span>
+                        <span class="login-buddy__cheek login-buddy__cheek--right"></span>
+                        <span class="login-buddy__mouth"></span>
+                        <span class="login-buddy__blush login-buddy__blush--left"></span>
+                        <span class="login-buddy__blush login-buddy__blush--right"></span>
+                    </div>
+                    <span class="login-buddy__arm login-buddy__arm--left"></span>
+                    <span class="login-buddy__arm login-buddy__arm--right"></span>
+                    <span class="login-buddy__foot login-buddy__foot--left"></span>
+                    <span class="login-buddy__foot login-buddy__foot--right"></span>
+                </div>
+                <span class="login-scene__floor" aria-hidden="true"></span>
+                <div class="login-scene__books" aria-hidden="true"><span></span><span></span><span></span></div>
+            </div>
+        </div>
         <small class="login-safe">♧ Un espacio para aprender · Prototipo local</small>
     </section>
-    <section class="login-right">
+    <section class="login-right" aria-label="Acceder a NEXO EDU">
         <div class="login-right-inner">
             <span class="tiny-caps">NEXO EDU · PERFILES DE ACCESO</span><h2>¡Qué bueno verte!</h2>
             <p>Selecciona un perfil. Los estudiantes tienen un nivel asignado a su cuenta de prueba.</p>
-            <div class="login-role-picker demo-five" aria-label="Selecciona una cuenta temporal">
+            <div class="login-role-picker demo-five" aria-label="Selecciona el perfil de acceso">
                 <button type="button" class="chosen" data-demo-email="@(modoLocal ? "alumno@nexoedu.test" : Config["PostgresBootstrap:Accounts:Primaria:Email"] ?? "primaria.db@nexoedu.test")"><span>✿</span>Primaria<small>Alumno</small></button>
                 <button type="button" data-demo-email="@(modoLocal ? "secundaria@nexoedu.test" : Config["PostgresBootstrap:Accounts:Secundaria:Email"] ?? "secundaria.db@nexoedu.test")"><span>✦</span>Secundaria<small>Alumno</small></button>
                 <button type="button" data-demo-email="@(modoLocal ? "prepa@nexoedu.test" : Config["PostgresBootstrap:Accounts:Preparatoria:Email"] ?? "prepa.db@nexoedu.test")"><span>◇</span>Prepa<small>Alumno</small></button>
@@ -29,12 +62,21 @@
                 <input type="hidden" asp-for="ReturnUrl"/>
                 <div asp-validation-summary="ModelOnly" class="auth-errors" role="alert"></div>
                 <label class="login-label" asp-for="Email">Usuario o correo de acceso</label>
-                <input class="login-input" asp-for="Email" autocomplete="username" placeholder="carlosramirez4821 o correo@nexoedu.test"/>
+                <div class="login-input-wrap">
+                    <span class="login-field-icon" aria-hidden="true">♙</span>
+                    <input class="login-input" asp-for="Email" autocomplete="username" placeholder="Tu usuario o correo electrónico" />
+                </div>
                 <span asp-validation-for="Email" class="validation-message"></span>
                 <label class="login-label" asp-for="Password">Contraseña</label>
-                <input class="login-input" asp-for="Password" autocomplete="current-password" placeholder="Introduce tu contraseña"/>
+                <div class="login-input-wrap">
+                    <span class="login-field-icon" aria-hidden="true">♢</span>
+                    <input class="login-input" asp-for="Password" autocomplete="current-password" placeholder="Introduce tu contraseña" />
+                    <button class="login-password-toggle" type="button" data-password-toggle aria-label="Mostrar contraseña" aria-pressed="false">
+                        <span aria-hidden="true">◉</span>
+                    </button>
+                </div>
                 <span asp-validation-for="Password" class="validation-message"></span>
-                <button class="login-submit" type="submit">Entrar a mi espacio →</button>
+                <button class="login-submit" type="submit"><span>Entrar a mi espacio</span><span aria-hidden="true">→</span></button>
             </form>
             @if(modoLocal){<p class="login-tip">Las credenciales de prueba están en README-ACCESOS-NIVELES.md. Seleccionar un perfil no evita la comprobación de contraseña.</p>}
             @if(!modoLocal){<p class="login-footnote"><strong>¿Eres docente?</strong> <a asp-controller="Matricula" asp-action="RegistroDocente">Crear cuenta docente con invitación →</a></p>}

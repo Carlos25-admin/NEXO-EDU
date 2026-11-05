@@ -1,0 +1,8 @@
+
+/* Parpadeo y gestos de bienvenida, con degradación al reducir movimiento. */
+.login-buddy__eye{transform-origin:center;animation:lx-blink 5.6s ease-in-out infinite}
+.login-buddy__eye--right{animation-delay:.08s}
+@keyframes lx-blink{0%,42%,46%,95%,100%{transform:scaleY(1)}44%{transform:scaleY(.12)}}
+.login-buddy.is-greeting .login-buddy__arm--right{animation:lx-wave-fast .65s ease-in-out 3}
+@keyframes lx-wave-fast{0%,100%{transform:rotate(-22deg)}50%{transform:rotate(-85deg)}}
+@media(prefers-reduced-motion:reduce){.login-buddy__eye,.login-buddy.is-greeting .login-buddy__arm--right{animation:none!important}}
