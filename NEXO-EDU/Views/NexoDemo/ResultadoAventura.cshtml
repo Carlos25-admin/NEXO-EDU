@@ -12,7 +12,7 @@
         <div class="result-stats">
             <div><strong>@Model.Porcentaje%</strong><small>Respuestas correctas</small></div>
             <div><strong>+@Model.Xp XP</strong><small>De esta actividad</small></div>
-            <div><strong>@progreso.Xp XP</strong><small>Total de tu sesión</small></div>
+            <div><strong>@progreso.Xp XP</strong><small>Experiencia acumulada</small></div>
         </div>
         <p>@progreso.Mensaje</p>
         <a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@Model.Nivel">Practicar de nuevo ↻</a>
@@ -30,5 +30,5 @@
             </div>
         }
     </article>
-    <p class="fine-print">Resultados temporales del navegador, no evaluaciones escolares registradas.</p>
+    <p class="fine-print">Los intentos se registran en PostgreSQL cuando se utiliza el perfil de base de datos. En Demo local son temporales.</p>
 </section>

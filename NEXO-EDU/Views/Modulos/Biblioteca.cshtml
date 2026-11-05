@@ -18,7 +18,7 @@
     <div class="module-summary">
       <div class="module-stat"><strong>@Model.Count</strong> materias</div>
       <div class="module-stat"><strong>@superados / @(Model.Count*5)</strong> niveles superados</div>
-      <div class="module-stat"><strong>@progreso.Xp</strong> XP de sesión</div>
+      <div class="module-stat"><strong>@progreso.Xp</strong> XP acumulados</div>
     </div>
   </section>
   <div class="module-grid">
@@ -38,5 +38,5 @@
       </article>
     }
   </div>
-  <p class="module-info">Aprendizaje de demostración: niveles, XP y logros permanecen en esta sesión, todavía no en PostgreSQL.</p>
+  <p class="module-info">Aprendizaje de demostración: Niveles, XP y logros se guardan en PostgreSQL al usar el perfil PostgreSQL; el modo Demo local conserva el progreso temporal.</p>
 </div>

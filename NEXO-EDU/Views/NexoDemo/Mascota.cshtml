@@ -30,7 +30,7 @@
       <div class="pet-studio__message">@(progreso.Mensaje ?? "¡Hola! Completa ejercicios y descubriremos juntos nuevas habilidades.")</div>
       <div class="pet-studio__progress-head"><strong>@progreso.Xp XP</strong><span>@(etapa.Numero < 3 ? $"Próxima evolución: {proximaMeta} XP" : "¡Evolución máxima alcanzada!")</span></div>
       <div class="pet-studio__progress" role="progressbar" aria-label="Experiencia de la mascota" aria-valuenow="@Math.Min(progreso.Xp, proximaMeta)" aria-valuemin="0" aria-valuemax="@proximaMeta"><span style="width:@(porcentaje)%"></span></div>
-      <small>@progreso.Actividades ejercicios completados durante esta sesión</small>
+      <small>@progreso.Actividades intentos registrados</small>
       <div class="pet-studio__controls" aria-label="Jugar con la mascota">
         <button type="button" data-pet-gesture="wave" data-pet-message="¡Hola! ¿Aprendemos juntos?">👋 Saludar</button>
         <button type="button" data-pet-gesture="jump" data-pet-message="¡Vamos por otra aventura!">↥ Saltar</button>
@@ -54,5 +54,5 @@
       }
     </div>
   </div>
-  <p class="pet-studio__notice">NEXO PET es una experiencia de demostración. Por ahora el XP se guarda en la sesión del navegador y todavía no se sincroniza con PostgreSQL.</p>
+  <p class="pet-studio__notice">En el perfil PostgreSQL, la experiencia y las evoluciones se conservan entre sesiones. El perfil Demo local continúa utilizando progreso temporal.</p>
 </section>

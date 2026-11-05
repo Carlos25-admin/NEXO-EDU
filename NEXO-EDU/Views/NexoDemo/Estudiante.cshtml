@@ -29,7 +29,7 @@
         <div class="level-preview"><small>Espacio de primaria · Cuenta de demostración</small><partial name="_LevelSwitcher"/></div>
         <div class="primary-greeting"><div><h1>¡Hola, @nombre!</h1><p>¿Listo para descubrir algo nuevo?</p></div><span>✦ Cada intento cuenta</span></div>
         <section class="primary-hero">
-            <div><span class="tiny-caps">♧ MATEMÁTICAS · 5 MIN</span><h2>El bosque de<br/>los números</h2><div class="tiny-meter"><span style="width:@(porcentajeMeta)%"></span></div><small>@progreso.Actividades aventuras terminadas · progreso de esta sesión</small><br/><a class="primary-button" asp-action="Aventura" asp-route-nivel="primaria">¡Vamos a jugar! ▷</a></div>
+            <div><span class="tiny-caps">♧ MATEMÁTICAS · 5 MIN</span><h2>El bosque de<br/>los números</h2><div class="tiny-meter"><span style="width:@(porcentajeMeta)%"></span></div><small>@progreso.Actividades aventuras terminadas · progreso acumulado</small><br/><a class="primary-button" asp-action="Aventura" asp-route-nivel="primaria">¡Vamos a jugar! ▷</a></div>
             <div class="number-art" aria-label="Bloques de números 1, 2 y 3"><span class="block-one">1</span><span class="block-two">2</span><span class="block-three">3</span><i class="sun-disc"></i></div>
         </section>
         <div class="pet-mini-panel pet-mini-panel--aguila"><partial name="_NexoPet"/><div class="pet-mini-panel__text"><strong>¡@mascotaNivel.Nombre crece contigo!</strong><small>@mascotaNivel.ElegirEtapa(progreso.Xp).Nombre · @progreso.Xp XP</small></div><a asp-action="Mascota">Conocer a mi mascota →</a></div>
@@ -52,7 +52,7 @@ else
     <div class="level-app-shell">
         <partial name="_LevelSidebar"/>
         <main class="level-main">
-            <div class="level-page-top"><span>@(esSecundaria ? "Tu espacio para explorar y superarte" : "Tu espacio para construir tu futuro")</span><span>Prototipo · Sesión de demostración</span></div>
+            <div class="level-page-top"><span>@(esSecundaria ? "Tu espacio para explorar y superarte" : "Tu espacio para construir tu futuro")</span><span>Prototipo · Desarrollo educativo</span></div>
             <div class="level-preview"><small>Nivel educativo asociado a tu cuenta</small><partial name="_LevelSwitcher"/></div>
             <div class="level-heading"><h1>@(esSecundaria ? $"¡Hola, {nombre}! Sigue descubriendo." : $"Hola, {nombre}. Diseña tu siguiente paso.")</h1><p>@(esSecundaria ? "Resuelve retos, descubre fortalezas y encuentra apoyo cuando lo necesites." : "Trabaja con metas, competencias y evaluaciones que te ayudan a tomar decisiones.")</p></div>
             <section class="level-banner">
@@ -64,7 +64,7 @@ else
             </section>
             <div class="pet-mini-panel pet-mini-panel--@mascotaNivel.Clave"><partial name="_NexoPet"/><div class="pet-mini-panel__text"><strong>@mascotaNivel.Nombre · @mascotaNivel.ElegirEtapa(progreso.Xp).Nombre</strong><small>@progreso.Xp XP · ¡Un compañero para cada meta!</small></div><a asp-action="Mascota">Ver evolución →</a></div>
             <div class="level-metrics">
-                <article><span>EXPERIENCIA CONSEGUIDA</span><strong>@progreso.Xp XP</strong><small>Acumulada durante esta sesión</small></article>
+                <article><span>EXPERIENCIA CONSEGUIDA</span><strong>@progreso.Xp XP</strong><small>Acumulada en tu cuenta con PostgreSQL</small></article>
                 <article><span>ACTIVIDADES COMPLETADAS</span><strong>@progreso.Actividades</strong><small>Desafíos finalizados</small></article>
                 <article><span>ÚLTIMA EVALUACIÓN</span><strong>@(progreso.Actividades > 0 ? progreso.UltimoPorcentaje.ToString() + "%" : "—")</strong><small>@(progreso.UltimaRuta ?? "Sin actividad completada")</small></article>
             </div>

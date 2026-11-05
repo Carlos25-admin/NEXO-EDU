@@ -6,27 +6,27 @@ using NEXO_EDU.Services;
 namespace NEXO_EDU.Controllers;
 
 [Authorize]
-public sealed class ModulosController : Controller
+public sealed class ModulosController(NexoProgressStore store) : Controller
 {
     private string NivelAlumno => NivelDemo.Normalizar(User.FindFirst("DemoLevel")?.Value);
     private string Nombre => User.FindFirst("DemoName")?.Value ?? "Estudiante";
-    private ProgresoDemo Progreso => DemoProgressService.Leer(HttpContext.Session, User.Identity?.Name);
+    private Task<ProgresoDemo> ProgresoAsync() => store.LeerAsync(HttpContext, HttpContext.RequestAborted);
 
     [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Biblioteca()
+    public async Task<IActionResult> Biblioteca()
     {
         ViewBag.Nivel = NivelAlumno;
         ViewBag.Nombre = Nombre;
-        ViewBag.Progreso = Progreso;
+        ViewBag.Progreso = await ProgresoAsync();
         return View(CatalogoLecciones.PorNivel(NivelAlumno));
     }
 
     [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Ruta(string clave)
+    public async Task<IActionResult> Ruta(string clave)
     {
         var modulo = CatalogoLecciones.Buscar(NivelAlumno, clave);
         if (modulo is null) return NotFound();
-        var progreso = Progreso;
+        var progreso = await ProgresoAsync();
         ViewBag.Progreso = progreso;
         return View(new RutaNivelViewModel(modulo,
             DemoProgressService.MaximoDesbloqueado(progreso, clave), BancoNiveles.TotalNiveles,
@@ -34,17 +34,17 @@ public sealed class ModulosController : Controller
     }
 
     [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Resolver(string clave, int nivel = 1)
+    public async Task<IActionResult> Resolver(string clave, int nivel = 1)
     {
         var modulo = CatalogoLecciones.Buscar(NivelAlumno, clave);
         if (modulo is null || nivel is < 1 or > 5) return NotFound();
-        if (nivel > DemoProgressService.MaximoDesbloqueado(Progreso, clave))
+        if (nivel > DemoProgressService.MaximoDesbloqueado(await ProgresoAsync(), clave))
             return RedirectToAction(nameof(Ruta), new { clave });
         return View(new ActividadNivelViewModel(modulo, nivel, BancoNiveles.Obtener(modulo,nivel)));
     }
 
     [Authorize(Roles = "Alumno"), HttpPost, ValidateAntiForgeryToken]
-    public IActionResult Calificar(string clave, int nivel = 1)
+    public async Task<IActionResult> Calificar(string clave, int nivel = 1)
     {
         var modulo = CatalogoLecciones.Buscar(NivelAlumno, clave);
         if (modulo is null || nivel is < 1 or > 5) return NotFound();
@@ -68,19 +68,10 @@ public sealed class ModulosController : Controller
         var actividad = modulo with { Preguntas = preguntas };
         var revision = CatalogoLecciones.Revisar(actividad, respuestas);
         var aprobado = revision.Porcentaje >= 65;
-        var obtenido = false;
-        if (aprobado)
-        {
-            var resumen = new ResultadoAventuraDemo(modulo.Nivel, revision.Aciertos,
-                revision.Total, revision.Experiencia,
-                revision.Respuestas.Select(r => new RetroalimentacionDemo(
-                    r.Numero, r.Enunciado, r.Correcta, r.Explicacion, r.Acertada)).ToArray());
-            obtenido = DemoProgressService.AprobarNivel(HttpContext.Session,
-                User.Identity?.Name, clave, nivel, resumen, modulo.Materia);
-        }
-        var nivelDisponible = DemoProgressService.MaximoDesbloqueado(Progreso, clave);
+        var (nueva, desbloqueado) = await store.GuardarNivelAsync(
+            HttpContext, modulo, nivel, revision, respuestas, HttpContext.RequestAborted);
         return View("Resultado", new ResultadoNivelViewModel(revision, nivel,
-            aprobado, obtenido, nivelDisponible, obtenido ? revision.Experiencia : 0));
+            aprobado, nueva, desbloqueado, nueva ? revision.Experiencia : 0));
     }
 
     [Authorize(Roles = "Docente"), HttpGet]

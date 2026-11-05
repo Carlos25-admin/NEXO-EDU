@@ -7,7 +7,7 @@ namespace NEXO_EDU.Controllers;
 
 // Los alumnos de demo tienen nivel fijo por claim. Docentes y familias pueden
 // explorar las tres presentaciones sin cambiar de rol ni acceder a datos reales.
-public sealed class NexoDemoController : Controller
+public sealed class NexoDemoController(NexoProgressStore store) : Controller
 {
     private string NivelAlumno => User.FindFirst("DemoLevel")?.Value is string valor
         ? NivelDemo.Normalizar(valor) : NivelDemo.Primaria;
@@ -16,20 +16,20 @@ public sealed class NexoDemoController : Controller
         User.IsInRole("Alumno")
             ? NivelAlumno : NivelDemo.Normalizar(solicitado);
 
-    private void PrepararAlumno()
+    private async Task PrepararAlumnoAsync()
     {
         ViewBag.Nivel = NivelAlumno;
         ViewBag.Nombre = User.FindFirst("DemoName")?.Value ?? "Estudiante";
-        ViewBag.Progreso = DemoProgressService.Leer(HttpContext.Session, User.Identity?.Name);
+        ViewBag.Progreso = await store.LeerAsync(HttpContext, HttpContext.RequestAborted);
     }
 
     [AllowAnonymous, HttpGet]
     public IActionResult Index() => View();
 
     [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Estudiante(string? nivel)
+    public async Task<IActionResult> Estudiante(string? nivel)
     {
-        PrepararAlumno();
+        await PrepararAlumnoAsync();
         return View();
     }
 
@@ -48,7 +48,7 @@ public sealed class NexoDemoController : Controller
     }
 
     [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Mascota()
+    public async Task<IActionResult> Mascota()
     {
         PrepararAlumno();
         return View();
@@ -61,14 +61,14 @@ public sealed class NexoDemoController : Controller
     public IActionResult Evaluar() => RedirectToAction("Aventura", new { nivel = NivelAlumno });
 
     [Authorize(Roles = "Alumno"), HttpGet]
-    public IActionResult Aventura(string? nivel)
+    public async Task<IActionResult> Aventura(string? nivel)
     {
         ViewBag.Progreso = DemoProgressService.Leer(HttpContext.Session, User.Identity?.Name);
         return View(ActividadesDemo.Crear(NivelDeVista(nivel)));
     }
 
     [Authorize(Roles = "Alumno"), HttpPost, ValidateAntiForgeryToken]
-    public IActionResult CorregirAventura(string? nivel)
+    public async Task<IActionResult> CorregirAventura(string? nivel)
     {
         var actividad = ActividadesDemo.Crear(NivelDeVista(nivel));
         var respuestas = new Dictionary<int, int>();
@@ -84,7 +84,7 @@ public sealed class NexoDemoController : Controller
         }
 
         var resultado = ActividadesDemo.Evaluar(actividad.Nivel, respuestas);
-        ViewBag.Progreso = DemoProgressService.Registrar(HttpContext.Session, User.Identity?.Name, resultado);
+        ViewBag.Progreso = await store.GuardarAventuraAsync(HttpContext, resultado, respuestas, HttpContext.RequestAborted);
         return View("ResultadoAventura", resultado);
     }
 }

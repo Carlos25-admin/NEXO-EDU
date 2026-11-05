@@ -5,6 +5,9 @@ using NEXO_EDU.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
+// La persistencia real utiliza el usuario autenticado de Identity;
+// el perfil Demo local conserva la Session de prototipo.
+builder.Services.AddScoped<NexoProgressStore>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
