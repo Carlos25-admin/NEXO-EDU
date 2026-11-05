@@ -1,0 +1,25 @@
+.matricula-page{min-height:80vh;background:radial-gradient(circle at 12% 10%,#d7e7ff 0,transparent 35%),linear-gradient(125deg,#ecf2fa,#eae7fa);padding:42px 18px 90px;color:#24304a}
+.matricula-shell{max-width:740px;margin:0 auto;border:1px solid #dce2ef;background:#fffdfefa;box-shadow:0 22px 70px #233b6024;border-radius:28px;padding:clamp(22px,4vw,42px)}
+.matricula-shell--wide{max-width:1180px}
+.matricula-back{color:#5c57a9;text-decoration:none;font-weight:800}
+.matricula-heading{margin:24px 0}.matricula-heading h1{font-size:clamp(2rem,4vw,3rem);color:#1d2942;margin:10px 0}.matricula-heading p{line-height:1.6;color:#687693}
+.matricula-kicker{color:#6452b0;font-size:.78rem;font-weight:900;letter-spacing:.13em}
+.matricula-fields{display:grid;grid-template-columns:1fr 1fr;gap:17px}.matricula-wide{grid-column:1/-1}
+.matricula-fields label{display:block;color:#334366;font-size:.89rem;font-weight:800;margin-bottom:8px}
+.matricula-fields input,.matricula-fields select{width:100%;box-sizing:border-box;border:1px solid #cdd7e7;border-radius:12px;padding:13px 14px;font:inherit;background:#fff;color:#263451}
+.matricula-fields input:focus,.matricula-fields select:focus{outline:3px solid #b5b4ee;outline-offset:1px}
+.matricula-fields small{color:#78859a;display:block;margin-top:5px}
+.matricula-button{display:inline-flex;align-items:center;justify-content:center;background:#6654c0;color:white!important;border:0;border-radius:13px;padding:13px 19px;cursor:pointer;text-decoration:none;font-weight:850;margin-top:22px}
+.matricula-error{color:#912d4f;background:#fff0f3;border-radius:12px;padding:12px 15px;margin:18px 0}
+.matricula-note{margin:20px 0;background:#f1f5ff;color:#485b77;border-radius:12px;padding:14px;line-height:1.6}
+.matricula-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.matricula-toolbar .matricula-button{margin:0}
+.matricula-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px 0}.matricula-stats article{padding:19px;border:1px solid #e0e6f1;border-radius:18px;background:#f8faff;display:grid;gap:6px}.matricula-stats strong{font-size:2rem;color:#5d4db6}.matricula-stats span{color:#697991;font-size:.85rem}
+.matricula-empty{border:1px dashed #a9b7d5;border-radius:20px;padding:35px;text-align:center}.matricula-empty p{color:#687693}
+.matricula-table-wrap{overflow:auto;border-radius:17px;border:1px solid #e2e8f3}
+.matricula-table{border-collapse:collapse;min-width:850px;width:100%;background:white}
+.matricula-table th{background:#f0f2fd;color:#4a5276;text-align:left}.matricula-table th,.matricula-table td{padding:16px;border-bottom:1px solid #e9ecf4;font-size:.88rem}
+.matricula-email{font-family:monospace;font-size:.8rem}.matricula-reset{border:1px solid #705cb4;color:#5946a1;background:white;border-radius:9px;padding:9px;cursor:pointer;font-weight:750}
+.matricula-credentials{border:1px solid #dde3ef;border-radius:18px;overflow:hidden}.matricula-credentials p{margin:0;padding:18px;border-bottom:1px solid #e7eaf1;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.matricula-credentials p span{color:#6a7890}.matricula-credentials code{color:#2d3767;font-size:.94rem;overflow-wrap:anywhere}
+.matricula-muted{color:#748099;font-size:.82rem}
+@media(max-width:650px){.matricula-fields{grid-template-columns:1fr}.matricula-stats{grid-template-columns:1fr}.matricula-page{padding:20px 10px}.matricula-shell{padding:23px}}

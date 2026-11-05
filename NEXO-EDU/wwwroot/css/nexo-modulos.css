@@ -57,3 +57,4 @@
 .module-level .module-action{margin-top:8px;max-width:100%;width:auto}
 .module-level__status{display:block;font-size:.78rem;font-weight:800;color:#8b96a5;margin-top:8px}
 @media(max-width:600px){.module-level-grid{grid-template-columns:1fr}.module-level{min-height:245px}}
+.matricula-success{padding:12px;border-radius:10px;background:#e4faeb;color:#235f3d;font-weight:700}

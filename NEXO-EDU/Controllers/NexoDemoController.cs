@@ -7,13 +7,13 @@ namespace NEXO_EDU.Controllers;
 
 // Los alumnos de demo tienen nivel fijo por claim. Docentes y familias pueden
 // explorar las tres presentaciones sin cambiar de rol ni acceder a datos reales.
-public sealed class NexoDemoController(NexoProgressStore store) : Controller
+public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaStore matriculas, IConfiguration config, IWebHostEnvironment env) : Controller
 {
     private string NivelAlumno => User.FindFirst("DemoLevel")?.Value is string valor
         ? NivelDemo.Normalizar(valor) : NivelDemo.Primaria;
 
     private string NivelDeVista(string? solicitado) =>
-        User.IsInRole("Alumno")
+        (User.IsInRole("Alumno") || User.IsInRole("Docente"))
             ? NivelAlumno : NivelDemo.Normalizar(solicitado);
 
     private async Task PrepararAlumnoAsync()
@@ -34,9 +34,16 @@ public sealed class NexoDemoController(NexoProgressStore store) : Controller
     }
 
     [Authorize(Roles = "Docente"), HttpGet]
-    public IActionResult Docente(string? nivel)
+    public async Task<IActionResult> Docente(string? nivel)
     {
         ViewBag.Nivel = NivelDeVista(nivel);
+        ViewBag.Nombre = User.FindFirst("DemoName")?.Value ?? "Docente";
+        if (!(env.IsDevelopment() && config.GetValue<bool>("DemoMode:Enabled")))
+        {
+            var id=User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if(!string.IsNullOrWhiteSpace(id))
+                ViewBag.Grupo = await matriculas.CargarGrupoAsync(id,HttpContext.RequestAborted);
+        }
         return View();
     }
 

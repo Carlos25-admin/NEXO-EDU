@@ -20,6 +20,7 @@
         {
             @if (role == "Docente")
             {
+                <a class="side-link" asp-controller="Matricula" asp-action="MisAlumnos"><span>♙</span>Mis alumnos</a>
                 <a class="side-link" asp-controller="Modulos" asp-action="RecursosDocente" asp-route-nivel="@nivel"><span>▤</span>Recursos docentes</a>
             }
             else

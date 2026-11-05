@@ -1,0 +1,26 @@
+@model NEXO_EDU.Models.DocenteGrupo
+@{
+ ViewData["Title"]="Mis alumnos";
+}
+<link rel="stylesheet" href="~/css/nexo-matricula.css" asp-append-version="true"/>
+<section class="matricula-page">
+ <div class="matricula-shell matricula-shell--wide">
+  <div class="matricula-toolbar"><a class="matricula-back" asp-controller="NexoDemo" asp-action="Docente" asp-route-nivel="@Model.Nivel">← Volver a mi aula</a><a class="matricula-button" asp-action="NuevoAlumno">+ Registrar alumno</a></div>
+  <div class="matricula-heading"><span class="matricula-kicker">MI GRUPO · @Model.Nivel.ToUpperInvariant()</span><h1>Alumnos de @Model.Nombre</h1><p>@Model.Institucion · Gestiona el acceso de tus estudiantes y consulta su progreso acumulado.</p></div>
+  <div class="matricula-stats"><article><strong>@Model.Alumnos.Count</strong><span>Alumnos registrados</span></article><article><strong>@Model.Alumnos.Count(a => a.Actividades>0)</strong><span>Con ejercicios realizados</span></article><article><strong>@Model.Alumnos.Sum(a => a.Actividades)</strong><span>Intentos realizados</span></article></div>
+  @if(TempData["MatriculaError"] is string aviso){<div class="matricula-error" role="alert">@aviso</div>}
+  @if(Model.Alumnos.Count==0){
+    <div class="matricula-empty"><h2>Tu grupo está listo para comenzar</h2><p>Registra al primer alumno. El sistema creará un acceso individual con nivel, grado y grupo.</p><a class="matricula-button" asp-action="NuevoAlumno">Registrar mi primer alumno</a></div>
+  }else{
+    <div class="matricula-table-wrap">
+      <table class="matricula-table"><thead><tr><th>Alumno</th><th>Usuario de acceso</th><th>Grado y grupo</th><th>XP</th><th>Actividades</th><th>Acciones</th></tr></thead><tbody>
+      @foreach(var a in Model.Alumnos){
+       <tr><td><strong>@a.Nombre</strong></td><td class="matricula-email">@a.CorreoAcceso</td><td>@(a.Grado).º @a.Grupo</td><td>@a.Xp</td><td>@a.Actividades</td>
+       <td><form asp-action="ReiniciarClave" method="post" onsubmit="return confirm('¿Generar una nueva contraseña? La anterior dejará de funcionar.');">@Html.AntiForgeryToken()<input type="hidden" name="alumnoId" value="@a.AlumnoId"/><button type="submit" class="matricula-reset">Restablecer clave</button></form></td></tr>
+      }
+      </tbody></table>
+    </div>
+  }
+  <p class="matricula-muted">Las contraseñas no se muestran en esta lista. Solo puedes gestionar alumnos asociados a tu cuenta docente.</p>
+ </div>
+</section>

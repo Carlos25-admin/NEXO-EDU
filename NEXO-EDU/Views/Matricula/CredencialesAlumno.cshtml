@@ -1,0 +1,16 @@
+@model NEXO_EDU.Models.CredencialesAlumno
+@{
+ ViewData["Title"]="Credenciales de alumno";
+}
+<link rel="stylesheet" href="~/css/nexo-matricula.css" asp-append-version="true"/>
+<section class="matricula-page"><div class="matricula-shell">
+ <div class="matricula-heading"><span class="matricula-kicker">ACCESO CREADO CORRECTAMENTE</span><h1>Entrega segura de credenciales</h1><p>Estas credenciales se muestran una sola vez. Cópialas ahora y entrégalas por un canal privado a la familia o responsable autorizado.</p></div>
+ <div class="matricula-credentials">
+  <p><span>Alumno</span><strong>@Model.Nombre</strong></p>
+  <p><span>Usuario</span><code>@Model.Correo</code></p>
+  <p><span>Contraseña temporal</span><code>@Model.Password</code></p>
+  <p><span>Nivel / grado / grupo</span><strong>@Model.Nivel · @(Model.Grado).º @Model.Grupo</strong></p>
+ </div>
+ <div class="matricula-note">No publiques estas credenciales ni las compartas en grupos. El estudiante puede ingresar con su usuario y contraseña. Si se pierde la clave, podrás generar otra desde «Mis alumnos».</div>
+ <a class="matricula-button" asp-action="MisAlumnos">Volver a mis alumnos →</a>
+</div></section>

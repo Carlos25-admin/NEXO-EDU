@@ -23,6 +23,7 @@
                 <button type="button" data-demo-email="@(modoLocal ? "docente@nexoedu.test" : Config["PostgresBootstrap:Accounts:Docente:Email"] ?? "docente.db@nexoedu.test")"><span>▣</span>Docente<small>Educador</small></button>
                 <button type="button" data-demo-email="@(modoLocal ? "familia@nexoedu.test" : Config["PostgresBootstrap:Accounts:Familia:Email"] ?? "familia.db@nexoedu.test")"><span>♡</span>Familia<small>Responsable</small></button>
             </div>
+            @if(TempData["AltaDocenteOk"] is string exito){<p class="matricula-success" role="status">@exito</p>}
             <form asp-controller="Cuenta" asp-action="Ingresar" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ReturnUrl"/>
@@ -36,7 +37,8 @@
                 <button class="login-submit" type="submit">Entrar a mi espacio →</button>
             </form>
             @if(modoLocal){<p class="login-tip">Las credenciales de prueba están en README-ACCESOS-NIVELES.md. Seleccionar un perfil no evita la comprobación de contraseña.</p>}
-            <p class="login-footnote">El registro de cuentas reales, códigos de clase y recuperación de contraseñas se integrarán con PostgreSQL.</p>
+            @if(!modoLocal){<p class="login-footnote"><strong>¿Eres docente?</strong> <a asp-controller="Matricula" asp-action="RegistroDocente">Crear cuenta docente con invitación →</a></p>}
+            <p class="login-footnote">Los alumnos reciben sus credenciales del docente. No necesitan registrarse por su cuenta.</p>
         </div>
     </section>
 </div>
