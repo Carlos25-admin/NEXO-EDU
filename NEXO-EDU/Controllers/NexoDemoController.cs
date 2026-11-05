@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using NEXO_EDU.Models;
 using NEXO_EDU.Services;
@@ -7,7 +8,7 @@ namespace NEXO_EDU.Controllers;
 
 // Los alumnos de demo tienen nivel fijo por claim. Docentes y familias pueden
 // explorar las tres presentaciones sin cambiar de rol ni acceder a datos reales.
-public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaStore matriculas, IConfiguration config, IWebHostEnvironment env) : Controller
+public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaStore matriculas, NexoPetNameStore petNames, IConfiguration config, IWebHostEnvironment env) : Controller
 {
     private string NivelAlumno => User.FindFirst("DemoLevel")?.Value is string valor
         ? NivelDemo.Normalizar(valor) : NivelDemo.Primaria;
@@ -21,6 +22,7 @@ public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaSto
         ViewBag.Nivel = NivelAlumno;
         ViewBag.Nombre = User.FindFirst("DemoName")?.Value ?? "Estudiante";
         ViewBag.Progreso = await store.LeerAsync(HttpContext, HttpContext.RequestAborted);
+        ViewBag.NombreMascota = await petNames.LeerAsync(HttpContext, HttpContext.RequestAborted);
     }
 
     [AllowAnonymous, HttpGet]
@@ -59,6 +61,23 @@ public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaSto
     {
         await PrepararAlumnoAsync();
         return View();
+    }
+
+    [Authorize(Roles = "Alumno"), HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> NombrarMascota(string? nombre)
+    {
+        var elegido = Regex.Replace((nombre ?? "").Trim(), @"\s+", " ");
+        // Nombres cortos legibles en español; sin caracteres de marcado ni control.
+        if (elegido.Length is < 2 or > 24 ||
+            !Regex.IsMatch(elegido, @"^[\p{L}\p{M}0-9 ]+$"))
+        {
+            TempData["PetNameError"] = "Elige un nombre de 2 a 24 caracteres usando letras, números o espacios.";
+            return RedirectToAction(nameof(Mascota));
+        }
+
+        await petNames.GuardarAsync(HttpContext, elegido, HttpContext.RequestAborted);
+        TempData["PetNameSaved"] = "¡Ahora tu mascota se llama " + elegido + "!";
+        return RedirectToAction(nameof(Mascota));
     }
 
     [Authorize(Roles = "Alumno"), HttpGet]

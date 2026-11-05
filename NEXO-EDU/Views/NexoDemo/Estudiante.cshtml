@@ -12,11 +12,23 @@
     var meta = esPrimaria ? 70 : esSecundaria ? 180 : 300;
     var porcentajeMeta = Math.Min(100, (int)(100.0 * progreso.Xp / meta));
     var mascotaNivel = NEXO_EDU.Services.MascotasNexo.ParaNivel(nivel);
+    var apodoMascota = (string?)ViewBag.NombreMascota;
+    var nombreMascota = string.IsNullOrWhiteSpace(apodoMascota) ? mascotaNivel.Nombre : apodoMascota;
+    var bienvenidaMascota = TempData["PetWelcome"] as string;
     ViewData["PetLevel"] = nivel;
     ViewData["PetStage"] = progreso.Etapa;
     ViewData["PetCompact"] = true;
 }
 <div class="level-experience @(esPrimaria ? "theme-primary" : esSecundaria ? "theme-secondary" : "theme-prepa")">
+@if (!string.IsNullOrWhiteSpace(bienvenidaMascota))
+{
+    <section class="nexo-login-welcome" role="status" aria-live="polite">
+      <div class="nexo-login-welcome__spark" aria-hidden="true">✦</div>
+      <div><strong>¡Qué gusto verte, @bienvenidaMascota!</strong>
+      <p>@nombreMascota está feliz de acompañarte hoy. ¡Vamos a descubrir algo nuevo!</p></div>
+      <a asp-action="Mascota">Saludar a @nombreMascota →</a>
+    </section>
+}
 @if(esPrimaria)
 {
     <header class="primary-student-header">
@@ -32,12 +44,12 @@
             <div><span class="tiny-caps">♧ MATEMÁTICAS · 5 MIN</span><h2>El bosque de<br/>los números</h2><div class="tiny-meter"><span style="width:@(porcentajeMeta)%"></span></div><small>@progreso.Actividades aventuras terminadas · progreso acumulado</small><br/><a class="primary-button" asp-action="Aventura" asp-route-nivel="primaria">¡Vamos a jugar! ▷</a></div>
             <div class="number-art" aria-label="Bloques de números 1, 2 y 3"><span class="block-one">1</span><span class="block-two">2</span><span class="block-three">3</span><i class="sun-disc"></i></div>
         </section>
-        <div class="pet-mini-panel pet-mini-panel--aguila"><partial name="_NexoPet"/><div class="pet-mini-panel__text"><strong>¡@mascotaNivel.Nombre crece contigo!</strong><small>@mascotaNivel.ElegirEtapa(progreso.Xp).Nombre · @progreso.Xp XP</small></div><a asp-action="Mascota">Conocer a mi mascota →</a></div>
+        <div class="pet-mini-panel pet-mini-panel--aguila"><partial name="_NexoPet"/><div class="pet-mini-panel__text"><strong>¡@nombreMascota crece contigo!</strong><small>@mascotaNivel.ElegirEtapa(progreso.Xp).Nombre · @progreso.Xp XP</small></div><a asp-action="Mascota">Conocer a mi mascota →</a></div>
         <h2 class="explore-title">Mis pequeñas aventuras</h2>
         <div class="module-shortcut"><div><strong>¡Nuevas aventuras para ti!</strong><p>Matemáticas, lectura, ciencias y convivencia con preguntas interactivas.</p></div><a asp-controller="Modulos" asp-action="Biblioteca">Explorar materias →</a></div>
         <div class="primary-explore">
             <a class="explore-card purple" asp-action="Aventura" asp-route-nivel="primaria"><span>123</span><div><strong>Contamos juntos</strong><small>Sumas, restas y secuencias · Jugar →</small></div></a>
-            <a class="explore-card mint" asp-action="Mascota"><span>✦</span><div><strong>Cuidemos a Nexi</strong><small>Explora tus logros y evolución →</small></div></a>
+            <a class="explore-card mint" asp-action="Mascota"><span>✦</span><div><strong>Cuidemos a @nombreMascota</strong><small>Explora tus logros y evolución →</small></div></a>
         </div>
         <div class="student-improvements">
             <article><span class="mini-icon">★</span><div><strong>Mi experiencia</strong><small>@progreso.Xp XP · etapa @progreso.Etapa de NEXO PET</small></div></article>
@@ -62,7 +74,7 @@ else
                     <a class="level-primary-action" asp-action="Aventura" asp-route-nivel="@nivel">@(esSecundaria ? "Comenzar desafío →" : "Evaluar mis habilidades →")</a>
                 </div><div class="banner-symbol">@(esSecundaria ? "✦" : "ƒ(x)")</div>
             </section>
-            <div class="pet-mini-panel pet-mini-panel--@mascotaNivel.Clave"><partial name="_NexoPet"/><div class="pet-mini-panel__text"><strong>@mascotaNivel.Nombre · @mascotaNivel.ElegirEtapa(progreso.Xp).Nombre</strong><small>@progreso.Xp XP · ¡Un compañero para cada meta!</small></div><a asp-action="Mascota">Ver evolución →</a></div>
+            <div class="pet-mini-panel pet-mini-panel--@mascotaNivel.Clave"><partial name="_NexoPet"/><div class="pet-mini-panel__text"><strong>@nombreMascota · @mascotaNivel.ElegirEtapa(progreso.Xp).Nombre</strong><small>@progreso.Xp XP · ¡Un compañero para cada meta!</small></div><a asp-action="Mascota">Ver evolución →</a></div>
             <div class="level-metrics">
                 <article><span>EXPERIENCIA CONSEGUIDA</span><strong>@progreso.Xp XP</strong><small>Acumulada en tu cuenta con PostgreSQL</small></article>
                 <article><span>ACTIVIDADES COMPLETADAS</span><strong>@progreso.Actividades</strong><small>Desafíos finalizados</small></article>

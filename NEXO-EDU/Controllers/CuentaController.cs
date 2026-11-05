@@ -9,7 +9,7 @@ using NEXO_EDU.Models;
 
 namespace NEXO_EDU.Controllers;
 
-public sealed class CuentaController(IServiceProvider services, IWebHostEnvironment environment, IConfiguration config) : Controller
+public sealed class CuentaController(IServiceProvider services, NEXO_EDU.Services.NexoPetNameStore petNames, IWebHostEnvironment environment, IConfiguration config) : Controller
 {
     private bool DemoLocal => environment.IsDevelopment() && config.GetValue<bool>("DemoMode:Enabled");
 
@@ -61,6 +61,13 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
             var identity = new ClaimsIdentity(claims, "NexoDemoLocal");
             await HttpContext.SignInAsync("NexoDemoLocal", new ClaimsPrincipal(identity),
                 new AuthenticationProperties { IsPersistent = false, AllowRefresh = true });
+            if (perfil.Role == "Alumno")
+            {
+                TempData["PetWelcome"] = perfil.Name ?? "Estudiante";
+                var nombreMascota = await petNames.LeerPorIdAsync(email.ToLowerInvariant(), HttpContext.Session, HttpContext.RequestAborted);
+                if (string.IsNullOrWhiteSpace(nombreMascota))
+                    return RedirectToAction("Mascota", "NexoDemo");
+            }
             return RedirigirPorNombreDeRol(perfil.Role, perfil.Level);
         }
 
@@ -98,6 +105,10 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
         {
             var claims = await users.GetClaimsAsync(user);
             var nivel = claims.FirstOrDefault(c => c.Type == "DemoLevel")?.Value ?? "primaria";
+            TempData["PetWelcome"] = claims.FirstOrDefault(c => c.Type == "DemoName")?.Value ?? "Estudiante";
+            var nombreMascota = await petNames.LeerPorIdAsync(user.Id, HttpContext.Session, HttpContext.RequestAborted);
+            if (string.IsNullOrWhiteSpace(nombreMascota))
+                return RedirectToAction("Mascota", "NexoDemo");
             return RedirigirPorNombreDeRol("Alumno", nivel);
         }
 

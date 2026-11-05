@@ -5,15 +5,17 @@
     var etapa = int.TryParse(ViewData["PetStage"]?.ToString(), out var etapaDeseada) ? Math.Clamp(etapaDeseada, 1, 3) : 1;
     var compacta = ViewData["PetCompact"]?.ToString() == "true";
     var nombreEtapa = mascota.Etapas[etapa - 1].Nombre;
+    var nombrePersonalizado = ViewBag.NombreMascota as string;
+    var nombreMascota = string.IsNullOrWhiteSpace(nombrePersonalizado) ? mascota.Nombre : nombrePersonalizado;
 }
 <div class="nexo-mascot nexo-mascot--@mascota.Clave @(compacta ? "nexo-mascot--compact" : "")"
      data-mascot="@mascota.Clave" data-stage="@etapa" tabindex="0" role="group"
-     aria-label="@mascota.Nombre, etapa @etapa, @nombreEtapa">
+     aria-label="@nombreMascota, etapa @etapa, @nombreEtapa">
     <div class="nexo-mascot__aura" aria-hidden="true"></div>
     <div class="nexo-mascot__spark nexo-mascot__spark--a" aria-hidden="true">✦</div>
     <div class="nexo-mascot__spark nexo-mascot__spark--b" aria-hidden="true">✧</div>
     <div class="nexo-mascot__model">
-        <img src="~/img/pets/@(mascota.Clave)-@(etapa).svg" alt="@mascota.Nombre · @nombreEtapa"
+        <img src="~/img/pets/@(mascota.Clave)-@(etapa).svg" alt="@nombreMascota · @nombreEtapa"
              width="420" height="440" loading="eager" draggable="false" />
     </div>
     <div class="nexo-mascot__shadow" aria-hidden="true"></div>

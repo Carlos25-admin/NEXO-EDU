@@ -9,6 +9,7 @@ builder.Services.AddControllersWithViews();
 // el perfil Demo local conserva la Session de prototipo.
 builder.Services.AddScoped<NexoProgressStore>();
 builder.Services.AddScoped<NexoMatriculaStore>();
+builder.Services.AddScoped<NexoPetNameStore>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
