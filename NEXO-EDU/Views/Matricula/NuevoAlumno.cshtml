@@ -13,7 +13,7 @@
    <div asp-validation-summary="All" class="matricula-error" role="alert"></div>
    <div class="matricula-fields">
     <div class="matricula-wide"><label asp-for="Nombre"></label><input asp-for="Nombre" autocomplete="off" required maxlength="120" placeholder="Nombre y apellidos del estudiante"/></div>
-    <div><label asp-for="Grado"></label><select asp-for="Grado">@for(var i=1;i<=(nivel=="primaria"?6:3);i++){<option value="@i">@i.º grado</option>}</select></div>
+    <div><label asp-for="Grado"></label><select asp-for="Grado">@for(var i=1;i<=(nivel=="primaria"?6:3);i++){<option value="@i">@(i).º grado</option>}</select></div>
     <div><label asp-for="Grupo"></label><input asp-for="Grupo" maxlength="12" required placeholder="A"/></div>
    </div>
    <div class="matricula-note">Por seguridad no solicitamos fecha de nacimiento, CURP, domicilio, teléfono ni fotografía del menor en esta primera etapa.</div>
