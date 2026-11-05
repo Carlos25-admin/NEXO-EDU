@@ -15,7 +15,7 @@
     <div class="matricula-table-wrap">
       <table class="matricula-table"><thead><tr><th>Alumno</th><th>Usuario de acceso</th><th>Grado y grupo</th><th>XP</th><th>Actividades</th><th>Acciones</th></tr></thead><tbody>
       @foreach(var a in Model.Alumnos){
-       <tr><td><strong>@a.Nombre</strong></td><td class="matricula-email">@a.CorreoAcceso</td><td>@(a.Grado).º @a.Grupo</td><td>@a.Xp</td><td>@a.Actividades</td>
+       <tr><td><strong>@a.Nombre</strong></td><td class="matricula-email">@(a.CorreoAcceso.EndsWith("@alumnos.nexoedu.test", StringComparison.OrdinalIgnoreCase) ? a.CorreoAcceso.Split('@')[0] : a.CorreoAcceso)</td><td>@(a.Grado).º @a.Grupo</td><td>@a.Xp</td><td>@a.Actividades</td>
        <td><form asp-action="ReiniciarClave" method="post" onsubmit="return confirm('¿Generar una nueva contraseña? La anterior dejará de funcionar.');">@Html.AntiForgeryToken()<input type="hidden" name="alumnoId" value="@a.AlumnoId"/><button type="submit" class="matricula-reset">Restablecer clave</button></form></td></tr>
       }
       </tbody></table>

@@ -23,3 +23,22 @@
 .matricula-credentials{border:1px solid #dde3ef;border-radius:18px;overflow:hidden}.matricula-credentials p{margin:0;padding:18px;border-bottom:1px solid #e7eaf1;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.matricula-credentials p span{color:#6a7890}.matricula-credentials code{color:#2d3767;font-size:.94rem;overflow-wrap:anywhere}
 .matricula-muted{color:#748099;font-size:.82rem}
 @media(max-width:650px){.matricula-fields{grid-template-columns:1fr}.matricula-stats{grid-template-columns:1fr}.matricula-page{padding:20px 10px}.matricula-shell{padding:23px}}
+
+/* Opciones de credenciales: automático/manual, accesible en móvil */
+.matricula-access-settings{border:1px solid #dce2ef;background:#f7f8ff;border-radius:18px;padding:22px;margin-top:25px}
+.matricula-access-settings h2{font-size:1.25rem;color:#243651;margin:0 0 8px}
+.matricula-access-settings>p{color:#677890;line-height:1.5;margin:0 0 17px}
+.matricula-credential-options{display:grid;gap:13px}
+.matricula-credential-choice{background:white;border:1px solid #dee4f0;border-radius:14px;padding:17px}
+.matricula-checkbox{display:flex;align-items:center;gap:12px;font-size:.95rem;font-weight:850;color:#263753;cursor:pointer}
+.matricula-checkbox input{width:20px;height:20px;accent-color:#6654c0}
+.matricula-automatic-description{font-size:.85rem;color:#697991;margin:10px 0 0}
+.matricula-manual-field{margin-top:14px}
+.matricula-manual-field[hidden],.matricula-automatic-description[hidden]{display:none!important}
+.matricula-manual-field label{display:block;font-weight:800;margin:0 0 7px;color:#35456a}
+.matricula-manual-field input{border:1px solid #cad5e5;border-radius:11px;padding:12px;font:inherit;min-width:0;width:100%;box-sizing:border-box;color:#263451;background:#fff}
+.matricula-manual-field input:focus{outline:3px solid #cbc6f8}
+.matricula-manual-field small{display:block;color:#738097;margin:7px 0 0;line-height:1.5}
+.matricula-validation{display:block;color:#b83256;font-size:.83rem}
+.matricula-password-row{display:flex;gap:8px}
+.matricula-password-row button{border:1px solid #ccc9ed;border-radius:10px;background:#eeeaff;padding:0 14px;color:#4c3a9b;font-weight:800;cursor:pointer}

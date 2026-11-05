@@ -60,7 +60,9 @@ else
         options.Password.RequireDigit = true;
         options.Password.RequireLowercase = true;
         options.Password.RequireUppercase = true;
-        options.Password.RequireNonAlphanumeric = true;
+        // Se permiten contraseñas alfanuméricas largas para alumnos,
+        // conservando longitud mínima, mayúscula, minúscula y número.
+        options.Password.RequireNonAlphanumeric = false;
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
         options.Lockout.MaxFailedAccessAttempts = 5;
         options.Lockout.AllowedForNewUsers = true;

@@ -46,6 +46,20 @@ public sealed class AltaAlumnoModel
     [Required, StringLength(12, MinimumLength=1)]
     [Display(Name="Grupo")]
     public string Grupo { get; set; } = "A";
+
+    [Display(Name="Escribir usuario manualmente")]
+    public bool UsuarioManual { get; set; }
+
+    [StringLength(30)]
+    [Display(Name="Usuario de acceso")]
+    public string? UsuarioElegido { get; set; }
+
+    [Display(Name="Escribir contraseña manualmente")]
+    public bool ClaveManual { get; set; }
+
+    [DataType(DataType.Password)]
+    [Display(Name="Contraseña inicial")]
+    public string? ClaveElegida { get; set; }
 }
 
 public sealed record AlumnoRegistrado(string AlumnoId, string Nombre, string CorreoAcceso,
@@ -55,4 +69,4 @@ public sealed record DocenteGrupo(string Nombre, string Institucion, string Nive
     IReadOnlyList<AlumnoRegistrado> Alumnos);
 
 public sealed record CredencialesAlumno(string Nombre, string Correo, string Password,
-    string Nivel, int Grado, string Grupo);
+    string Nivel, int Grado, string Grupo, string? Usuario = null);

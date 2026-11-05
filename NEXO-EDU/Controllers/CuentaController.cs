@@ -66,7 +66,9 @@ public sealed class CuentaController(IServiceProvider services, IWebHostEnvironm
 
         var users = services.GetRequiredService<UserManager<IdentityUser>>();
         var signIn = services.GetRequiredService<SignInManager<IdentityUser>>();
-        var user = await users.FindByEmailAsync(email);
+        var user = email.Contains('@')
+            ? await users.FindByEmailAsync(email)
+            : await users.FindByNameAsync(email);
         if (user is null)
         {
             ModelState.AddModelError("", "Credenciales incorrectas.");

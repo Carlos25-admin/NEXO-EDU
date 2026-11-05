@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -145,15 +146,50 @@ public sealed class MatriculaController(
             return View(model);
         }
 
-        var codigo=Convert.ToHexString(RandomNumberGenerator.GetBytes(6)).ToLowerInvariant();
-        var email="nexo-"+codigo+"@alumnos.nexoedu.test";
-        var password=CrearPassword();
-        var student=new IdentityUser { Id=Guid.NewGuid().ToString("D"), UserName=email,
+        // El docente puede elegir cada credencial por separado. La sugerencia automática
+        // utiliza nombre + cuatro dígitos aleatorios; jamás se deriva del ID ni de
+        // información sensible del menor. El correo virtual es interno a Identity.
+        string usuario;
+        if (model.UsuarioManual)
+        {
+            usuario = (model.UsuarioElegido ?? "").Trim().ToLowerInvariant();
+            if (!System.Text.RegularExpressions.Regex.IsMatch(usuario, "^[a-z][a-z0-9]{2,29}$"))
+                ModelState.AddModelError(nameof(model.UsuarioElegido),
+                    "El usuario debe tener de 3 a 30 caracteres: letras sin acentos y números, comenzando con letra.");
+            else if (await users.FindByNameAsync(usuario) is not null ||
+                     await users.FindByEmailAsync(usuario + "@alumnos.nexoedu.test") is not null)
+                ModelState.AddModelError(nameof(model.UsuarioElegido), "Ese usuario ya está ocupado. Elige otro.");
+        }
+        else
+        {
+            var raiz = RaizUsuario(model.Nombre);
+            usuario = raiz + RandomNumberGenerator.GetInt32(1000,10000);
+            for (var i=0; i<12 && await users.FindByNameAsync(usuario) is not null; i++)
+                usuario = raiz + RandomNumberGenerator.GetInt32(1000,10000);
+            if (await users.FindByNameAsync(usuario) is not null)
+                ModelState.AddModelError("", "No se pudo generar un usuario único. Intenta nuevamente.");
+        }
+
+        var password = model.ClaveManual ? (model.ClaveElegida ?? "") : CrearPassword();
+        if (model.ClaveManual &&
+            (password.Length < 12 || password.Length > 64 ||
+             !password.Any(char.IsUpper) || !password.Any(char.IsLower) ||
+             !password.Any(char.IsDigit) || !password.All(c => char.IsAsciiLetterOrDigit(c))))
+            ModelState.AddModelError(nameof(model.ClaveElegida),
+                "Usa de 12 a 64 caracteres: letras mayúsculas, minúsculas y números, sin espacios ni símbolos.");
+        if (!ModelState.IsValid) return View(model);
+
+        var email = usuario + "@alumnos.nexoedu.test";
+        var student=new IdentityUser { Id=Guid.NewGuid().ToString("D"), UserName=usuario,
             Email=email,EmailConfirmed=false,LockoutEnabled=true };
         var created=await users.CreateAsync(student,password);
         if(!created.Succeeded)
         {
-            ModelState.AddModelError("", "No se pudo generar la cuenta. Intenta nuevamente.");
+            // Cuando otro docente acaba de registrar el mismo identificador,
+            // Identity rechaza el duplicado a nivel de base de datos.
+            ModelState.AddModelError("", model.UsuarioManual
+                ? "No se pudo crear el acceso. Revisa si el usuario está ocupado o la contraseña es válida."
+                : "No se pudo crear el acceso automático. Inténtalo nuevamente.");
             return View(model);
         }
         try
@@ -180,7 +216,7 @@ public sealed class MatriculaController(
         Response.Headers.CacheControl="no-store";
         Response.Headers.Pragma="no-cache";
         return View("CredencialesAlumno",new CredencialesAlumno(model.Nombre,email,password,
-            grupo.Nivel,model.Grado,model.Grupo.Trim().ToUpperInvariant()));
+            grupo.Nivel,model.Grado,model.Grupo.Trim().ToUpperInvariant(), usuario));
     }
 
     [Authorize(Roles="Docente"), HttpPost, ValidateAntiForgeryToken]
@@ -207,21 +243,37 @@ public sealed class MatriculaController(
         Response.Headers.CacheControl="no-store";
         Response.Headers.Pragma="no-cache";
         return View("CredencialesAlumno",new CredencialesAlumno(fichaPrevia.Nombre,alumno.Email??"",
-            clave,fichaPrevia.Nivel,fichaPrevia.Grado,fichaPrevia.Grupo));
+            clave,fichaPrevia.Nivel,fichaPrevia.Grado,fichaPrevia.Grupo,alumno.UserName));
+    }
+
+    private static string RaizUsuario(string nombre)
+    {
+        // Evita acentos y caracteres que Identity no acepta como UserName.
+        var limpio=nombre.Trim().Normalize(NormalizationForm.FormD);
+        var sinAcentos=new string(limpio
+            .Where(ch => CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
+            .ToArray()).ToLowerInvariant();
+        var palabras=System.Text.RegularExpressions.Regex.Matches(sinAcentos,"[a-z]+")
+            .Select(m => m.Value).ToArray();
+        var raiz=palabras.Length == 0 ? "alumno" :
+            palabras.Length == 1 ? palabras[0] : palabras[0] + palabras[^1];
+        if (raiz.Length > 24) raiz=raiz[..24];
+        return raiz.Length >= 3 ? raiz : "alumno";
     }
 
     private static string CrearPassword()
     {
+        // 16 caracteres alfanuméricos criptográficamente aleatorios.
         const string upper="ABCDEFGHJKLMNPQRSTUVWXYZ";
         const string lower="abcdefghijkmnpqrstuvwxyz";
         const string digits="23456789";
-        const string symbols="!@#$%*-_";
-        const string all=upper+lower+digits+symbols;
-        var chars=new List<char> { upper[RandomNumberGenerator.GetInt32(upper.Length)],
+        const string all=upper+lower+digits;
+        var chars=new List<char> {
+            upper[RandomNumberGenerator.GetInt32(upper.Length)],
             lower[RandomNumberGenerator.GetInt32(lower.Length)],
-            digits[RandomNumberGenerator.GetInt32(digits.Length)],
-            symbols[RandomNumberGenerator.GetInt32(symbols.Length)] };
-        while(chars.Count<18) chars.Add(all[RandomNumberGenerator.GetInt32(all.Length)]);
+            digits[RandomNumberGenerator.GetInt32(digits.Length)]
+        };
+        while(chars.Count<16) chars.Add(all[RandomNumberGenerator.GetInt32(all.Length)]);
         for(int i=chars.Count-1;i>0;i--)
         {
             var j=RandomNumberGenerator.GetInt32(i+1);

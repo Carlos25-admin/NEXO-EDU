@@ -28,8 +28,8 @@
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="ReturnUrl"/>
                 <div asp-validation-summary="ModelOnly" class="auth-errors" role="alert"></div>
-                <label class="login-label" asp-for="Email">Correo de acceso</label>
-                <input class="login-input" asp-for="Email" autocomplete="username" placeholder="correo@nexoedu.test"/>
+                <label class="login-label" asp-for="Email">Usuario o correo de acceso</label>
+                <input class="login-input" asp-for="Email" autocomplete="username" placeholder="carlosramirez4821 o correo@nexoedu.test"/>
                 <span asp-validation-for="Email" class="validation-message"></span>
                 <label class="login-label" asp-for="Password">Contraseña</label>
                 <input class="login-input" asp-for="Password" autocomplete="current-password" placeholder="Introduce tu contraseña"/>
