@@ -35,6 +35,10 @@ public sealed class MatriculaController(
     public async Task<IActionResult> RegistroDocente(RegistroDocenteModel model)
     {
         if (Demo) return NotFound();
+        model.Nombre = ReglasFormulario.NormalizarEspacios(model.Nombre);
+        model.Institucion = ReglasFormulario.NormalizarEspacios(model.Institucion);
+        if (!ReglasFormulario.NombreValido(model.Nombre,3,120))
+            ModelState.AddModelError(nameof(model.Nombre),"El nombre debe contener solo letras y espacios.");
         if (!ModelState.IsValid) return View(model);
 
         // Invitar a docentes exige un secreto largo configurado FUERA del repositorio.
@@ -137,6 +141,10 @@ public sealed class MatriculaController(
         var grupo=DocenteId is null ? null : await store.CargarGrupoAsync(DocenteId,HttpContext.RequestAborted);
         if(grupo is null) return Forbid();
         ViewBag.Nivel=grupo.Nivel;
+        model.Nombre = ReglasFormulario.NormalizarEspacios(model.Nombre);
+        model.Grupo = (model.Grupo ?? "").Trim().ToUpperInvariant();
+        if (!ReglasFormulario.NombreValido(model.Nombre,2,120))
+            ModelState.AddModelError(nameof(model.Nombre),"El nombre del alumno debe contener solo letras y espacios.");
         if(grupo.Nivel!="primaria" && model.Grado>3)
             ModelState.AddModelError(nameof(model.Grado),"En secundaria y preparatoria solo existen grados 1 a 3.");
         if(!ModelState.IsValid) return View(model);

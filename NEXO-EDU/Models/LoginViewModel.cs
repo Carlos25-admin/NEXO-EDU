@@ -5,6 +5,7 @@ namespace NEXO_EDU.Models;
 public sealed class LoginViewModel
 {
     [Required(ErrorMessage = "Escribe tu usuario o correo electrónico.")]
+    [StringLength(256,ErrorMessage="El usuario o correo no puede superar 256 caracteres.")]
     [Display(Name = "Usuario o correo electrónico")]
     public string Email { get; set; } = "";
 

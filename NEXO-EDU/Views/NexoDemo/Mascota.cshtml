@@ -49,11 +49,11 @@
         <div class="pet-name-form__row">
           <input id="nombreMascota" name="nombre" type="text" value="@nombreElegido"
                  placeholder="Ejemplo: Estrellita" maxlength="24" minlength="2"
-                 autocomplete="off" required pattern="[^<>]{2,24}"
+                 autocomplete="off" required data-nexo-validate="nombre"
                  aria-describedby="petNameHelp"/>
           <button type="submit">@(necesitaNombre ? "Guardar mi nombre" : "Cambiar nombre")</button>
         </div>
-        <small id="petNameHelp">De 2 a 24 caracteres. Puedes usar letras, números y espacios.</small>
+        <small id="petNameHelp">De 2 a 24 caracteres: letras, acentos, espacios, guiones o apóstrofes.</small>
         @if (!string.IsNullOrWhiteSpace(mensajeError))
         {
           <p class="pet-name-form__error" role="alert">@mensajeError</p>

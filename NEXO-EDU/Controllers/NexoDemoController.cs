@@ -81,6 +81,9 @@ public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaSto
         // La búsqueda por datos conocidos es únicamente una funcionalidad de
         // prototipo para personas ficticias en desarrollo.
         if (!env.IsDevelopment() || config.GetValue<bool>("DemoMode:Enabled")) return NotFound();
+        model.Nombre = ReglasFormulario.NormalizarEspacios(model.Nombre);
+        if (!ReglasFormulario.NombreValido(model.Nombre,2,120))
+            ModelState.AddModelError(nameof(model.Nombre),"Escribe un nombre válido, solo letras y espacios.");
         if (model.Nivel != "primaria" && model.Grado > 3)
             ModelState.AddModelError(nameof(model.Grado), "Secundaria y preparatoria tienen grados 1 a 3.");
         if (!ModelState.IsValid)
@@ -110,12 +113,12 @@ public sealed class NexoDemoController(NexoProgressStore store, NexoMatriculaSto
     [Authorize(Roles = "Alumno"), HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> NombrarMascota(string? nombre)
     {
-        var elegido = Regex.Replace((nombre ?? "").Trim(), @"\s+", " ");
+        var elegido = ReglasFormulario.NormalizarEspacios(nombre);
         // Nombres cortos legibles en español; sin caracteres de marcado ni control.
         if (elegido.Length is < 2 or > 24 ||
-            !Regex.IsMatch(elegido, @"^[\p{L}\p{M}0-9 ]+$"))
+            !Regex.IsMatch(elegido, ReglasFormulario.Nombre))
         {
-            TempData["PetNameError"] = "Elige un nombre de 2 a 24 caracteres usando letras, números o espacios.";
+            TempData["PetNameError"] = "Elige un nombre de 2 a 24 caracteres usando solo letras, acentos y espacios.";
             return RedirectToAction(nameof(Mascota));
         }
 

@@ -40,7 +40,7 @@
         <form asp-controller="NexoDemo" asp-action="BuscarHijo" method="post" class="family-search-form">
           @Html.AntiForgeryToken()
           <label>Nombre completo del alumno
-            <input name="Nombre" type="text" required minlength="2" maxlength="120" autocomplete="off" placeholder="Como aparece en el registro escolar"/>
+            <input name="Nombre" type="text" required minlength="2" maxlength="120" data-nexo-validate="nombre" autocomplete="off" placeholder="Como aparece en el registro escolar"/>
           </label>
           <label>Nivel educativo
             <select name="Nivel" id="family-level" required>

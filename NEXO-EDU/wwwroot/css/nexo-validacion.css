@@ -1,0 +1,8 @@
+/* Validación contextual sin cambios bruscos ni bloqueos al teclear. */
+.nexo-field-feedback{display:block;min-height:0;margin:5px 0;color:#b42b55;font-size:.79rem;font-weight:650;line-height:1.35}
+.nexo-field-feedback:empty{display:none}
+.nexo-field-invalid{border-color:#d54d73!important;box-shadow:0 0 0 2px rgba(213,77,115,.08)!important}
+.nexo-field-invalid:focus-visible{outline:3px solid #d54d73}
+.matricula-form :is(input,select):valid:not(:placeholder-shown):not([type=checkbox]){transition:border-color .18s}
+.pet-name-form .nexo-field-feedback,.family-search-form .nexo-field-feedback{grid-column:1/-1}
+@media(prefers-reduced-motion:reduce){.nexo-field-invalid{transition:none!important}}

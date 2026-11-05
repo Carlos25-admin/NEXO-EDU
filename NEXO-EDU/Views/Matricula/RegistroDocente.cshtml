@@ -11,12 +11,12 @@
    @Html.AntiForgeryToken()
    <div asp-validation-summary="All" class="matricula-error" role="alert"></div>
    <div class="matricula-fields">
-    <div><label asp-for="Nombre"></label><input asp-for="Nombre" autocomplete="name" required maxlength="120"/></div>
-    <div><label asp-for="Email"></label><input asp-for="Email" autocomplete="email" required maxlength="256"/></div>
-    <div><label asp-for="Institucion"></label><input asp-for="Institucion" required maxlength="140"/></div>
+    <div><label asp-for="Nombre"></label><input asp-for="Nombre" autocomplete="name" required maxlength="120" minlength="3" data-nexo-validate="nombre"/><span asp-validation-for="Nombre" class="matricula-validation"></span></div>
+    <div><label asp-for="Email"></label><input asp-for="Email" type="email" autocomplete="email" required maxlength="256" data-nexo-validate="email"/><span asp-validation-for="Email" class="matricula-validation"></span></div>
+    <div><label asp-for="Institucion"></label><input asp-for="Institucion" required minlength="3" maxlength="140" data-nexo-validate="institucion"/><span asp-validation-for="Institucion" class="matricula-validation"></span></div>
     <div><label asp-for="Nivel"></label><select asp-for="Nivel"><option value="primaria">Primaria</option><option value="secundaria">Secundaria</option><option value="preparatoria">Preparatoria</option></select></div>
-    <div><label asp-for="Password"></label><input asp-for="Password" autocomplete="new-password" required minlength="12"/></div>
-    <div><label asp-for="ConfirmPassword"></label><input asp-for="ConfirmPassword" autocomplete="new-password" required/></div>
+    <div><label asp-for="Password"></label><input asp-for="Password" autocomplete="new-password" required minlength="12" maxlength="128"/></div>
+    <div><label asp-for="ConfirmPassword"></label><input asp-for="ConfirmPassword" autocomplete="new-password" required/><span asp-validation-for="ConfirmPassword" class="matricula-validation"></span></div>
     <div class="matricula-wide"><label asp-for="CodigoInvitacion"></label><input asp-for="CodigoInvitacion" autocomplete="off" required/><small>El registro no está abierto al público. Solicita el código a quien administra el proyecto.</small></div>
    </div>
    <button type="submit" class="matricula-button">Crear mi cuenta docente →</button>
