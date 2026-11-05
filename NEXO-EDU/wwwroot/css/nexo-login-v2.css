@@ -1,0 +1,16 @@
+.nexo-login-reimagined{font-family:"Segoe UI",system-ui,sans-serif;min-height:100vh;display:grid;grid-template-columns:43% 57%;background:#fbfaf7;color:#312d44}
+.login-left{display:flex;flex-direction:column;justify-content:space-between;padding:32px clamp(25px,4vw,64px);background:#eee8ff;min-height:100vh}
+.login-left .level-logo{font-size:19px}.login-left .level-logo-icon{background:#6b52cf}
+.login-story h1{font-weight:850;font-size:clamp(33px,3.9vw,52px);line-height:1.12;letter-spacing:-1.5px;margin:0 0 15px}.login-story p{color:#858092;font-size:15px;max-width:330px}
+.login-mascot{display:grid;justify-items:center;margin:26px auto;position:relative;max-width:320px}
+.login-mascot .mini-mascot{height:190px;width:185px;border-radius:44%;font-size:80px;border:18px solid #ddd0ff;background:#baa5ee;box-shadow:0 10px 30px #8673b632}
+.login-mascot>span:last-child{position:relative;margin-top:-24px;padding:13px;background:white;border-radius:16px;font-size:12px;font-weight:800;color:#6b52cf;box-shadow:0 7px 16px #aa9ccd33}
+.login-safe{font-size:11px;color:#7d70a5}.login-right{display:grid;place-items:center;padding:45px 35px}
+.login-right-inner{width:min(440px,100%)}.login-right-inner h2{font-size:32px;letter-spacing:-1px;margin:8px 0}
+.login-right-inner>p{font-size:13px;color:#8e8995}.login-role-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:23px 0}
+.login-role-picker button{min-height:97px;background:#fff;border:1px solid #e9e6ed;border-radius:16px;color:#858090;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.login-role-picker button span{font-size:24px}.login-role-picker button.chosen{background:#f0eaff;color:#6147bd;border:2px solid #6b52cf}.login-label{display:block;font-size:12px;font-weight:800;margin:13px 0 8px}
+.login-input{width:100%;padding:14px 15px;border-radius:14px;border:1px solid #e7e2e9;background:white;font-size:13px;color:#39344d}
+.login-submit{width:100%;border:0;background:#6a52cf;color:white;border-radius:14px;padding:14px;margin-top:22px;cursor:pointer;font-size:13px;font-weight:800}
+.login-tip,.login-footnote{font-size:11px!important;color:#918b9d!important;line-height:1.6}.login-tip{background:#f1ecff;border-radius:12px;padding:12px}
+@media(max-width:760px){.nexo-login-reimagined{grid-template-columns:1fr}.login-left{min-height:290px;padding:20px}.login-story h1{font-size:27px;margin-top:15px}.login-story p{font-size:12px}.login-mascot,.login-safe{display:none}.login-right{padding:25px 18px}.login-right-inner h2{font-size:28px}}

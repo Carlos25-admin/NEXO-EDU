@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Inicio";
+}
+<section class="hero page-width">
+  <div class="hero-copy">
+    <span class="eyebrow">✦ HACK4EDU 2026 · RETO 08</span>
+    <h1>Aprende <span>a tu ritmo.</span><br />Crece con cada logro.</h1>
+    <p>Educación personalizada, alertas tempranas y un compañero que evoluciona contigo. Una plataforma para estudiantes, docentes y familias.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" asp-action="Estudiante">Explorar plataforma →</a>
+      <a class="btn btn-outline" asp-action="Diagnostico">Probar diagnóstico</a>
+    </div>
+    <div class="hero-points"><span>✓ Aprendizaje adaptativo</span><span>✓ Seguimiento preventivo</span><span>✓ Motivación positiva</span></div>
+  </div>
+  <div class="hero-art">
+    <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+    <div class="floating-chip chip-one">✦ +50 XP</div>
+    <div class="floating-chip chip-two">▥ Progreso</div>
+    <div class="floating-chip chip-three">✓ Nueva habilidad</div>
+    <partial name="_NexoPet" />
+    <div class="hero-art-caption">NEXI · Compañero de aprendizaje</div>
+  </div>
+</section>
+<section class="page-width roles-section">
+  <div class="section-intro"><span class="eyebrow">TU ESPACIO EDUCATIVO</span><h2>Una experiencia para cada persona</h2><p>Conoce el prototipo según el papel que desempeñas.</p></div>
+  <div class="feature-grid">
+    <a class="feature-card role-student" asp-action="Estudiante"><span class="feature-icon">🎓</span><h3>Estudiante</h3><p>Actividades personalizadas, progreso y NEXO PET.</p><span class="card-link">Explorar →</span></a>
+    <a class="feature-card role-teacher" asp-action="Docente"><span class="feature-icon">▥</span><h3>Docente</h3><p>Alertas, indicadores y planes de intervención.</p><span class="card-link">Explorar →</span></a>
+    <a class="feature-card role-family" asp-action="Familia"><span class="feature-icon">♡</span><h3>Familia</h3><p>Acompañamiento y recomendaciones para el hogar.</p><span class="card-link">Explorar →</span></a>
+  </div>
+</section>
+<section class="page-width modules-section">
+  <div class="section-intro"><span class="eyebrow">NUESTRO ECOSISTEMA</span><h2>Más que una plataforma de tareas</h2></div>
+  <div class="module-grid">
+    <article class="module-card"><span class="module-symbol">◎</span><h3>NEXO LEARN</h3><p>Diagnóstico por conceptos y rutas de refuerzo, práctica o avance.</p></article>
+    <article class="module-card"><span class="module-symbol">♢</span><h3>NEXO ALERT</h3><p>Detección oportuna de dificultades y acompañamiento docente.</p></article>
+    <article class="module-card"><span class="module-symbol">✦</span><h3>NEXO PET</h3><p>Mascota evolutiva que reconoce el esfuerzo y la mejora.</p></article>
+    <article class="module-card"><span class="module-symbol">♧</span><h3>NEXO CONNECT</h3><p>Información adecuada para docentes, estudiantes y familias.</p></article>
+  </div>
+</section>

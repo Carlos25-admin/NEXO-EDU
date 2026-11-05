@@ -1,0 +1,60 @@
+/* Biblioteca de módulos NEXO EDU - diseño adaptable por nivel */
+.module-page{--m-accent:#7256d9;--m-tint:#f3efff;max-width:1180px;margin:0 auto;padding:42px 24px 80px;color:#24304a}
+.module-page.secondary{--m-accent:#2265ba;--m-tint:#eaf4ff}
+.module-page.prepa{--m-accent:#163e64;--m-tint:#eef3f7}
+.module-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.module-back{color:var(--m-accent);text-decoration:none;font-weight:700}
+.module-tag{display:inline-block;background:var(--m-tint);color:var(--m-accent);border-radius:999px;padding:8px 15px;font-weight:700;font-size:.86rem}
+.module-title{font-size:clamp(2rem,4vw,3.3rem);line-height:1.13;margin:14px 0;color:#192741}
+.module-subtitle{color:#65738a;font-size:1.06rem;max-width:700px}
+.module-hero{background:linear-gradient(110deg,var(--m-tint),#fff);border:1px solid #e5e8f0;border-radius:26px;padding:32px;margin-bottom:28px}
+.module-summary{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+.module-stat{padding:14px 21px;border-radius:15px;background:white;border:1px solid #e8eaf1;font-size:.96rem}
+.module-stat strong{color:var(--m-accent);font-size:1.35rem;margin-right:6px}
+.module-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:19px}
+.module-card{background:white;border:1px solid #e4e8f0;border-radius:22px;padding:24px;box-shadow:0 9px 25px rgba(32,44,85,.045);display:flex;flex-direction:column;gap:11px}
+.module-icon{font-size:2rem;width:55px;height:55px;display:grid;place-items:center;background:var(--m-tint);border-radius:15px;color:var(--m-accent)}
+.module-card h2{font-size:1.24rem;margin:0;color:#1d2941}.module-card p{color:#65738a;margin:0;line-height:1.55;flex:1}
+.module-category{font-size:.77rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--m-accent)}
+.module-action{background:var(--m-accent);border:0;color:#fff!important;padding:12px 18px;border-radius:12px;text-decoration:none!important;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-weight:750;width:max-content}
+.module-action:hover{filter:brightness(1.08)}.module-card .module-action{margin-top:8px}
+.module-question{background:#fff;border:1px solid #e0e5ef;border-radius:20px;padding:23px 25px;margin:0 0 16px}
+.module-question legend{float:none;width:auto;font-weight:750;font-size:1.12rem;color:#1b2b43;padding:0;margin-bottom:16px}
+.module-answer{display:flex;align-items:center;gap:12px;border:1px solid #dce1eb;border-radius:13px;padding:13px 15px;margin:9px 0;cursor:pointer}
+.module-answer:has(input:checked){border-color:var(--m-accent);background:var(--m-tint)}
+.module-answer input{accent-color:var(--m-accent);width:18px;height:18px}
+.module-result{padding:21px;border-radius:18px;background:#fff;border:1px solid #e4e8f0;margin:12px 0}
+.module-result.correct{border-left:5px solid #32a078}.module-result.review{border-left:5px solid #e09b4c}
+.module-result p{margin:8px 0;color:#5c6a7b}.module-result strong{color:#21334d}
+.module-notice{padding:14px 18px;border:1px solid #e8dfb1;border-radius:13px;background:#fffaf0;color:#7a5d19;margin:18px 0}
+.module-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:25px}.module-outline{border:1px solid var(--m-accent);color:var(--m-accent);padding:11px 18px;border-radius:12px;text-decoration:none;font-weight:700}
+.module-info{font-size:.85rem;color:#708097;margin-top:20px}
+.module-highlight{background:var(--m-tint);border-radius:18px;padding:23px;margin:20px 0}
+.module-highlight h2{font-size:1.2rem;margin:0 0 9px}.module-highlight p{margin:0;color:#4d5e73}
+@media(max-width:600px){.module-page{padding:24px 15px 50px}.module-hero{padding:22px}.module-card{padding:19px}.module-question{padding:17px}.module-action{width:100%}}
+
+/* Misiones progresivas: estados visuales por materia y nivel */
+.module-card--path{position:relative;overflow:hidden}
+.module-card--path::before{content:"";position:absolute;left:0;top:0;right:0;height:4px;background:linear-gradient(90deg,var(--m-accent),#89d9d3)}
+.module-path-dots{display:flex;align-items:center;gap:7px;margin:8px 0 2px}
+.module-path-dots span{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:.81rem}
+.module-path-dots .done{background:#dff8ed;color:#177b5e}
+.module-path-dots .active{background:var(--m-accent);color:#fff;box-shadow:0 6px 12px #27356825}
+.module-path-dots .locked{background:#edf0f4;color:#9aa6b7}
+.module-progress-line{height:8px;width:100%;background:#e8edf4;border-radius:99px;overflow:hidden}
+.module-progress-line span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--m-accent),#60cdbd)}
+.module-level-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:17px;margin:22px 0 32px}
+.module-level{border:1px solid #e0e5ef;background:#fff;border-radius:24px;padding:25px;display:flex;flex-direction:column;gap:10px;position:relative;min-height:284px;box-shadow:0 10px 26px #25305c09}
+.module-level.available{border:2px solid var(--m-accent);box-shadow:0 15px 32px #25305c16}
+.module-level.completed{background:linear-gradient(150deg,#f3fff8,#fff);border-color:#badfcf}
+.module-level.locked{background:#f4f6f9;color:#8290a4}
+.module-level__top{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;font-weight:900;letter-spacing:.1em}
+.module-level__top span:last-child{font-size:1.35rem}
+.module-level__number{font-size:3.3rem;font-weight:900;line-height:1;color:var(--m-accent)}
+.module-level.locked .module-level__number{color:#aeb7c5}
+.module-level h2{font-size:1.13rem;line-height:1.25;color:#24344f;margin:3px 0}
+.module-level p{font-size:.9rem;line-height:1.55;color:#63718a;margin:0;flex:1}
+.module-level .module-action{margin-top:8px;max-width:100%;width:auto}
+.module-level__status{display:block;font-size:.78rem;font-weight:800;color:#8b96a5;margin-top:8px}
+@media(max-width:600px){.module-level-grid{grid-template-columns:1fr}.module-level{min-height:245px}}
+.matricula-success{padding:12px;border-radius:10px;background:#e4faeb;color:#235f3d;font-weight:700}

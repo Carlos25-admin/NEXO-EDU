@@ -1,0 +1,19 @@
+@using NEXO_EDU.Services
+@using NEXO_EDU.Models
+@{
+    ViewData["Title"] = "Recursos docentes";
+}
+<link rel="stylesheet" href="~/css/nexo-modulos.css" asp-append-version="true" />
+@model IReadOnlyList<LeccionNexo>
+@{
+    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    var css = nivel == "secundaria" ? "secondary" : nivel == "preparatoria" ? "prepa" : "";
+}
+<div class="module-page @css"><div class="module-top"><a class="module-back" asp-controller="NexoDemo" asp-action="Docente" asp-route-nivel="@nivel">← Mi aula</a><span class="module-tag">Vista docente · @NivelDemo.Nombre(nivel)</span></div>
+<section class="module-hero"><span class="module-tag">HERRAMIENTAS DEL DOCENTE</span><h1 class="module-title">Planea experiencias que acompañen</h1><p class="module-subtitle">Consulta las materias disponibles en la biblioteca y organiza actividades de apoyo de acuerdo con las necesidades del grupo.</p></section>
+<section class="module-highlight"><h2>Secuencia sugerida de acompañamiento</h2><p>1. Explora saberes previos · 2. Presenta un reto · 3. Escucha las estrategias de los estudiantes · 4. Retroalimenta sin etiquetar · 5. Revisa el avance con una nueva práctica.</p></section>
+<h2>Banco de actividades para @NivelDemo.Nombre(nivel)</h2><div class="module-grid">
+@foreach(var l in Model){<article class="module-card"><div class="module-icon">@l.Icono</div><span class="module-category">@l.Materia</span><h2>@l.Titulo</h2><p>@l.Descripcion</p><small>@l.Preguntas.Count preguntas listas para la práctica del alumno</small></article>}
+</div><div class="module-notice">Vista de planeación. La asignación de actividades a grupos y el seguimiento de estudiantes reales requieren vincular los registros escolares en PostgreSQL.</div>
+<div class="module-actions"><a class="module-outline" asp-action="RecursosDocente" asp-route-nivel="primaria">Primaria</a><a class="module-outline" asp-action="RecursosDocente" asp-route-nivel="secundaria">Secundaria</a><a class="module-outline" asp-action="RecursosDocente" asp-route-nivel="preparatoria">Preparatoria</a></div>
+</div>

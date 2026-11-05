@@ -1,0 +1,11 @@
+.nexo-shell{max-width:1120px;margin:2rem auto;padding:2rem;color:#12234f;background:linear-gradient(135deg,#f6fbff,#e6f3ff);border-radius:24px;font-family:system-ui,sans-serif}
+.nexo-shell h1{font-size:2.3rem;font-weight:800;color:#133aa3}.nexo-eyebrow{letter-spacing:.12em;color:#1386c8;font-size:.8rem;font-weight:700}
+.nexo-grid{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(260px,1fr);gap:1.2rem;margin-top:1.5rem}
+.nexo-card{background:#fff;border:1px solid #dbe8fa;border-radius:22px;box-shadow:0 12px 30px #2255a51b;padding:1.8rem}
+.nexo-card h2{color:#153c94;font-weight:800} .nexo-card fieldset{border:0;border-top:1px solid #e4ecfa;margin:1.2rem 0;padding:1rem 0}
+.nexo-card legend{font-weight:700} .nexo-card label{display:block;padding:.4rem 0;cursor:pointer}
+.nexo-primary{background:linear-gradient(90deg,#0558cf,#129fe5);color:#fff;border:0;border-radius:12px;padding:.8rem 1.3rem;font-weight:700;display:inline-block;text-decoration:none}
+.nexo-primary:hover{color:#fff;filter:brightness(1.08)}
+.nexo-pet{display:grid;place-items:center;margin:.8rem auto;width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,#03d1ec,#125ad8);color:#fff;font-size:5rem;box-shadow:0 0 40px #05a7ed63}
+.nexo-progress{height:10px;background:#e2ecfb;border-radius:20px;overflow:hidden;margin:1rem 0}.nexo-progress span{display:block;width:35%;height:100%;background:linear-gradient(90deg,#0589e0,#00d5ed)}
+@media(max-width:700px){.nexo-shell{padding:1rem;margin:.5rem}.nexo-grid{grid-template-columns:1fr}.nexo-shell h1{font-size:1.7rem}}

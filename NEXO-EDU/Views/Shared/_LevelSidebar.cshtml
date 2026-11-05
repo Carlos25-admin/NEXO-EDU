@@ -1,0 +1,38 @@
+@{
+    var role = ViewData["LevelRole"]?.ToString() ?? "Alumno";
+    var nivel = ViewData["CurrentLevel"]?.ToString() ?? "primaria";
+    var action = role == "Docente" ? "Docente" : role == "Familia" ? "Familia" : "Estudiante";
+    var nombre = role == "Docente" ? "Clara Ruiz" : role == "Familia" ? "Lucía Martín" : "Leo Martín";
+    var subtitulo = role == "Docente" ? "Docente · Demostración" : role == "Familia" ? "Familia · Demostración" : "Estudiante · Demostración";
+}
+<aside class="nexo-side">
+    <a class="level-logo" asp-controller="NexoDemo" asp-action="Index"><span class="level-logo-icon">N</span><strong>nexo <small>edu</small></strong></a>
+    <div class="side-section">ESPACIO @role.ToUpperInvariant()</div>
+    <nav aria-label="Secciones del perfil">
+        <a class="side-link active" asp-controller="NexoDemo" asp-action="@action" asp-route-nivel="@nivel"><span>⌂</span>@(role == "Docente" ? "Mi aula" : role == "Familia" ? "Resumen" : "Mi aventura")</a>
+        @if (role == "Alumno")
+        {
+            <a class="side-link" asp-controller="Modulos" asp-action="Biblioteca"><span>◇</span>Mis materias</a>
+            <a class="side-link" asp-controller="NexoDemo" asp-action="Aventura" asp-route-nivel="@nivel"><span>▣</span>Reto de matemáticas</a>
+            <a class="side-link" asp-controller="NexoDemo" asp-action="Mascota"><span>✦</span>Mi mascota</a>
+        }
+        else
+        {
+            @if (role == "Docente")
+            {
+                <a class="side-link" asp-controller="Matricula" asp-action="MisAlumnos"><span>♙</span>Mis alumnos</a>
+                <a class="side-link" asp-controller="Modulos" asp-action="RecursosDocente" asp-route-nivel="@nivel"><span>▤</span>Recursos docentes</a>
+            }
+            else
+            {
+                <a class="side-link" asp-controller="Modulos" asp-action="GuiaFamiliar" asp-route-nivel="@nivel"><span>▤</span>Guía familiar</a>
+            }
+            <div class="side-link side-muted"><span>◯</span>Mensajes <small>Próximamente</small></div>
+        }
+    </nav>
+    <div class="side-bottom">
+        <div class="side-help">ⓘ ¿Necesitas ayuda?</div>
+        <div class="profile-mini"><div class="profile-avatar">@nombre.Substring(0,1)</div><div><strong>@nombre</strong><small>@subtitulo</small></div></div>
+        <form asp-controller="Cuenta" asp-action="Salir" method="post">@Html.AntiForgeryToken()<button class="side-signout" type="submit">Cerrar sesión ↗</button></form>
+    </div>
+</aside>

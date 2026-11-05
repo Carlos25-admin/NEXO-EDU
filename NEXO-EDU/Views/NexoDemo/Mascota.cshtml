@@ -1,0 +1,91 @@
+@using NEXO_EDU.Services
+@{
+    ViewData["Title"] = "NEXO PET · Mi mascota";
+    ViewData["PetCompanionDisabled"] = true;
+    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    var progreso = ViewBag.Progreso as ProgresoDemo ?? new ProgresoDemo();
+    var mascota = MascotasNexo.ParaNivel(nivel);
+    var nombreElegido = (string?)ViewBag.NombreMascota;
+    var nombreVisible = string.IsNullOrWhiteSpace(nombreElegido) ? mascota.Nombre : nombreElegido;
+    var nombreAlumno = (string?)ViewBag.Nombre ?? "Estudiante";
+    var necesitaNombre = string.IsNullOrWhiteSpace(nombreElegido);
+    var mensajeBienvenida = TempData["PetWelcome"] as string;
+    var mensajeGuardado = TempData["PetNameSaved"] as string;
+    var mensajeError = TempData["PetNameError"] as string;
+    var etapa = mascota.ElegirEtapa(progreso.Xp);
+    var proximaMeta = mascota.SiguienteMeta(progreso.Xp);
+    var porcentaje = Math.Min(100, (int)(100.0 * progreso.Xp / proximaMeta));
+    ViewData["PetLevel"] = nivel;
+    ViewData["PetStage"] = etapa.Numero;
+}
+<section class="pet-studio pet-studio--@mascota.Clave">
+  <div class="pet-studio__top">
+    <a asp-action="Estudiante" class="pet-studio__back">← Volver a mi espacio</a>
+    <span class="pet-studio__brand">NEXO PET <span>✦</span> @NEXO_EDU.Models.NivelDemo.Nombre(nivel)</span>
+  </div>
+  @if (!string.IsNullOrWhiteSpace(mensajeBienvenida))
+  {
+    <div class="pet-welcome" role="status">
+      <span class="pet-welcome__symbol" aria-hidden="true">✦</span>
+      <div><strong>¡Bienvenido a NEXO EDU, @mensajeBienvenida!</strong>
+      <p>Tu compañero @nombreVisible te espera para aprender y descubrir nuevas aventuras.</p></div>
+    </div>
+  }
+  @if (!string.IsNullOrWhiteSpace(mensajeGuardado)) { <p class="pet-welcome pet-welcome--saved" role="status">@mensajeGuardado</p> }
+  <div class="pet-studio__layout">
+    <div class="pet-studio__stage">
+      <div class="pet-studio__orbit" aria-hidden="true"></div>
+      <partial name="_NexoPet"/>
+      <span class="pet-studio__pedestal" aria-hidden="true"></span>
+      <span class="pet-studio__level">ETAPA @etapa.Numero / 3 · @etapa.Nombre</span>
+    </div>
+    <div class="pet-studio__info">
+      <span class="pet-studio__eyebrow">TU COMPAÑERO EVOLUTIVO</span>
+      <h1>Conoce a <span>@nombreVisible</span></h1>
+      <h2>@mascota.Apodo</h2>
+      <form class="pet-name-form" asp-action="NombrarMascota" asp-controller="NexoDemo" method="post">
+        @Html.AntiForgeryToken()
+        <label for="nombreMascota">@(necesitaNombre ? "¡Ponle un nombre a tu mascota!" : "¿Quieres cambiarle el nombre?")</label>
+        <div class="pet-name-form__row">
+          <input id="nombreMascota" name="nombre" type="text" value="@nombreElegido"
+                 placeholder="Ejemplo: Estrellita" maxlength="24" minlength="2"
+                 autocomplete="off" required data-nexo-validate="nombre"
+                 aria-describedby="petNameHelp"/>
+          <button type="submit">@(necesitaNombre ? "Guardar mi nombre" : "Cambiar nombre")</button>
+        </div>
+        <small id="petNameHelp">De 2 a 24 caracteres: letras, acentos, espacios, guiones o apóstrofes.</small>
+        @if (!string.IsNullOrWhiteSpace(mensajeError))
+        {
+          <p class="pet-name-form__error" role="alert">@mensajeError</p>
+        }
+      </form>
+      <p>@mascota.Lema</p>
+      <div class="pet-studio__message">@(progreso.Mensaje ?? "¡Hola! Completa ejercicios y descubriremos juntos nuevas habilidades.")</div>
+      <div class="pet-studio__progress-head"><strong>@progreso.Xp XP</strong><span>@(etapa.Numero < 3 ? $"Próxima evolución: {proximaMeta} XP" : "¡Evolución máxima alcanzada!")</span></div>
+      <div class="pet-studio__progress" role="progressbar" aria-label="Experiencia de la mascota" aria-valuenow="@Math.Min(progreso.Xp, proximaMeta)" aria-valuemin="0" aria-valuemax="@proximaMeta"><span style="width:@(porcentaje)%"></span></div>
+      <small>@progreso.Actividades intentos registrados</small>
+      <div class="pet-studio__controls" aria-label="Jugar con la mascota">
+        <button type="button" data-pet-gesture="wave" data-pet-message="¡Hola! ¿Aprendemos juntos?">👋 Saludar</button>
+        <button type="button" data-pet-gesture="jump" data-pet-message="¡Vamos por otra aventura!">↥ Saltar</button>
+        <button type="button" data-pet-gesture="celebrate" data-pet-message="¡Qué gran esfuerzo!">✦ Celebrar</button>
+      </div>
+      <a class="pet-studio__cta" asp-controller="Modulos" asp-action="Biblioteca">Ganar experiencia con ejercicios →</a>
+    </div>
+  </div>
+  <div class="pet-studio__evolutions">
+    <div class="pet-studio__section"><h2>El camino de @nombreVisible</h2><p>Tres transformaciones. La mascota crece cuando practicas; equivocarte nunca te hace perder XP.</p></div>
+    <div class="pet-studio__cards">
+      @foreach (var fase in mascota.Etapas)
+      {
+        var desbloqueada = progreso.Xp >= fase.XpMinimo;
+        <article class="pet-studio__card @(desbloqueada ? "is-unlocked" : "is-locked") @(etapa.Numero == fase.Numero ? "is-current" : "")">
+          <div class="pet-studio__preview">
+            <img src="~/img/pets/@(mascota.Clave)-@(fase.Numero).svg" loading="lazy" alt="@fase.Nombre" width="180" height="190"/>
+          </div>
+          <div><span>ETAPA @fase.Numero · @(desbloqueada ? "Desbloqueada" : $"{fase.XpMinimo} XP")</span><h3>@fase.Nombre</h3><p>@fase.Descripcion</p></div>
+        </article>
+      }
+    </div>
+  </div>
+  <p class="pet-studio__notice">En el perfil PostgreSQL, la experiencia y las evoluciones se conservan entre sesiones. El perfil Demo local continúa utilizando progreso temporal.</p>
+</section>

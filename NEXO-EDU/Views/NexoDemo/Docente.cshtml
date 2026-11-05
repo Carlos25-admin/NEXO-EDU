@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Mi aula";
+    ViewData["Immersive"] = true;
+    var nivel = (string?)ViewBag.Nivel ?? "primaria";
+    var grupoReal = ViewBag.Grupo as NEXO_EDU.Models.DocenteGrupo;
+    var nombreDocente = (string?)ViewBag.Nombre ?? "Docente";
+    ViewData["CurrentLevel"] = nivel;
+    ViewData["LevelAction"] = "Docente";
+    ViewData["LevelRole"] = "Docente";
+}
+<link rel="stylesheet" href="~/css/nexo-matricula-extra.css" asp-append-version="true"/>
+<div class="level-experience @(nivel == "primaria" ? "theme-primary" : nivel == "secundaria" ? "theme-secondary" : "theme-prepa")">
+<div class="level-app-shell">
+    <partial name="_LevelSidebar"/>
+    <main class="level-main">
+        <div class="level-page-top"><span>Bienvenido, @nombreDocente</span><span>4 de noviembre de 2026 · Datos ilustrativos</span></div>
+        <div class="level-preview"><small>Ver diseño por nivel</small><partial name="_LevelSwitcher"/></div>
+        @if (grupoReal is not null)
+        {
+            <section class="teacher-real-roster">
+                <div class="teacher-real-roster__title">
+                    <div><span>ALUMNOS REGISTRADOS EN POSTGRESQL</span><h2>Mi grupo · @grupoReal.Alumnos.Count estudiantes</h2><p>@grupoReal.Institucion · @NEXO_EDU.Models.NivelDemo.Nombre(grupoReal.Nivel)</p></div>
+                    <a asp-controller="Matricula" asp-action="NuevoAlumno">+ Registrar alumno</a>
+                </div>
+                @if (grupoReal.Alumnos.Count == 0) { <p>Aún no hay estudiantes registrados. Puedes agregar el primero desde «Mis alumnos».</p> }
+                else
+                {
+                    <div class="teacher-roster-grid">
+                    @foreach(var a in grupoReal.Alumnos.Take(8))
+                    {
+                        <div class="teacher-roster-student"><span class="teacher-roster-avatar">@(a.Nombre.Length>0 ? a.Nombre.Substring(0,1).ToUpperInvariant() : "?")</span>
+                            <div><strong>@a.Nombre</strong><small>@(a.Grado).º @a.Grupo · @a.Xp XP · @a.Actividades actividades</small></div></div>
+                    }
+                    </div>
+                }
+                <a class="teacher-roster-link" asp-controller="Matricula" asp-action="MisAlumnos">Ver grupo completo y accesos →</a>
+            </section>
+        }
+        <div class="module-shortcut"><div><strong>Control de mi grupo y alumnos</strong><p>Registra estudiantes, crea sus accesos y consulta su progreso académico.</p></div><a asp-controller="Matricula" asp-action="MisAlumnos">Administrar alumnos →</a></div>
+        <div class="module-shortcut"><div><strong>Recursos para el aula</strong><p>Planeación y banco de actividades por nivel educativo.</p></div><a asp-controller="Modulos" asp-action="RecursosDocente" asp-route-nivel="@nivel">Explorar recursos →</a></div>
+        <p class="teacher-demo-disclaimer">Los indicadores y estudiantes de ejemplo que aparecen a continuación son ilustrativos; los datos reales están en la sección «Mi grupo».</p>
+        @if (nivel == "primaria")
+        {
+            <div class="level-heading"><h1>Cada pequeño avance cuenta</h1><p><strong>2.º B</strong> · 24 estudiantes</p></div>
+            <section class="teacher-feature"><div class="activity-glyph">△<br/>◯ □</div><div><span class="tiny-caps">EN MARCHA HOY</span><h2>El bosque de los números</h2><p>18 de 24 estudiantes han terminado.</p><div class="teacher-progress"><span></span></div></div><span class="subject-label">Matemáticas</span></section>
+            <div class="teacher-bottom"><section><h2>Un poco de apoyo</h2><p>Dos estudiantes necesitan una mano.</p><div class="student-list-item"><span class="initial-circle peach">L</span><div><strong>Leo Martín</strong><small>Está practicando sumas hasta 10</small></div><span>→</span></div><div class="student-list-item"><span class="initial-circle green">A</span><div><strong>Ana López</strong><small>Aún no ha empezado la actividad</small></div><span>→</span></div><p class="quiet-caption">Las alertas requieren revisión del docente.</p></section><section class="teacher-tomorrow"><h2>Para mañana</h2><div class="nature-icon">♧</div><h3>Detectives de la naturaleza</h3><p>Ciencias · 10 minutos</p><span class="violet-link">Preparar actividad · Próximamente</span></section></div>
+            <div class="teacher-lower"><div><strong>¿Qué aprenderemos después?</strong><p>Elige una aventura para tu aula.</p></div><span class="soft-pill">Crear actividad · Próximamente</span></div>
+        }
+        else
+        {
+            <div class="level-heading"><h1>@(nivel == "secundaria" ? "Acompaña cada aprendizaje" : "Decisiones docentes con evidencia")</h1><p>@(nivel == "secundaria" ? "2.º de secundaria · Matemáticas · Grupo A" : "Preparatoria · Matemáticas · Grupo 4.º A")</p></div>
+            <div class="level-metrics"><article><span>ESTUDIANTES</span><strong>@(nivel == "secundaria" ? "30" : "32")</strong><small>Datos ficticios</small></article><article><span>ALERTAS PARA REVISAR</span><strong>4</strong><small>Sin etiquetas definitivas</small></article><article><span>INTERVENCIONES</span><strong>2</strong><small>Pendientes de seguimiento</small></article></div>
+            <section class="level-white-card"><h2>@(nivel == "secundaria" ? "Seguimiento del grupo" : "Panorama de competencias")</h2><p>Identifica conceptos que requieren apoyo y propone actividades de refuerzo.</p><div class="teacher-topic"><span>@(nivel == "secundaria" ? "Fracciones" : "Funciones")</span><div class="horizontal-bar"><span style="width:74%"></span></div><strong>74%</strong></div><div class="teacher-topic"><span>@(nivel == "secundaria" ? "Ecuaciones básicas" : "Modelación algebraica")</span><div class="horizontal-bar"><span style="width:61%"></span></div><strong>61%</strong></div><div class="teacher-topic"><span>@(nivel == "secundaria" ? "Proporcionalidad" : "Análisis de datos")</span><div class="horizontal-bar"><span style="width:82%"></span></div><strong>82%</strong></div></section>
+            <div class="level-two-cols"><section class="level-white-card"><h2>Estudiantes que requieren apoyo</h2><div class="student-list-item"><span class="initial-circle peach">D</span><div><strong>Diego Morales</strong><small>Dificultades recurrentes en el concepto actual</small></div><span class="risk-pill">Revisar</span></div><div class="student-list-item"><span class="initial-circle green">V</span><div><strong>Valentina Rojas</strong><small>Necesita práctica complementaria</small></div><span class="risk-pill mild">Atención</span></div></section><section class="level-white-card"><h2>Próxima intervención</h2><p>Revisión individual, actividad guiada y reevaluación posterior.</p><div class="note-box">NEXO ALERT sugiere acciones; el docente decide cómo acompañar.</div></section></div>
+        }
+    </main>
+</div>
+</div>

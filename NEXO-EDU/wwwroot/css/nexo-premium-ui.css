@@ -1,0 +1,35 @@
+/* NEXO EDU • refinamiento visual compartido */
+:root{--nexo-brand:#7250d4;--nexo-brand-strong:#5539ae;--nexo-brand-soft:#f1ecff;--nexo-ink:#232541;--nexo-border:#e4e5f2;--nexo-card-shadow:0 14px 40px rgba(53,44,100,.075)}
+body{color:var(--nexo-ink)}
+::selection{background:#cabaff;color:#291c57}
+.topbar{background:#ffffffec;backdrop-filter:blur(18px);border-bottom:1px solid #ece9f6;box-shadow:0 8px 25px #3c2b7810}
+.topbar .brand-symbol{background:linear-gradient(145deg,#8e5bf2,#563bc5);transform:none;box-shadow:0 7px 19px #704aca35;border-radius:13px}
+.topbar .brand em{color:#7151d2}
+.topbar .main-nav a{transition:color .18s,transform .18s}
+.topbar .main-nav a:hover{color:#6349c9;transform:translateY(-2px)}
+.topbar .nav-cta{background:linear-gradient(110deg,#8153e6,#5a3bbb);box-shadow:0 10px 22px #6845b12d;color:#fff}
+.feature-card,.module-card,.panel,.course-card,.stat-card{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.feature-card:hover,.module-card:hover,.course-card:hover{transform:translateY(-5px);box-shadow:0 24px 48px rgba(52,43,108,.13);border-color:#cdbdee}
+.feature-card,.module-card,.panel{border-color:var(--nexo-border);box-shadow:var(--nexo-card-shadow)}
+.feature-card{background:linear-gradient(145deg,#fff,#fdfbff)}
+.btn-primary{background:linear-gradient(105deg,#8053e6,#5941ba);box-shadow:0 9px 24px #714ac336}
+.btn-outline{color:#5b48a8;border-color:#c6b8e9}
+.btn-outline:hover{background:#f7f2ff}
+.hero-copy h1 span,.dashboard h1 span{color:#6d4bc5}
+.hero-art{background:radial-gradient(circle at 50% 52%,#d5c1ff,#eee9ff 70%,#faf8ff)}
+.orbit{border-color:#a786e844}
+.hero-points{color:#5d4a99}
+.eyebrow{color:#7652cd}
+.floating-chip{color:#7052b9}
+.level-experience .module-shortcut{box-shadow:0 12px 28px rgba(58,44,112,.08);border-color:#e7dff5;transition:transform .25s,box-shadow .25s}
+.level-experience .module-shortcut:hover{transform:translateY(-2px);box-shadow:0 20px 36px rgba(58,44,112,.12)}
+.level-experience .module-shortcut a{background:linear-gradient(105deg,#7e56df,#5f40b7)}
+.level-experience .nexo-side .side-link{transition:transform .2s,background .2s,color .2s}
+.level-experience .nexo-side .side-link:hover{transform:translateX(4px)}
+.module-page .module-card,.pet-studio__card,.family-panel-card,.family-finder,.matricula-shell{transition:box-shadow .25s ease,border-color .25s ease}
+.module-page .module-card:hover,.pet-studio__card:hover{box-shadow:0 20px 42px rgba(49,35,111,.13)}
+.module-page .module-action,.pet-studio__cta,.matricula-button{transition:transform .2s,box-shadow .2s,filter .2s}
+.module-page .module-action:hover,.pet-studio__cta:hover,.matricula-button:hover{transform:translateY(-2px);filter:brightness(1.05);box-shadow:0 14px 25px #6546b033}
+input,select,textarea{font:inherit}
+:where(input,select,textarea,button,a):focus-visible{outline:3px solid #956df0;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.feature-card,.module-card,.panel,.course-card,.stat-card,.level-experience .module-shortcut,.level-experience .nexo-side .side-link{transition:none!important;transform:none!important}}

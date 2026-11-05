@@ -1,0 +1,34 @@
+@model NEXO_EDU.Services.AventuraDemo
+@{
+    ViewData["Title"] = "Actividad · " + Model.Titulo;
+    ViewData["PetCompanionContext"] = "activity";
+}
+<section class="level-activity-wrap theme-@(Model.Nivel)">
+    <div class="activity-header">
+        <a asp-action="Estudiante" asp-route-nivel="@Model.Nivel">← Volver a mi espacio</a>
+        <span class="tiny-caps">@Model.Materia · Actividad demostrativa</span>
+    </div>
+    <h1>@Model.Titulo</h1><p>@Model.Descripcion</p>
+    <div class="activity-layout">
+        <form class="activity-form" asp-action="CorregirAventura" asp-route-nivel="@Model.Nivel" method="post">
+            @Html.AntiForgeryToken()
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="note-box" role="alert">Responde todos los retos para finalizar.</div>
+            }
+            @foreach(var reto in Model.Retos)
+            {
+                <fieldset class="activity-question"><legend><span class="question-index">@reto.Numero</span> @reto.Enunciado</legend>
+                    <div class="activity-choices">
+                    @for(int i = 0; i < reto.Opciones.Length; i++)
+                    {
+                        <label><input required type="radio" name="reto@(reto.Numero)" value="@i" /><span>@reto.Opciones[i]</span></label>
+                    }
+                    </div>
+                </fieldset>
+            }
+            <button class="level-primary-action activity-submit" type="submit">Terminar mi aventura →</button>
+        </form>
+        <aside class="activity-aside"><div class="activity-friendly-icon">✦</div><h2>¡Tú puedes!</h2><p>Explora, prueba y aprende de cada intento. Lo importante es comprender.</p><small>Con PostgreSQL, tus respuestas y resultados se guardan en tu cuenta.</small></aside>
+    </div>
+</section>

@@ -1,0 +1,13 @@
+.teacher-real-roster{background:#fff;border:1px solid #dce5f0;border-radius:22px;padding:22px;margin:20px 0;box-shadow:0 10px 20px #16224b11}
+.teacher-real-roster__title{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.teacher-real-roster__title span{letter-spacing:.09em;font-weight:900;color:#5b4eaf;font-size:.74rem}
+.teacher-real-roster__title h2{font-size:1.4rem;color:#263759;margin:5px 0}
+.teacher-real-roster__title p{color:#788499;margin:0 0 12px}
+.teacher-real-roster__title a,.teacher-roster-link{display:inline-flex;background:#6855bd;color:white!important;text-decoration:none;border-radius:12px;padding:10px 14px;font-size:.86rem;font-weight:850}
+.teacher-roster-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px;margin-top:19px}
+.teacher-roster-student{display:flex;align-items:center;gap:10px;background:#f5f7fb;border-radius:14px;padding:12px}
+.teacher-roster-student strong{display:block;color:#253654;font-size:.91rem}
+.teacher-roster-student small{display:block;color:#79869c;font-size:.78rem}
+.teacher-roster-avatar{flex:none;display:grid;place-items:center;width:38px;height:38px;background:#e4dcff;color:#6841a5;border-radius:12px;font-weight:900}
+.teacher-roster-link{margin-top:18px;background:transparent!important;color:#5f4daf!important;padding:0}
+.teacher-demo-disclaimer{padding:10px 15px;background:#fff9dc;color:#7c651b;border-radius:10px;font-size:.79rem}

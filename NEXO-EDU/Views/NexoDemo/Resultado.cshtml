@@ -1,0 +1,21 @@
+@model NEXO_EDU.Services.DemoEvaluation
+@{
+    ViewData["Title"] = "Mi progreso";
+}
+<section class="dashboard page-width">
+  <div class="dashboard-heading"><div><span class="eyebrow">NEXO LEARN + NEXO ALERT</span><h1>¡Buen trabajo! <span>Este es tu progreso</span></h1><p>Cada resultado es un punto de partida para seguir aprendiendo.</p></div><a class="btn btn-outline" asp-action="Diagnostico">Volver a practicar ↻</a></div>
+  <div class="student-grid">
+    <div class="student-main">
+      <article class="panel result-hero"><div><span class="eyebrow">DIAGNÓSTICO COMPLETADO</span><h2>@Model.Porcentaje%</h2><p>@Model.Correctas de @Model.Total respuestas correctas</p></div><div><span class="pill">Ruta sugerida: <strong>@Model.Ruta</strong></span><p>Esta recomendación es orientativa; un docente puede ajustarla.</p></div></article>
+      <article class="panel"><h2>Progreso por concepto</h2><div class="concept-grid">
+      @foreach (var item in Model.Conceptos)
+      {
+          var ancho = (int)Math.Round(100.0 * item.Correctas / item.Total);
+          <div class="concept-item"><div class="progress-label"><span>@item.Concepto</span><strong>@ancho%</strong></div><div class="progress-bar"><span style="width:@(ancho)%"></span></div><small>@item.Ruta · @item.Correctas de @item.Total</small></div>
+      }
+      </div></article>
+      <article class="panel"><h2>Tu siguiente paso</h2><p>@(Model.Ruta == "Refuerzo" ? "Repasa fracciones con ejemplos visuales y una nueva práctica guiada." : Model.Ruta == "Práctica" ? "Refuerza los conceptos con mayor dificultad y vuelve a intentarlo." : "¡Excelente! Puedes continuar con ejercicios de mayor dificultad.")</p><a class="btn btn-primary" asp-action="Diagnostico">Practicar de nuevo →</a></article>
+    </div>
+    <aside class="student-aside"><article class="panel pet-panel"><div class="pet-stage"><partial name="_NexoPet" /></div><h2>¡Nexi ganó @Model.Experiencia XP!</h2><p>Etapa de ejemplo: @Model.EtapaMascota de 3.</p><p>Los errores nunca hacen que tu mascota retroceda.</p></article><article class="panel"><h2>Alerta educativa</h2><span class="badge @(Model.Semaforo == "Rojo" ? "badge-red" : Model.Semaforo == "Amarillo" ? "badge-yellow" : "badge-green")">@Model.Semaforo</span><p>El semáforo es una señal de apoyo y requiere interpretación docente.</p><p class="fine-print">Prototipo sin almacenamiento de resultados ni perfiles reales.</p></article></aside>
+  </div>
+</section>

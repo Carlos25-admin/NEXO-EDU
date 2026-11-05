@@ -1,49 +1,63 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="es">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - NEXO_EDU</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/NEXO_EDU.styles.css" asp-append-version="true" />
+    <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="theme-color" content="#6a53ce"/>
+    <title>@ViewData["Title"] · NEXO EDU</title>
+    <link rel="stylesheet" href="~/css/nexo-ui.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-auth.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-levels.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-login-v2.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-pet-purple.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-levels-v2.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-modulos.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-pets-studio.css" asp-append-version="true"/>
+    <script src="~/js/nexo-pet.js" asp-append-version="true" defer></script>
+    <link rel="stylesheet" href="~/css/nexo-pet-companion.css" asp-append-version="true"/>
+    <script src="~/js/nexo-pet-companion.js" asp-append-version="true" defer></script>
+    <link rel="stylesheet" href="~/css/nexo-premium-ui.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-login-premium.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-login-motion.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/nexo-validacion.css" asp-append-version="true"/>
+    <script src="~/js/nexo-validacion.js" asp-append-version="true" defer></script>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NEXO_EDU</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+@if (ViewData["Immersive"] is not true)
+{
+    <header class="topbar">
+        <a class="brand" asp-controller="NexoDemo" asp-action="Index" aria-label="Inicio de NEXO EDU"><span class="brand-symbol">N</span><span>NEXO <em>EDU</em></span></a>
+        <nav class="main-nav" aria-label="Navegación">
+            <a asp-controller="NexoDemo" asp-action="Index">Inicio</a>
+            @if (User.IsInRole("Alumno"))
+            {
+                <a asp-controller="NexoDemo" asp-action="Estudiante">Mi aprendizaje</a>
+                <a asp-controller="NexoDemo" asp-action="Mascota">NEXO PET</a>
+            }
+            @if (User.IsInRole("Docente")) { <a asp-controller="NexoDemo" asp-action="Docente">Mi aula</a> }
+            @if (User.IsInRole("Familia")) { <a asp-controller="NexoDemo" asp-action="Familia">Familia</a> }
         </nav>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form asp-controller="Cuenta" asp-action="Salir" method="post">
+                @Html.AntiForgeryToken()
+                <button class="nav-cta logout-btn" type="submit">Cerrar sesión</button>
+            </form>
+        }
+        else
+        {
+            <a class="nav-cta" asp-controller="Cuenta" asp-action="Ingresar">Iniciar sesión →</a>
+        }
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - NEXO_EDU - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+}
+<main id="contenido">@RenderBody()</main>
+@if (User.IsInRole("Alumno") && ViewData["PetCompanionDisabled"] is not true)
+{
+    <partial name="_PetCompanion"/>
+}
+@if (ViewData["Immersive"] is not true)
+{
+    <footer class="site-footer"><span>© 2026 NEXO EDU · Conectamos talento. Transformamos el aprendizaje.</span><span>Prototipo · Datos ficticios</span></footer>
+}
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

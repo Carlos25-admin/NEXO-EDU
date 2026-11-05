@@ -1,0 +1,27 @@
+@using NEXO_EDU.Services
+@using NEXO_EDU.Models
+@model ActividadNivelViewModel
+@{
+    ViewData["Title"] = "Reto " + Model.Nivel + " · " + Model.Modulo.Materia;
+    ViewData["PetCompanionContext"] = "activity";
+    var css = Model.Modulo.Nivel == "secundaria" ? "secondary" : Model.Modulo.Nivel == "preparatoria" ? "prepa" : "";
+}
+<div class="module-page @css">
+    <div class="module-top"><a class="module-back" asp-action="Ruta" asp-route-clave="@Model.Modulo.Clave">← Mi ruta de niveles</a><span class="module-tag">@NivelDemo.Nombre(Model.Modulo.Nivel) · @Model.Modulo.Materia</span></div>
+    <section class="module-hero"><span class="module-tag">@Model.Modulo.Icono NIVEL @Model.Nivel DE 5</span><h1 class="module-title">@Model.Modulo.Titulo</h1><p class="module-subtitle">@Model.Modulo.Descripcion</p><div class="module-summary"><div class="module-stat"><strong>@Model.Preguntas.Count</strong> preguntas</div><div class="module-stat"><strong>65%</strong> para avanzar</div></div></section>
+    @if(!ViewData.ModelState.IsValid){<div class="module-notice" role="alert">Responde todas las preguntas antes de continuar.</div>}
+    <form method="post" asp-action="Calificar" asp-route-clave="@Model.Modulo.Clave" asp-route-nivel="@Model.Nivel">
+      @Html.AntiForgeryToken()
+      @foreach(var p in Model.Preguntas)
+      {
+        <fieldset class="module-question"><legend>@p.Numero. @p.Enunciado</legend>
+          @for(var i=0;i<p.Opciones.Length;i++)
+          {
+            <label class="module-answer"><input type="radio" required name="pregunta@(p.Numero)" value="@i" /><span>@p.Opciones[i]</span></label>
+          }
+        </fieldset>
+      }
+      <button type="submit" class="module-action">Terminar nivel @Model.Nivel →</button>
+    </form>
+    <p class="module-info">Equivocarte forma parte del aprendizaje. Obtendrás explicaciones después de enviar tus respuestas.</p>
+</div>

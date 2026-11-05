@@ -1,0 +1,94 @@
+/* NEXO EDU — Login premium, diseño específico aprobado (sin cambiar autenticación). */
+.nexo-login-reimagined{
+ --lx-violet:#754ade;--lx-dark:#201b47;--lx-ink:#222044;--lx-shadow:0 21px 55px rgba(55,30,122,.16);
+ display:grid;grid-template-columns:minmax(420px,50%) minmax(420px,50%);min-height:100svh;
+ background:#fffcfa;overflow:hidden;color:var(--lx-ink);font-family:Inter,"Segoe UI",system-ui,sans-serif
+}
+.nexo-login-reimagined *{box-sizing:border-box}
+.nexo-login-reimagined .login-left{
+ position:relative;display:flex;flex-direction:column;justify-content:space-between;isolation:isolate;
+ padding:clamp(28px,3.2vw,56px) clamp(28px,4.1vw,76px) 28px;
+ background:radial-gradient(circle at 47% 58%,rgba(212,185,255,.65),transparent 42%),linear-gradient(145deg,#f4ecff 0%,#ece3ff 61%,#dfd5ff 100%);min-height:100svh;overflow:hidden
+}
+.login-left::before,.login-left::after{content:"";position:absolute;z-index:-1;pointer-events:none}
+.login-left::before{width:68vw;height:34vw;min-height:260px;left:-20%;bottom:-24%;background:#cbb7fa;border-radius:50%;transform:rotate(-15deg);opacity:.46}
+.login-left::after{width:51vw;height:22vw;min-height:230px;right:-32%;bottom:-23%;background:#bca9f6;border-radius:50%;opacity:.38}
+.nexo-login-reimagined .login-left .level-logo{display:inline-flex;align-items:center;gap:11px;font-size:16px;font-weight:900;letter-spacing:-.5px;color:#191735;align-self:flex-start;z-index:2}
+.nexo-login-reimagined .login-left .level-logo-icon{width:39px;height:39px;background:linear-gradient(145deg,#8855f2,#5c31ce);border:1px solid #b5a1ed;color:#fff;border-radius:12px;display:grid;place-items:center;font-size:25px;box-shadow:0 9px 18px #7754c93d}
+.nexo-login-reimagined .login-story{position:relative;display:flex;flex-direction:column;justify-content:center;flex:1;margin-top:14px}
+.login-story__eyebrow{font-size:11px;font-weight:900;letter-spacing:.17em;color:#8066bf;display:inline-flex;align-items:center;gap:8px;margin-bottom:16px}
+.login-story__eyebrow-mark{color:#744ad7}
+.nexo-login-reimagined .login-story h1{font-size:clamp(36px,3.3vw,63px);letter-spacing:-.055em;line-height:1.1;font-weight:900;color:#281a52;margin:0 0 16px}
+.login-story h1 span{color:#44317e}
+.nexo-login-reimagined .login-story p{font-size:clamp(14px,1vw,17px);line-height:1.65;color:#7a6d9a;max-width:440px;margin:0}
+.nexo-login-reimagined .login-safe{color:#876cad;font-size:11px;letter-spacing:.015em;z-index:2}
+.login-scene{position:relative;height:clamp(290px,29vw,425px);width:min(100%,590px);align-self:center;margin-top:0;isolation:isolate}
+.login-scene__halo{position:absolute;width:65%;aspect-ratio:1;left:17%;top:1%;border-radius:50%;background:radial-gradient(circle,#d5bcff88,#e0ccff22 53%,transparent 72%);animation:lx-halo 5s ease-in-out infinite}
+.login-scene__star{position:absolute;color:#ffd66c;text-shadow:0 4px 10px #d29d5e55;font-size:36px;animation:lx-sparkle 3.5s ease-in-out infinite}
+.login-scene__star--one{left:5%;top:40%}.login-scene__star--two{right:5%;top:34%;animation-delay:1.3s}.login-scene__star--three{left:28%;top:18%;font-size:24px;animation-delay:2.4s;color:#9570e2}
+.login-scene__book{position:absolute;left:2%;top:20%;font-size:48px;filter:drop-shadow(0 8px 10px #7155b737);animation:lx-book 6s ease-in-out infinite}
+.login-scene__speech{position:absolute;z-index:5;right:7%;top:5%;border-radius:28px 28px 28px 8px;background:#fff;color:#5133a8;padding:14px 24px;text-align:center;font-weight:800;font-size:15px;line-height:1.28;box-shadow:var(--lx-shadow);animation:lx-speech 5s ease-in-out infinite;transform-origin:bottom left}
+.login-scene__speech strong{font-size:20px}
+.login-scene__floor{position:absolute;z-index:1;left:28%;width:45%;bottom:11%;height:19px;border-radius:100%;background:#6a4ab5;opacity:.19;filter:blur(13px);animation:lx-shadow 3.5s ease-in-out infinite}
+.login-buddy{position:absolute;z-index:3;width:clamp(180px,19vw,270px);height:clamp(205px,22vw,306px);left:50%;top:56%;transform:translate(-50%,-50%);animation:lx-float 3.5s ease-in-out infinite;filter:drop-shadow(0 18px 25px #6e4fa650)}
+.login-buddy__ear{position:absolute;z-index:0;top:4%;width:23%;height:40%;background:linear-gradient(110deg,#d9bcff,#9471df);border:3px solid #a580e8;border-radius:62% 58% 36% 34%}
+.login-buddy__ear--left{left:19%;transform:rotate(-29deg);animation:lx-ear-left 4.8s ease-in-out infinite}
+.login-buddy__ear--right{right:18%;transform-origin:bottom left;transform:rotate(30deg);animation:lx-ear-right 4.8s ease-in-out infinite}
+.login-buddy__body{position:absolute;z-index:3;left:12%;top:27%;width:76%;height:65%;border-radius:46% 47% 44% 44%;background:linear-gradient(135deg,#c9a4ff 0%,#a47cea 55%,#8759d6 100%);border:3px solid #a27ae6;box-shadow:inset 10px 11px 18px #f5dbff77,inset -8px -9px 17px #6641b42a}
+.login-buddy__eye{position:absolute;top:43%;width:11%;height:14%;border-radius:50%;background:#21183e;box-shadow:inset -2px -2px 2px #30294b}
+.login-buddy__eye::after{content:"";position:absolute;left:28%;top:20%;width:30%;height:28%;border-radius:50%;background:#fff}
+.login-buddy__eye--left{left:29%}.login-buddy__eye--right{right:29%}
+.login-buddy__mouth{position:absolute;left:44%;top:52%;width:13%;height:14%;border-radius:14% 14% 75% 75%;background:#3d225c;transform:rotate(2deg)}
+.login-buddy__mouth::after{content:"";position:absolute;bottom:6%;left:20%;width:63%;height:32%;background:#ff97bd;border-radius:90% 90% 50% 50%}
+.login-buddy__cheek{position:absolute;top:60%;height:10%;width:12%;border-radius:50%;background:#ffa5ca;filter:blur(.4px)}
+.login-buddy__cheek--left{left:17%}.login-buddy__cheek--right{right:17%}
+.login-buddy__blush{position:absolute;top:69%;width:13%;height:5%;background:#e9b7ff;border-radius:90%;opacity:.8}
+.login-buddy__blush--left{left:33%}.login-buddy__blush--right{right:33%}
+.login-buddy__arm{position:absolute;z-index:4;top:61%;width:28%;height:17%;background:#a779e6;border-radius:60%;border:2px solid #956ad6}
+.login-buddy__arm--left{left:1%;transform:rotate(37deg);transform-origin:right center}
+.login-buddy__arm--right{right:-3%;transform-origin:left center;animation:lx-wave 2.8s ease-in-out infinite}
+.login-buddy__foot{position:absolute;z-index:2;bottom:0;width:27%;height:16%;border-radius:40% 55%;background:#8b65d0;box-shadow:inset 0 -5px 7px #6c46b443}
+.login-buddy__foot--left{left:21%;transform:rotate(9deg)}.login-buddy__foot--right{right:21%;transform:rotate(-9deg)}
+.login-scene__books{position:absolute;z-index:2;bottom:10%;right:0;width:26%;height:23%;transform:rotate(5deg)}
+.login-scene__books span{position:absolute;right:4%;height:18%;width:90%;border-radius:8px;background:linear-gradient(180deg,#997ae0,#7656c1);border-bottom:5px solid #ffe4aa;box-shadow:0 6px 8px #725cb02f}
+.login-scene__books span:nth-child(1){bottom:8%}.login-scene__books span:nth-child(2){bottom:33%;width:75%;right:15%;background:#e6b56e}.login-scene__books span:nth-child(3){bottom:59%;width:70%;background:#b18bec}
+.nexo-login-reimagined .login-right{display:flex;justify-content:center;align-items:center;background:radial-gradient(circle at 80% 13%,#f7f2ff,transparent 30%),#fffdfa;padding:clamp(36px,4.5vw,82px) clamp(24px,5vw,80px)}
+.nexo-login-reimagined .login-right-inner{width:min(100%,540px)}
+.nexo-login-reimagined .login-right-inner .tiny-caps{display:block;color:#5e4aa9;letter-spacing:.13em;font-size:11px;font-weight:900;margin-bottom:12px}
+.nexo-login-reimagined .login-right-inner h2{font-size:clamp(32px,2.7vw,45px);letter-spacing:-.05em;line-height:1.15;color:#262046;margin:0 0 12px;font-weight:900}
+.nexo-login-reimagined .login-right-inner>p{font-size:14px;line-height:1.7;color:#7d7890;margin:0}
+.nexo-login-reimagined .login-role-picker.demo-five{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:28px 0 25px}
+.nexo-login-reimagined .login-role-picker.demo-five button{height:109px;min-height:109px;padding:10px 3px;background:#fff;border:1px solid #e8e2f0;border-radius:17px;color:#777189;box-shadow:0 6px 13px #3d2b7210;gap:6px;font-weight:800;font-size:11px;transition:transform .2s,background .2s,border .2s,box-shadow .2s}
+.nexo-login-reimagined .login-role-picker.demo-five button span{font-size:26px;line-height:1.2}
+.nexo-login-reimagined .login-role-picker.demo-five button small{font-size:10px;color:inherit;opacity:.8}
+.nexo-login-reimagined .login-role-picker.demo-five button:hover{transform:translateY(-4px);border-color:#c9b4ee;box-shadow:0 11px 22px #5b36a525}
+.nexo-login-reimagined .login-role-picker.demo-five button.chosen{border:2px solid #7647df;background:linear-gradient(155deg,#f8f3ff,#eee7ff);color:#633dc4;box-shadow:0 7px 22px #7d57d627}
+.nexo-login-reimagined .login-label{font-size:12px;font-weight:900;color:#343051;margin:17px 0 8px}
+.login-input-wrap{position:relative;display:flex;align-items:center}
+.nexo-login-reimagined .login-input-wrap .login-input{background:#f0f2fc;border:1px solid #dfe2f3;box-shadow:inset 0 2px 5px #43317e0c;width:100%;height:55px;border-radius:15px;padding:14px 50px 14px 50px;color:#292443;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+.nexo-login-reimagined .login-input-wrap .login-input:focus{border-color:#8154dd;box-shadow:0 0 0 4px #946dea26}
+.nexo-login-reimagined .login-input::placeholder{color:#9ca1b8}
+.login-field-icon{position:absolute;z-index:1;left:17px;font-size:22px;color:#7568aa}
+.login-password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;background:transparent;border-radius:10px;color:#6c638f;cursor:pointer;font-size:19px}
+.login-password-toggle:hover{background:#e5dffa}
+.nexo-login-reimagined .login-submit{display:flex;align-items:center;justify-content:center;gap:14px;min-height:57px;width:100%;border:0;border-radius:15px;background:linear-gradient(105deg,#8654ee,#5e34c8);color:#fff;font-size:15px;font-weight:900;box-shadow:0 12px 23px #7a4dd23a;margin-top:26px;cursor:pointer}
+.nexo-login-reimagined .login-submit:hover{background:linear-gradient(105deg,#9464f6,#6941d1);transform:translateY(-2px);box-shadow:0 16px 30px #7a4dd24c}
+.nexo-login-reimagined .login-submit:active{transform:translateY(0)}
+.nexo-login-reimagined .login-footnote{font-size:12px!important;color:#817b91!important;margin-top:12px!important;line-height:1.55}
+.nexo-login-reimagined .login-footnote a{color:#643fc4;font-weight:850;text-decoration:none}
+.nexo-login-reimagined .login-footnote a:hover{text-decoration:underline}
+.nexo-login-reimagined .login-tip{font-size:11px!important;line-height:1.5;background:#f2ebff;color:#5c4c87;padding:12px;border-radius:12px;margin-top:15px}
+.nexo-login-reimagined .auth-errors:not(:empty){margin:0 0 13px;background:#fff0f3;border:1px solid #ffcfdb;border-radius:12px;padding:12px;color:#ad3956}
+@keyframes lx-float{0%,100%{transform:translate(-50%,-50%) rotate(-2deg)}50%{transform:translate(-50%,-54%) rotate(2deg)}}
+@keyframes lx-wave{0%,12%,100%{transform:rotate(-22deg)}35%{transform:rotate(-71deg)}55%{transform:rotate(7deg)}74%{transform:rotate(-58deg)}}
+@keyframes lx-ear-left{0%,100%{transform:rotate(-29deg)}50%{transform:rotate(-16deg)}}
+@keyframes lx-ear-right{0%,100%{transform:rotate(30deg)}50%{transform:rotate(45deg)}}
+@keyframes lx-sparkle{0%,100%{opacity:.4;transform:scale(.75) rotate(-20deg)}50%{opacity:1;transform:scale(1.17) rotate(20deg)}}
+@keyframes lx-book{0%,100%{transform:rotate(-12deg) translateY(0)}50%{transform:rotate(4deg) translateY(-8px)}}
+@keyframes lx-speech{0%,100%{transform:rotate(-3deg) scale(.96)}50%{transform:rotate(3deg) scale(1.035)}}
+@keyframes lx-halo{0%,100%{transform:scale(.9);opacity:.65}50%{transform:scale(1.1);opacity:1}}
+@keyframes lx-shadow{0%,100%{transform:scaleX(.95)}50%{transform:scaleX(.72)}}
+@media(max-width:1050px){.nexo-login-reimagined{grid-template-columns:44% 56%}.nexo-login-reimagined .login-left{padding:27px}.nexo-login-reimagined .login-right{padding:35px 26px}.login-scene__speech{right:0}}
+@media(max-width:760px){.nexo-login-reimagined{display:block;min-height:100svh}.nexo-login-reimagined .login-left{min-height:365px;padding:21px 22px}.nexo-login-reimagined .login-story{display:grid;grid-template-columns:1fr 170px;gap:8px;margin-top:20px}.nexo-login-reimagined .login-story h1{font-size:clamp(27px,6vw,37px)}.nexo-login-reimagined .login-story p{font-size:12px}.login-story__eyebrow{font-size:9px}.login-scene{height:210px;width:190px;align-self:center;margin-top:0}.login-buddy{width:150px;height:170px}.login-scene__speech{right:-9px;top:-6px;padding:8px 10px;font-size:10px}.login-scene__speech strong{font-size:12px}.login-scene__star{font-size:23px}.login-scene__book{font-size:24px}.nexo-login-reimagined .login-safe{margin-top:8px}.nexo-login-reimagined .login-right{padding:33px 21px 55px}.nexo-login-reimagined .login-right-inner{max-width:500px}.nexo-login-reimagined .login-role-picker.demo-five{grid-template-columns:repeat(5,minmax(0,1fr))}.nexo-login-reimagined .login-role-picker.demo-five button{height:84px;min-height:84px;font-size:9px;border-radius:12px}.nexo-login-reimagined .login-role-picker.demo-five button span{font-size:18px}.nexo-login-reimagined .login-role-picker.demo-five button small{font-size:8px}}
+@media(max-width:410px){.nexo-login-reimagined .login-story{grid-template-columns:1fr 120px}.login-scene{height:155px;width:135px}.login-buddy{width:113px;height:134px}.login-scene__speech{font-size:8px;right:-4px;top:-8px}.login-scene__speech strong{font-size:10px}.nexo-login-reimagined .login-role-picker.demo-five{gap:4px}.nexo-login-reimagined .login-role-picker.demo-five button{font-size:8px;padding:6px 1px}.nexo-login-reimagined .login-role-picker.demo-five button small{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.nexo-login-reimagined *,.nexo-login-reimagined *::before,.nexo-login-reimagined *::after{animation:none!important;transition:none!important}}

@@ -1,0 +1,88 @@
+@model NEXO_EDU.Models.AltaAlumnoModel
+@{
+ ViewData["Title"]="Registrar alumno";
+ var nivel=(string?)ViewBag.Nivel??"primaria";
+}
+<link rel="stylesheet" href="~/css/nexo-matricula.css" asp-append-version="true"/>
+<section class="matricula-page">
+ <div class="matricula-shell">
+  <a class="matricula-back" asp-action="MisAlumnos">← Regresar a mis alumnos</a>
+  <div class="matricula-heading"><span class="matricula-kicker">INSCRIPCIÓN · @nivel.ToUpperInvariant()</span><h1>Nuevo estudiante</h1><p>Los estudiantes no necesitan correo personal. NEXO EDU genera un usuario y una contraseña inicial, que podrás entregar de forma privada.</p></div>
+  <form class="matricula-form" asp-action="NuevoAlumno" method="post">
+   @Html.AntiForgeryToken()
+   <div asp-validation-summary="All" class="matricula-error" role="alert"></div>
+   <div class="matricula-fields">
+    <div class="matricula-wide"><label asp-for="Nombre"></label><input asp-for="Nombre" autocomplete="off" required minlength="2" maxlength="120" data-nexo-validate="nombre" placeholder="Nombre y apellidos del estudiante"/><span asp-validation-for="Nombre" class="matricula-validation"></span></div>
+    <div><label asp-for="Grado"></label><select asp-for="Grado">@for(var i=1;i<=(nivel=="primaria"?6:3);i++){<option value="@i">@(i).º grado</option>}</select></div>
+    <div><label asp-for="Grupo"></label><input asp-for="Grupo" maxlength="12" required data-nexo-validate="grupo" placeholder="A"/><span asp-validation-for="Grupo" class="matricula-validation"></span></div>
+   </div>
+   <section class="matricula-access-settings" aria-labelledby="account-setup-title">
+     <h2 id="account-setup-title">Credenciales para iniciar sesión</h2>
+     <p>Elige si deseas que NEXO EDU las genere o prefieres asignarlas tú. Los datos existentes no se modificarán.</p>
+     <div class="matricula-credential-options">
+       <div class="matricula-credential-choice">
+         <label class="matricula-checkbox">
+           <input asp-for="UsuarioManual" type="checkbox" data-credential-toggle="username"/>
+           <span>Escribir el usuario manualmente</span>
+         </label>
+         <div data-credential-panel="username" class="matricula-manual-field" hidden>
+           <label asp-for="UsuarioElegido"></label>
+           <input asp-for="UsuarioElegido" maxlength="30" minlength="3" data-nexo-validate="usuario" autocomplete="off" placeholder="Ejemplo: carlosramirez4821" spellcheck="false"/>
+           <span asp-validation-for="UsuarioElegido" class="matricula-validation"></span>
+           <small>De 3 a 30 caracteres: letras minúsculas y números. Debe ser único.</small>
+         </div>
+         <p class="matricula-automatic-description" data-credential-auto="username">Automático: nombre + cuatro números aleatorios, por ejemplo, <strong>carlosramirez4821</strong>.</p>
+       </div>
+       <div class="matricula-credential-choice">
+         <label class="matricula-checkbox">
+           <input asp-for="ClaveManual" type="checkbox" data-credential-toggle="password"/>
+           <span>Escribir la contraseña manualmente</span>
+         </label>
+         <div data-credential-panel="password" class="matricula-manual-field" hidden>
+           <label asp-for="ClaveElegida"></label>
+           <div class="matricula-password-row">
+             <input asp-for="ClaveElegida" type="password" autocomplete="new-password" minlength="12" maxlength="64" data-nexo-validate="clave" placeholder="12 caracteres o más"/>
+             <button type="button" data-toggle-password aria-label="Mostrar contraseña" aria-pressed="false">Mostrar</button>
+           </div>
+           <span asp-validation-for="ClaveElegida" class="matricula-validation"></span>
+           <small>De 12 a 64 caracteres; incluye mayúsculas, minúsculas y números. Evita nombres o fechas fáciles de adivinar.</small>
+         </div>
+         <p class="matricula-automatic-description" data-credential-auto="password">Automática: 16 letras y números aleatorios, sin símbolos.</p>
+       </div>
+     </div>
+   </section>
+   <div class="matricula-note">Por seguridad no solicitamos fecha de nacimiento, CURP, domicilio, teléfono ni fotografía del menor en esta primera etapa.</div>
+   <button class="matricula-button" type="submit">Crear cuenta del alumno →</button>
+  </form>
+ </div>
+</section>
+<script>
+(() => {
+  for (const name of ['username', 'password']) {
+    const checkbox = document.querySelector('[data-credential-toggle="' + name + '"]');
+    const panel = document.querySelector('[data-credential-panel="' + name + '"]');
+    const auto = document.querySelector('[data-credential-auto="' + name + '"]');
+    if (!checkbox || !panel || !auto) continue;
+    const input = panel.querySelector('input');
+    const sync = () => {
+      panel.hidden = !checkbox.checked;
+      auto.hidden = checkbox.checked;
+      if (input) {
+        input.required = checkbox.checked;
+        if (!checkbox.checked) input.value = '';
+      }
+    };
+    checkbox.addEventListener('change', sync);
+    sync();
+  }
+  const show = document.querySelector('[data-toggle-password]');
+  const password = document.querySelector('[name="ClaveElegida"]');
+  show?.addEventListener('click', () => {
+    if (!password) return;
+    const visible = password.type === 'password';
+    password.type = visible ? 'text' : 'password';
+    show.textContent = visible ? 'Ocultar' : 'Mostrar';
+    show.setAttribute('aria-pressed', String(visible));
+  });
+})();
+</script>

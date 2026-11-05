@@ -1,0 +1,16 @@
+@{
+    var action = ViewData["LevelAction"]?.ToString() ?? "Estudiante";
+    var actual = ViewData["CurrentLevel"]?.ToString() ?? "primaria";
+}
+@if (User.IsInRole("Alumno"))
+{
+    <span class="level-fixed">Nivel asignado: @(actual == "preparatoria" ? "Preparatoria" : char.ToUpper(actual[0]) + actual.Substring(1))</span>
+}
+else
+{
+    <nav class="level-switcher" aria-label="Comparar niveles educativos de demostración">
+        <a class="@(actual == "primaria" ? "selected" : "")" asp-controller="NexoDemo" asp-action="@action" asp-route-nivel="primaria">Primaria</a>
+        <a class="@(actual == "secundaria" ? "selected" : "")" asp-controller="NexoDemo" asp-action="@action" asp-route-nivel="secundaria">Secundaria</a>
+        <a class="@(actual == "preparatoria" ? "selected" : "")" asp-controller="NexoDemo" asp-action="@action" asp-route-nivel="preparatoria">Prepa</a>
+    </nav>
+}

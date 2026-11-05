@@ -1,0 +1,97 @@
+/* NEXO PET: escena animada y responsiva para tres mascotas evolutivas */
+.nexo-mascot{--pet-glow:#efca7b;position:relative;display:flex;justify-content:center;align-items:center;min-height:310px;width:min(100%,390px);margin:0 auto;isolation:isolate;outline-offset:8px}
+.nexo-mascot--coraje{--pet-glow:#53d3f1}.nexo-mascot--robot{--pet-glow:#9b65ff}
+.nexo-mascot__aura{position:absolute;width:81%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,var(--pet-glow) 0%,transparent 66%);opacity:.34;filter:blur(23px);animation:pet-breathe 3.4s ease-in-out infinite}
+.nexo-mascot__model{position:relative;width:100%;z-index:2;transform-origin:center 82%;animation:pet-idle 3s ease-in-out infinite;filter:drop-shadow(0 22px 25px rgba(9,17,47,.20));will-change:transform}
+.nexo-mascot__model img{width:100%;height:auto;display:block;user-select:none}
+.nexo-mascot__shadow{position:absolute;z-index:0;bottom:9%;left:22%;right:22%;height:17px;border-radius:50%;background:#24295c;filter:blur(16px);opacity:.28;animation:pet-shadow 3s ease-in-out infinite}
+.nexo-mascot__spark{position:absolute;z-index:3;color:var(--pet-glow);font-size:35px;animation:pet-spark 3.8s ease-in-out infinite;pointer-events:none}
+.nexo-mascot__spark--a{top:12%;left:9%}.nexo-mascot__spark--b{right:6%;top:38%;animation-delay:1.5s}
+.nexo-mascot__speech{position:absolute;top:0;right:0;z-index:7;max-width:70%;background:white;color:#26354e;border:1px solid #d8dcec;box-shadow:0 12px 30px #11193622;border-radius:16px 16px 4px 16px;padding:10px 14px;font-weight:800;font-size:.84rem;opacity:0;transform:translateY(10px) scale(.95);transition:opacity .22s,transform .22s;pointer-events:none}
+.nexo-mascot.is-talking .nexo-mascot__speech{opacity:1;transform:translateY(0) scale(1)}
+.nexo-mascot.is-wave .nexo-mascot__model{animation:pet-wave .9s ease-in-out 2}
+.nexo-mascot.is-jump .nexo-mascot__model{animation:pet-jump 1.2s ease-in-out}
+.nexo-mascot.is-celebrate .nexo-mascot__model{animation:pet-celebrate 1.3s ease-in-out}
+.nexo-mascot.is-celebrate .nexo-mascot__spark{animation:pet-spark .48s ease-in-out 3}
+.nexo-mascot--compact{min-height:135px;width:150px}
+.nexo-mascot--compact .nexo-mascot__spark{font-size:18px}
+.nexo-mascot--compact .nexo-mascot__speech{display:none}
+@keyframes pet-idle{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-11px) rotate(1deg)}}
+@keyframes pet-breathe{0%,100%{transform:scale(.88);opacity:.25}50%{transform:scale(1.08);opacity:.48}}
+@keyframes pet-shadow{0%,100%{transform:scaleX(1);opacity:.24}50%{transform:scaleX(.76);opacity:.14}}
+@keyframes pet-spark{0%,100%{opacity:.3;transform:scale(.65) rotate(0)}45%{opacity:1;transform:scale(1.15) rotate(40deg)}}
+@keyframes pet-wave{0%,100%{transform:rotate(0)}25%{transform:rotate(-10deg)}50%{transform:rotate(9deg)}75%{transform:rotate(-7deg)}}
+@keyframes pet-jump{0%,100%{transform:translateY(0) scale(1)}20%{transform:translateY(12px) scale(1.07,.9)}50%{transform:translateY(-48px) rotate(-7deg) scale(.95,1.08)}80%{transform:translateY(6px) scale(1.08,.92)}}
+@keyframes pet-celebrate{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-11deg) scale(1.06)}50%{transform:rotate(12deg) scale(1.13)}75%{transform:rotate(-8deg) scale(1.05)}}
+.pet-studio{--pet-accent:#c48b35;--pet-bg:#fff8ea;min-height:calc(100vh - 110px);padding:32px max(20px,calc((100vw - 1200px)/2)) 72px;background:radial-gradient(circle at 24% 22%,#fff0cf 0,transparent 34%),linear-gradient(145deg,#fffcf5,#fbf4fd 80%);color:#253047}
+.pet-studio--coraje{--pet-accent:#197cba;--pet-bg:#e6f7ff;background:radial-gradient(circle at 24% 22%,#b3f0ff 0,transparent 34%),linear-gradient(145deg,#ebf7ff,#f5edff 85%)}
+.pet-studio--robot{--pet-accent:#6555d3;--pet-bg:#e8ecff;background:radial-gradient(circle at 24% 22%,#c5c3ff 0,transparent 34%),linear-gradient(145deg,#eaf4ff,#eae8fa 85%)}
+.pet-studio__top,.pet-studio__progress-head{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.pet-studio__back{text-decoration:none;font-weight:800;color:var(--pet-accent)}
+.pet-studio__brand{font-size:.82rem;letter-spacing:.16em;font-weight:900;color:#7a87a3}.pet-studio__brand span{color:var(--pet-accent)}
+.pet-studio__layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:50px;align-items:center;margin:25px 0 45px}
+.pet-studio__stage{position:relative;min-height:480px;border-radius:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#ffffffb0,#ffffff38);box-shadow:inset 0 0 0 1px #ffffffd9,0 30px 90px #36457d19;overflow:hidden}
+.pet-studio__stage .nexo-mascot{width:min(100%,430px);min-height:390px;z-index:2}
+.pet-studio__orbit{position:absolute;width:83%;aspect-ratio:1;border:2px dashed color-mix(in srgb,var(--pet-accent) 42%,transparent);border-radius:50%;animation:pet-orbit 35s linear infinite}
+.pet-studio__pedestal{position:absolute;bottom:52px;width:58%;height:22px;max-width:320px;border-radius:50%;background:var(--pet-accent);opacity:.16;filter:blur(14px)}
+.pet-studio__level{position:relative;z-index:4;margin-top:-20px;margin-bottom:18px;border-radius:99px;background:#ffffffc9;padding:11px 17px;font-size:.78rem;font-weight:900;letter-spacing:.055em;color:var(--pet-accent)}
+.pet-studio__info h1{font-size:clamp(2.5rem,5vw,4.7rem);line-height:1.04;color:#1d2948;margin:12px 0}
+.pet-studio__info h1 span{color:var(--pet-accent)}
+.pet-studio__info h2{font-size:1.25rem;margin:0 0 18px;color:#485572}
+.pet-studio__info p{line-height:1.6;color:#62708a}
+.pet-studio__eyebrow{color:var(--pet-accent);font-weight:900;letter-spacing:.12em;font-size:.8rem}
+.pet-studio__message{background:white;border-left:5px solid var(--pet-accent);padding:18px 19px;border-radius:15px;margin:22px 0;box-shadow:0 8px 20px #24304e12}
+.pet-studio__progress-head{font-size:.9rem;margin:24px 0 8px}.pet-studio__progress-head strong{font-size:1.1rem;color:var(--pet-accent)}.pet-studio__progress-head span{color:#697992}
+.pet-studio__progress{height:12px;background:#e1e7f1;border-radius:20px;overflow:hidden;margin:8px 0 10px}
+.pet-studio__progress span{height:100%;display:block;background:linear-gradient(90deg,var(--pet-accent),#9de8e4);border-radius:20px;transition:width .6s}
+.pet-studio__info small{color:#728097}
+.pet-studio__controls{display:flex;gap:10px;flex-wrap:wrap;margin:24px 0}
+.pet-studio__controls button{background:#fff;border:1px solid #d5dfea;border-radius:13px;padding:11px 13px;font-weight:800;color:#364768;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.pet-studio__controls button:hover{transform:translateY(-3px);box-shadow:0 9px 18px #161c441f}
+.pet-studio__controls button:focus-visible{outline:3px solid var(--pet-accent);outline-offset:2px}
+.pet-studio__cta{display:inline-block;border-radius:15px;background:var(--pet-accent);padding:15px 22px;color:white!important;text-decoration:none;font-weight:800;box-shadow:0 12px 25px #27315526}
+.pet-studio__evolutions{margin:50px 0 10px}.pet-studio__section h2{font-size:1.7rem;color:#273452}.pet-studio__section p{color:#65738d}
+.pet-studio__cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.pet-studio__card{background:#ffffffd9;border:1px solid #e2e6ed;border-radius:24px;padding:18px;min-width:0;transition:transform .25s,border-color .25s}
+.pet-studio__card.is-current{border:2px solid var(--pet-accent);box-shadow:0 12px 36px #24315e19}
+.pet-studio__card:hover{transform:translateY(-5px)}
+.pet-studio__preview{height:175px;display:flex;align-items:center;justify-content:center;background:var(--pet-bg);border-radius:16px;margin-bottom:13px}
+.pet-studio__preview img{height:166px;width:auto;max-width:100%;object-fit:contain}
+.pet-studio__card.is-locked .pet-studio__preview img{filter:grayscale(1);opacity:.53}
+.pet-studio__card span{font-size:.72rem;font-weight:900;color:var(--pet-accent);letter-spacing:.065em}
+.pet-studio__card h3{font-size:1.12rem;color:#283653;margin:7px 0}.pet-studio__card p{color:#6c7890;font-size:.88rem;line-height:1.5}
+.pet-studio__notice{margin-top:30px;font-size:.82rem;color:#78869c}
+.pet-mini-panel{border-radius:19px;background:linear-gradient(120deg,#fff9eb,#efeaff);padding:12px 20px;display:flex;align-items:center;gap:15px;margin:20px 0;box-shadow:0 10px 24px #151b3b0d}
+.pet-mini-panel--coraje{background:linear-gradient(120deg,#eafaff,#eef0ff)}
+.pet-mini-panel--robot{background:linear-gradient(120deg,#eff0ff,#e6f6ff)}
+.pet-mini-panel .nexo-mascot{flex:none}
+.pet-mini-panel__text{display:flex;flex-direction:column;gap:5px;flex:1}.pet-mini-panel__text strong{font-size:1.08rem;color:#293851}.pet-mini-panel__text small{color:#65718d}
+.pet-mini-panel a{color:#5c48b8;font-weight:850;white-space:nowrap}
+@keyframes pet-orbit{to{transform:rotate(360deg)}}
+@media(max-width:850px){.pet-studio__layout{grid-template-columns:1fr;gap:25px}.pet-studio__stage{min-height:375px}.pet-studio__stage .nexo-mascot{width:360px;min-height:300px}.pet-studio__cards{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.pet-studio{padding:22px 15px 45px}.pet-studio__stage{min-height:300px}.pet-studio__stage .nexo-mascot{width:290px;min-height:270px}.pet-studio__cards{grid-template-columns:1fr}.pet-studio__controls button{flex:1}.pet-mini-panel{padding:9px 12px}.pet-mini-panel .nexo-mascot{width:94px;min-height:88px}.pet-mini-panel a{font-size:.85rem}}
+@media(prefers-reduced-motion:reduce){.nexo-mascot *,.pet-studio__orbit{animation:none!important;transition:none!important}}
+
+/* NEXO PET · bienvenida y nombre personalizado */
+.pet-welcome{display:flex;align-items:center;gap:16px;margin:25px 0 10px;background:linear-gradient(110deg,#ffffffed,#eeedffed);padding:17px 22px;border:1px solid #dddaf6;border-radius:21px;color:#26375f;box-shadow:0 12px 30px #32408413;animation:pet-welcome-in .6s ease both}
+.pet-welcome strong{font-size:1.08rem}.pet-welcome p{margin:5px 0 0;color:#697692}
+.pet-welcome__symbol{font-size:2.5rem;color:#8871cc;animation:pet-welcome-pop 1.7s ease-in-out infinite alternate}
+.pet-welcome--saved{font-weight:850;color:#257a58;background:#e8fff3}
+.pet-name-form{margin:18px 0 20px;padding:18px;background:#ffffffce;border:1px solid #e3e1f0;border-radius:18px}
+.pet-name-form label{display:block;font-weight:850;color:#293b60;margin-bottom:10px}
+.pet-name-form__row{display:flex;gap:9px;align-items:stretch}
+.pet-name-form__row input{flex:1;min-width:0;border:1px solid #c7d3e7;border-radius:12px;padding:12px 14px;background:white;color:#263653;font:inherit}
+.pet-name-form__row input:focus{outline:3px solid #c7bcfa}
+.pet-name-form__row button{border:0;border-radius:12px;background:#6654bc;color:white;font-weight:850;padding:11px 16px;cursor:pointer}
+.pet-name-form small{display:block;margin-top:10px;color:#728096}
+.pet-name-form__error{color:#a62c45;font-weight:700}
+.nexo-login-welcome{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:linear-gradient(110deg,#e5fbff,#f3ecff);border:1px solid #cddbf4;padding:15px 21px;margin:15px 20px;border-radius:20px;box-shadow:0 13px 30px #20304f14;animation:pet-welcome-in .6s ease both}
+.nexo-login-welcome__spark{font-size:1.9rem;color:#6f51c1}
+.nexo-login-welcome div:nth-child(2){flex:1;min-width:175px}
+.nexo-login-welcome strong{color:#273758;font-weight:900}
+.nexo-login-welcome p{color:#66788e;font-size:.9rem;margin:4px 0}
+.nexo-login-welcome a{color:#6748b6;font-weight:850;text-decoration:none}
+@keyframes pet-welcome-in{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pet-welcome-pop{from{transform:scale(.9) rotate(-7deg)}to{transform:scale(1.09) rotate(7deg)}}
+@media(max-width:620px){.pet-name-form__row{flex-direction:column}.pet-name-form__row button{width:100%}}
+@media(prefers-reduced-motion:reduce){.pet-welcome,.nexo-login-welcome,.pet-welcome__symbol{animation:none}}

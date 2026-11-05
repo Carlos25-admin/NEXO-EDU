@@ -1,0 +1,37 @@
+@using NEXO_EDU.Services
+@model ResultadoNivelViewModel
+@{
+    ViewData["Title"] = "Resultado del nivel " + Model.Nivel;
+    ViewData["PetCompanionContext"] = Model.Aprobado ? "success" : "retry";
+    var revision = Model.Revision;
+    var modulo = revision.Leccion;
+    var css = modulo.Nivel == "secundaria" ? "secondary" : modulo.Nivel == "preparatoria" ? "prepa" : "";
+}
+<div class="module-page @css">
+    <div class="module-top"><a class="module-back" asp-action="Ruta" asp-route-clave="@modulo.Clave">← Volver a la ruta</a><span class="module-tag">@modulo.Materia · Nivel @Model.Nivel</span></div>
+    <section class="module-hero">
+      <span class="module-tag">@(Model.Aprobado ? "✦ NIVEL SUPERADO" : "REFUERZO RECOMENDADO")</span>
+      <h1 class="module-title">@(Model.Aprobado ? "¡Lo lograste!" : "¡Buen intento, sigue practicando!")</h1>
+      <p class="module-subtitle">Respondiste correctamente @revision.Aciertos de @revision.Total preguntas. @(Model.Aprobado ? (Model.Nivel==5 ? "¡Completaste la ruta de esta materia!" : "Ya puedes avanzar al siguiente nivel.") : "Revisa las explicaciones y vuelve a intentarlo.")</p>
+      <div class="module-summary">
+        <div class="module-stat"><strong>@revision.Porcentaje%</strong> aciertos</div>
+        <div class="module-stat"><strong>+@Model.PuntosOtorgados</strong> XP nuevos</div>
+        <div class="module-stat"><strong>@Model.MejorNivel / 5</strong> desbloqueado</div>
+      </div>
+      @if(Model.Aprobado && !Model.RecompensaNueva){<p class="module-info">Este nivel ya estaba superado: no se vuelve a sumar XP por repetirlo.</p>}
+    </section>
+    <h2>Aprende de cada respuesta</h2>
+    @foreach(var r in revision.Respuestas)
+    {
+       <article class="module-result @(r.Acertada ? "correct" : "review")"><strong>@(r.Acertada ? "✓ Correcto" : "↻ Para repasar") · @r.Numero. @r.Enunciado</strong><p>Respuesta correcta: <strong>@r.Correcta</strong></p><p>@r.Explicacion</p></article>
+    }
+    <div class="module-actions">
+      @if(Model.Aprobado && Model.Nivel < 5){
+        <a class="module-action" asp-action="Resolver" asp-route-clave="@modulo.Clave" asp-route-nivel="@(Model.Nivel+1)">Continuar al nivel @(Model.Nivel+1) →</a>
+      }
+      <a class="module-outline" asp-action="Resolver" asp-route-clave="@modulo.Clave" asp-route-nivel="@Model.Nivel">Practicar de nuevo</a>
+      <a class="module-outline" asp-action="Ruta" asp-route-clave="@modulo.Clave">Ver todos los niveles</a>
+      <a class="module-outline" asp-controller="NexoDemo" asp-action="Mascota">Ver mi NEXO PET</a>
+    </div>
+    <p class="module-info">Con el perfil PostgreSQL, los intentos, desbloqueos y XP quedan guardados en la base de datos. El perfil Demo local sigue usando Session.</p>
+</div>
